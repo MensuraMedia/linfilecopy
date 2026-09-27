@@ -1,0 +1,15 @@
+{
+  "template": "mirror-to-array",
+  "name": "Mirror to storage array",
+  "description": "Keep an exact copy of a folder on a local storage array. Files removed from the source are removed from the copy after you confirm.",
+  "source": {"path": "~/Pictures"},
+  "destination": {"path": ""},
+  "mode": "mirror",
+  "overwrite": "overwrite",
+  "preview_first": true,
+  "transfer": {"checksum": true, "resume": true},
+  "metadata": {"permissions": true, "times": true, "acls": true, "xattrs": true, "hardlinks": true},
+  "filters": {"presets": ["cache", "temp", "system"]},
+  "performance": {"low_priority": true},
+  "logging": {"notify_failure": true, "retries": 2}
+}

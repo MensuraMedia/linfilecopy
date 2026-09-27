@@ -1,0 +1,14 @@
+{
+  "template": "two-way-usb-stick",
+  "name": "Two-way with a USB stick",
+  "description": "Keep a folder and a USB stick in step in both directions. Runs when the stick is plugged in; deleted files are kept in .lfc-trash.",
+  "source": {"path": "~/Notes"},
+  "destination": {"path": ""},
+  "mode": "two_way",
+  "preview_first": true,
+  "filters": {"presets": ["cache", "temp", "system"]},
+  "twoway": {"conflict": "keep_both", "use_trash": true, "delete_guard_percent": 50},
+  "triggers": {"on_drive_connected": true},
+  "drive": {"eject_after": false},
+  "logging": {"notify_success": true, "notify_failure": true}
+}

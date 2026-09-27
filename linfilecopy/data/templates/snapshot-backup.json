@@ -1,0 +1,16 @@
+{
+  "template": "snapshot-backup",
+  "name": "Snapshot backup",
+  "description": "Daily hard-linked snapshots of your home folder. Unchanged files take no extra space; keeps 14 daily and 8 weekly snapshots.",
+  "source": {"path": "~"},
+  "destination": {"path": ""},
+  "mode": "copy",
+  "preview_first": false,
+  "transfer": {"resume": true, "sparse": true},
+  "metadata": {"permissions": true, "times": true, "acls": true, "xattrs": true, "hardlinks": true},
+  "filters": {"presets": ["cache", "temp", "system"], "rules": [{"action": "exclude", "pattern": "Downloads/"}, {"action": "exclude", "pattern": "*.iso"}]},
+  "safety": {"snapshots": true, "keep_daily": 14, "keep_weekly": 8},
+  "performance": {"low_priority": true},
+  "schedule": {"kind": "daily", "time": "03:00", "enabled": false},
+  "logging": {"notify_success": false, "notify_failure": true, "retries": 2}
+}

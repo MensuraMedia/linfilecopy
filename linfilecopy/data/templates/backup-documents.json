@@ -1,0 +1,14 @@
+{
+  "template": "backup-documents",
+  "name": "Backup Documents",
+  "description": "Copy your Documents folder to an external drive. Adapts to the drive's filesystem and ejects it when done.",
+  "source": {"path": "~/Documents"},
+  "destination": {"path": ""},
+  "mode": "copy",
+  "overwrite": "newer",
+  "preview_first": true,
+  "metadata": {"permissions": true, "times": true},
+  "filters": {"presets": ["cache", "temp"]},
+  "drive": {"eject_after": true},
+  "logging": {"notify_success": true, "notify_failure": true, "retries": 1}
+}
