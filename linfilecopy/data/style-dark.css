@@ -1,0 +1,19 @@
+/* Dark tokens: slate-toned, per the -universal-themes references. */
+@define-color lfc_accent #3584e4;
+@define-color lfc_accent_fg #99c1f1;
+@define-color lfc_accent_soft #233a57;
+@define-color lfc_source #62a0ea;
+@define-color lfc_dest #33d17a;
+@define-color lfc_ok #57e389;
+@define-color lfc_ok_bg #1f3a2b;
+@define-color lfc_warn #f6d32d;
+@define-color lfc_warn_bg #3d3418;
+@define-color lfc_err #ff7b7b;
+@define-color lfc_err_bg #46211f;
+@define-color lfc_sidebar_bg #262a30;
+@define-color lfc_card_bg #1e2126;
+@define-color lfc_code_bg #181a1e;
+@define-color lfc_border #363b43;
+@define-color lfc_dim #9aa1aa;
+@define-color lfc_selected #353b44;
+@define-color lfc_trough #3a3f47;

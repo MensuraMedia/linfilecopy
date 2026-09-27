@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "linfilecopy"
+version = "0.1.0"
+description = "GTK 3 dashboard for copy and sync jobs between local disks and attached drives, powered by rsync"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0-or-later" }
+authors = [{ name = "MensuraMedia" }]
+# Runtime needs PyGObject + GTK 3 from the system packages (python3-gi,
+# gir1.2-gtk-3.0) and rsync. Nothing is installed from PyPI.
+dependencies = []
+classifiers = [
+    "Environment :: X11 Applications :: GTK",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Archiving :: Backup",
+]
+
+[project.scripts]
+linfilecopy = "linfilecopy.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/MensuraMedia/linfilecopy"
+
+[tool.setuptools.packages.find]
+include = ["linfilecopy*"]
+
+[tool.setuptools.package-data]
+linfilecopy = ["data/*.css", "data/*.gresource", "data/icons/**/*", "data/templates/*.json", "data/locale/**/*"]

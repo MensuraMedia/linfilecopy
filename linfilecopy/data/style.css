@@ -1,0 +1,117 @@
+/* LinFileCopy — GTK 3 stylesheet (light tokens). style-dark.css redefines
+ * the tokens when the active theme is dark. Widgets otherwise inherit the
+ * user's GTK theme; only LinFileCopy's own classes (lfc-*) are styled here. */
+
+@define-color lfc_accent #3584e4;
+@define-color lfc_accent_fg #1c5fb4;
+@define-color lfc_accent_soft #dbe8fa;
+@define-color lfc_source #3584e4;
+@define-color lfc_dest #26a269;
+@define-color lfc_ok #26a269;
+@define-color lfc_ok_bg #dcf3e5;
+@define-color lfc_warn #9c6c00;
+@define-color lfc_warn_bg #fcefc7;
+@define-color lfc_err #c01c28;
+@define-color lfc_err_bg #fbe0e2;
+@define-color lfc_sidebar_bg #f2f2f2;
+@define-color lfc_card_bg #ffffff;
+@define-color lfc_code_bg #f4f5f7;
+@define-color lfc_border #dadada;
+@define-color lfc_dim #6b7177;
+@define-color lfc_selected #e1e6ec;
+@define-color lfc_trough #e1e1e1;
+
+/* ---------- sidebar ---------- */
+.lfc-sidebar { background-color: @lfc_sidebar_bg; border-right: 1px solid @lfc_border; }
+.lfc-sidebar list { background-color: transparent; }
+.lfc-sidebar row.lfc-nav { padding: 8px 10px; margin: 1px 8px; border-radius: 6px; }
+.lfc-sidebar row.lfc-nav:selected { background-color: @lfc_selected; color: @theme_fg_color; }
+.lfc-sidebar row.lfc-nav:selected label { font-weight: bold; }
+.lfc-sidebar row.lfc-nav:hover:not(:selected) { background-color: alpha(@lfc_selected, 0.6); }
+.lfc-count { background-color: @lfc_accent; color: #ffffff; border-radius: 9px; padding: 0 7px; font-size: 0.8em; font-weight: bold; }
+.lfc-sidebar-heading { font-size: 0.75em; font-weight: bold; letter-spacing: 1px; color: @lfc_dim; margin: 10px 16px 4px 16px; }
+.lfc-drive-row { padding: 4px 6px 4px 12px; margin: 0 8px; border-radius: 6px; }
+.lfc-drives { border-top: 1px solid @lfc_border; padding-top: 6px; }
+
+/* ---------- page content ---------- */
+.lfc-page { padding: 22px 26px 26px 26px; }
+.lfc-page-title { font-size: 1.45em; font-weight: bold; }
+.lfc-group-title { font-weight: bold; }
+.dim-label, .lfc-dim { color: @lfc_dim; opacity: 1; }
+.lfc-small { font-size: 0.9em; }
+.lfc-caption { font-size: 0.78em; font-weight: bold; letter-spacing: 1px; }
+
+/* boxed lists (Adwaita-style preference groups) */
+.lfc-card, list.lfc-boxed-list {
+  background-color: @lfc_card_bg;
+  border: 1px solid @lfc_border;
+  border-radius: 10px;
+}
+list.lfc-boxed-list > row { padding: 8px 14px; min-height: 34px; border-bottom: 1px solid @lfc_border; }
+list.lfc-boxed-list > row:last-child { border-bottom: none; }
+list.lfc-boxed-list > row.lfc-subrow { padding-left: 44px; }
+list.lfc-boxed-list > row:selected { background-color: @lfc_accent_soft; color: @theme_fg_color; }
+.lfc-card { padding: 14px; }
+
+/* source / destination cards */
+.lfc-path-card { background-color: @lfc_card_bg; border: 1px solid @lfc_border; border-radius: 10px; padding: 12px 14px; }
+.lfc-path-card.source { border-left: 4px solid @lfc_source; }
+.lfc-path-card.destination { border-left: 4px solid @lfc_dest; }
+.lfc-path-card.source .lfc-caption { color: @lfc_source; }
+.lfc-path-card.destination .lfc-caption { color: @lfc_dest; }
+.lfc-drop-hint { border: 1px dashed alpha(@lfc_dim, 0.6); border-radius: 8px; padding: 6px 10px; color: @lfc_dim; }
+.lfc-drop-hint.active { border-style: solid; border-color: @lfc_accent; background-color: alpha(@lfc_accent, 0.12); color: @lfc_accent_fg; }
+
+/* chips (toggle buttons) */
+button.lfc-chip { border-radius: 15px; padding: 2px 12px; }
+button.lfc-chip:checked { background-image: none; background-color: @lfc_accent_soft; border-color: @lfc_accent; color: @lfc_accent_fg; }
+
+/* segmented choice buttons */
+.linked > button.lfc-segment:checked { background-image: none; background-color: @lfc_accent_soft; border-color: @lfc_accent; color: @lfc_accent_fg; }
+
+/* command preview */
+.lfc-cmd, .lfc-cmd text {
+  font-family: "Source Code Pro", "DejaVu Sans Mono", monospace;
+  font-size: 0.9em;
+  background-color: @lfc_code_bg;
+}
+.lfc-cmd-frame { border: 1px solid @lfc_border; border-radius: 8px; background-color: @lfc_code_bg; }
+
+/* badges */
+.lfc-badge { border-radius: 11px; padding: 1px 9px; font-size: 0.85em; font-weight: bold; background-color: @lfc_selected; }
+.lfc-badge.ok { background-color: @lfc_ok_bg; color: @lfc_ok; }
+.lfc-badge.warn { background-color: @lfc_warn_bg; color: @lfc_warn; }
+.lfc-badge.err { background-color: @lfc_err_bg; color: @lfc_err; }
+.lfc-badge.info { background-color: @lfc_accent_soft; color: @lfc_accent_fg; }
+
+/* status colours */
+.lfc-ok { color: @lfc_ok; }
+.lfc-warn { color: @lfc_warn; }
+.lfc-err { color: @lfc_err; }
+.lfc-accent { color: @lfc_accent; }
+
+/* inline message bars */
+.lfc-message { border-radius: 8px; padding: 10px 14px; background-color: @lfc_warn_bg; color: @lfc_warn; }
+.lfc-message.info { background-color: @lfc_accent_soft; color: @lfc_accent_fg; }
+.lfc-message.err { background-color: @lfc_err_bg; color: @lfc_err; }
+.lfc-message.ok { background-color: @lfc_ok_bg; color: @lfc_ok; }
+
+/* stat tiles */
+.lfc-tile { background-color: @lfc_card_bg; border: 1px solid @lfc_border; border-radius: 10px; padding: 14px; }
+.lfc-tile image { color: @lfc_accent; }
+.lfc-tile.bad image { color: @lfc_err; }
+.lfc-stat-num { font-size: 1.7em; font-weight: bold; }
+
+/* progress */
+progressbar.lfc-progress trough { min-height: 8px; border-radius: 4px; background-color: @lfc_trough; border: none; }
+progressbar.lfc-progress progress { min-height: 8px; border-radius: 4px; background-color: @lfc_accent; border: none; }
+progressbar.lfc-progress.paused progress { background-color: @lfc_dim; }
+.lfc-metric-value { font-size: 1.15em; font-weight: bold; }
+.lfc-mono { font-family: "Source Code Pro", "DejaVu Sans Mono", monospace; font-size: 0.88em; }
+
+/* weekday toggles */
+button.lfc-day { min-width: 34px; padding: 4px 0; font-weight: bold; }
+button.lfc-day:checked { background-image: none; background-color: @lfc_accent; color: #ffffff; border-color: @lfc_accent; }
+
+/* primary action */
+button.lfc-big { padding: 8px 20px; font-size: 1.05em; }
