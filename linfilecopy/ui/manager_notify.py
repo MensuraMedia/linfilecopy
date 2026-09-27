@@ -43,13 +43,14 @@ class NotificationManager:
         n = Gio.Notification.new(title)
         n.set_body(body)
         n.set_icon(Gio.ThemedIcon.new(icon_name(icon)))
-        n.set_default_action_and_target_value("app.show-run", GLib.Variant.new_string(run.id))
+        target = GLib.Variant.new_string(run.id).print_(False)   # run ids are hex: safe to embed
+        n.set_default_action(f"app.show-run({target})")
         if run.status is RunStatus.FAILED:
-            n.add_button_with_target_value(_("Retry"), "app.retry-run", GLib.Variant.new_string(run.id))
-            n.add_button_with_target_value(_("Open log"), "app.open-log", GLib.Variant.new_string(run.id))
+            n.add_button(_("Retry"), f"app.retry-run({target})")
+            n.add_button(_("Open log"), f"app.open-log({target})")
             n.set_priority(Gio.NotificationPriority.HIGH)
         else:
-            n.add_button_with_target_value(_("Show details"), "app.show-run", GLib.Variant.new_string(run.id))
+            n.add_button(_("Show details"), f"app.show-run({target})")
         self.app.send_notification(f"run-{job.id}", n)
 
     def simple(self, key: str, title: str, body: str, icon: str = "misc-info",
@@ -58,5 +59,5 @@ class NotificationManager:
         n.set_body(body)
         n.set_icon(Gio.ThemedIcon.new(icon_name(icon)))
         if action and button:
-            n.add_button_with_target_value(button, action, GLib.Variant.new_string(target or ""))
+            n.add_button(button, f"{action}({GLib.Variant.new_string(target or '').print_(False)})")
         self.app.send_notification(key, n)

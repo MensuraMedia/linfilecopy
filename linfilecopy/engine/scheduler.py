@@ -35,7 +35,13 @@ class ScheduleError(Exception):
     """User-facing scheduling failure."""
 
 
+IN_FLATPAK = os.path.exists("/.flatpak-info")
+FLATPAK_ID = "io.github.mensuramedia.LinFileCopy"
+
+
 def _run(argv: list[str], stdin: str | None = None) -> tuple[int, str]:
+    if IN_FLATPAK and argv and argv[0] in ("systemctl", "crontab"):
+        argv = ["flatpak-spawn", "--host", *argv]   # timers and crontab live on the host
     try:
         proc = subprocess.run(argv, input=stdin, capture_output=True, text=True, timeout=20, check=False)
     except (OSError, subprocess.SubprocessError) as exc:
@@ -148,6 +154,8 @@ def on_calendar(sch: ScheduleOptions) -> str:
 
 def run_command(job_id: str) -> list[str]:
     """argv that runs a job headlessly with the current interpreter."""
+    if IN_FLATPAK:
+        return ["flatpak", "run", "--command=linfilecopy", FLATPAK_ID, "run", job_id]
     exe = shutil.which("linfilecopy")
     if exe and os.path.realpath(sys.executable) != os.path.realpath(exe):
         return [exe, "run", job_id]
@@ -175,7 +183,10 @@ class Scheduler:
             code, out = self.runner(["systemctl", "--user", "show-environment"], None)
             self.systemd_available = code == 0 and bool(out.strip())
         if self.cron_available is None:
-            self.cron_available = shutil.which("crontab") is not None
+            if IN_FLATPAK:
+                self.cron_available = self.runner(["crontab", "-l"], None)[0] in (0, 1)
+            else:
+                self.cron_available = shutil.which("crontab") is not None
 
     # ----- selection -------------------------------------------------------------
     def backend_for(self, job: SyncJob) -> ScheduleBackend:

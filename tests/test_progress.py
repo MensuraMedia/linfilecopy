@@ -57,6 +57,7 @@ class ProgressTest(unittest.TestCase):
     def test_preview_attrs_only(self) -> None:
         self.assertEqual(parse_preview_line(".f...p..... 10 script.sh").kind, ChangeKind.ATTRS)
         self.assertEqual(parse_preview_line("hf+++++++++ 10 hard").kind, ChangeKind.LINK)
+        self.assertIsNone(parse_preview_line("cd+++++++++ 4096 ./"))
 
 
 class ExitCodeTest(unittest.TestCase):

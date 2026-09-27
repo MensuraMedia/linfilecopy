@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+export PYBUILD_NAME=linfilecopy
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_build:
+	tools/build_resources.sh
+	dh_auto_build
+
+override_dh_auto_install:
+	dh_auto_install
+	packaging/install-data.sh /usr $(CURDIR)/debian/linfilecopy
+
+override_dh_auto_test:
+	python3 -m unittest discover -s tests

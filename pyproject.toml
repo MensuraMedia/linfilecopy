@@ -30,4 +30,4 @@ Homepage = "https://github.com/MensuraMedia/linfilecopy"
 include = ["linfilecopy*"]
 
 [tool.setuptools.package-data]
-linfilecopy = ["data/*.css", "data/*.gresource", "data/icons/**/*", "data/templates/*.json", "data/locale/**/*"]
+linfilecopy = ["data/*.css", "data/*.gresource", "data/icons/**/*", "data/app-icon/**/*", "data/templates/*.json", "data/locale/**/*"]

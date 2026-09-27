@@ -32,6 +32,10 @@ def main() -> int:
     ap.add_argument("--real-home", action="store_true")
     ap.add_argument("--delay", type=int, default=900, help="ms to wait before capture")
     ap.add_argument("--action", action="append", default=[], help="page action to run before capture")
+    ap.add_argument("--run-demo", help="with --demo: open this demo job (docs/music/snapshot/notes), slow it down and press Start")
+    ap.add_argument("--open-demo", help="with --demo: open this demo job in the designer")
+    ap.add_argument("--advanced", action="store_true", help="show the designer's Advanced view")
+    ap.add_argument("--root", action="store_true", help="capture the whole screen (includes dialogs)")
     args = ap.parse_args()
 
     if not args.real_home:
@@ -51,16 +55,20 @@ def main() -> int:
 
     settings = AppSettings(style=args.style)
     settings.save()
+    seed_result = {}
     if args.demo:
         from tools.demo_data import seed
 
-        seed()
+        seed_result = seed()
 
+    demo_jobs = {}
+    if args.demo:
+        demo_jobs = seed_result  # noqa: F821 - set below
     pages = args.page or ["dashboard"]
     app = LinFileCopyApp()
 
     def capture(win: Gtk.Window, name: str) -> None:
-        gdk_win = win.get_window()
+        gdk_win = Gdk.get_default_root_window() if args.root else win.get_window()
         w, h = gdk_win.get_width(), gdk_win.get_height()
         pb = Gdk.pixbuf_get_from_window(gdk_win, 0, 0, w, h)
         out = Path(args.out)
@@ -73,11 +81,27 @@ def main() -> int:
     def run_sequence() -> bool:
         win = app.window
         win.resize(args.width, args.height)
+        key = args.run_demo or args.open_demo
+        if key and key in demo_jobs:
+            job = demo_jobs[key]
+            if args.run_demo:
+                job.performance.limit_speed, job.performance.speed_limit = True, 3
+            app.ctx.publish("edit-job", job)
+            if args.advanced:
+                win.page("designer").view_switch.set_value("advanced")
+                for sec in win.page("designer").sections.values():
+                    sec.set_expanded(True)
+            if args.run_demo:
+                GLib.timeout_add(1200, lambda: app.ctx.publish("action", "start") or False)
         # Park the pointer in a corner so hover effects and tooltips stay out of the shots.
         display = Gdk.Display.get_default()
         seat = display.get_default_seat() if display else None
         if seat is not None and seat.get_pointer() is not None:
             seat.get_pointer().warp(display.get_default_screen(), 1399, 999)
+
+        # Layout switches lower the minimum width; ask again so narrow sizes are reached.
+        GLib.timeout_add(400, lambda: win.resize(args.width, args.height) or False)
+        GLib.timeout_add(800, lambda: win.resize(args.width, args.height) or False)
 
         def step(i: int) -> bool:
             if i >= len(pages):

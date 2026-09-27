@@ -95,11 +95,12 @@ class DesignerPage(BasePage):
         self.job_menu.set_popover(self.job_popover)
         top.pack_start(self.job_menu, False, False, 0)
         self.name_entry = Gtk.Entry()
-        self.name_entry.set_width_chars(28)
+        self.name_entry.set_width_chars(12)
+        self.name_entry.set_hexpand(True)
         self.name_entry.set_placeholder_text(_("Job name"))
         self.name_entry.get_accessible().set_name(_("Job name"))
         self.name_entry.connect("changed", self._on_name)
-        top.pack_start(self.name_entry, False, True, 0)
+        top.pack_start(self.name_entry, True, True, 0)
         self.view_switch = Segmented([("simple", _("Simple"), None), ("advanced", _("Advanced"), None)],
                                      "simple" if self.ctx.settings.simple_view_default else "advanced",
                                      lambda v: self._set_view(v))
@@ -137,9 +138,9 @@ class DesignerPage(BasePage):
         self.side.pack_start(actions, False, False, 0)
         self.side.set_size_request(SIDE_WIDTH, -1)
 
-        self.form_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        self.form_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         self.form_scroll.add(self.form)
-        self.side_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        self.side_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         self.side_scroll.add(self.side)
         self.body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=22)
         self.body.pack_start(self.form_scroll, True, True, 0)

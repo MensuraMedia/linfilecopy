@@ -1,0 +1,50 @@
+# Flatpak manifest (skeleton). Build with:
+#   flatpak-builder --user --install build-dir packaging/flatpak/io.github.mensuramedia.LinFileCopy.yml
+app-id: io.github.mensuramedia.LinFileCopy
+runtime: org.gnome.Platform
+runtime-version: '47'
+sdk: org.gnome.Sdk
+command: linfilecopy
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # Copying between arbitrary local folders and drives needs host filesystem access.
+  - --filesystem=host
+  - --filesystem=/media
+  - --filesystem=/run/media
+  - --filesystem=/mnt
+  # Drive mount/unlock/eject.
+  - --system-talk-name=org.freedesktop.UDisks2
+  # Colour scheme, notifications, keyring, tray.
+  - --talk-name=org.freedesktop.portal.Desktop
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.kde.StatusNotifierWatcher
+  # Schedules are installed on the host (systemctl --user / crontab via flatpak-spawn).
+  - --talk-name=org.freedesktop.Flatpak
+modules:
+  - name: rsync
+    buildsystem: autotools
+    config-opts:
+      - --disable-md2man
+      - --disable-xxhash
+      - --disable-zstd
+      - --disable-lz4
+      - --disable-openssl
+    sources:
+      - type: archive
+        url: https://download.samba.org/pub/rsync/src/rsync-3.3.0.tar.gz
+        # Fill in after verifying the tarball's signature (rsync-3.3.0.tar.gz.asc).
+        # flatpak-builder refuses to build until this is a real checksum.
+        sha256: FILL-IN-VERIFIED-SHA256
+  - name: linfilecopy
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps --no-build-isolation --prefix=/app .
+      - tools/build_resources.sh
+      - packaging/install-data.sh /app
+    sources:
+      - type: dir
+        path: ../..

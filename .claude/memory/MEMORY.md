@@ -3,9 +3,15 @@
 
 ## Session Logs
 <!-- Add newest first -->
+- [2026-09-27 initial build](sessions/2026-09-27_2340_initial-build.md) — concept → v0.1.0 in one session
 
 ## Changes
 <!-- Add newest first -->
+- [P7–P9 triggers, polish, packaging](changes/2026-09-28_p7-p9-triggers-polish-packaging.md)
+- [P3/P6 runner + strategies](changes/2026-09-27_p3-runner-strategies.md)
+- [P2 drives + builder](changes/2026-09-27_p2-drives-builder.md)
+- [P1 model](changes/2026-09-27_p1-model.md)
+- [P0 foundation](changes/2026-09-27_p0-foundation.md)
 
 ## Decisions
 - [Decision Log](decisions.md) — Architectural and design decisions

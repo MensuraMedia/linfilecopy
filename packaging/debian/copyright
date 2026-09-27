@@ -1,0 +1,11 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: linfilecopy
+Source: https://github.com/MensuraMedia/linfilecopy
+
+Files: *
+Copyright: 2026 MensuraMedia
+License: GPL-3.0-or-later
+
+Files: linfilecopy/data/icons/* linfilecopy/data/app-icon/*
+Copyright: 2023 Phosphor Icons
+License: MIT

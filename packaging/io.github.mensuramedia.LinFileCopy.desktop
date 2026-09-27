@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=LinFileCopy
+GenericName=File Copy and Sync
+Comment=Copy and sync folders between local disks and external drives
+Exec=linfilecopy
+Icon=io.github.mensuramedia.LinFileCopy
+Terminal=false
+Categories=Utility;FileTools;GTK;
+Keywords=copy;sync;backup;rsync;mirror;snapshot;usb;drive;
+StartupNotify=true
+StartupWMClass=io.github.mensuramedia.LinFileCopy
+DBusActivatable=false
+X-GNOME-UsesNotifications=true

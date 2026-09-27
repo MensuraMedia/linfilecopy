@@ -136,14 +136,18 @@ class RunCardWidget(Gtk.Box):
         add_classes(self.bar, "lfc-progress")
         self.pack_start(self.bar, False, False, 0)
 
-        metrics = Gtk.Grid(column_spacing=18, row_spacing=2, column_homogeneous=True)
+        # Four columns when wide, two when narrow.
+        metrics = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, homogeneous=True, min_children_per_line=2,
+                              max_children_per_line=4, column_spacing=18, row_spacing=8)
         self.metric_values: dict[str, Gtk.Label] = {}
         self.metric_names: dict[str, Gtk.Label] = {}
-        for col, (key, title) in enumerate((("copied", _("Copied")), ("speed", _("Speed")), ("eta", _("Time left")), ("files", _("Files")))):
+        for key, title in (("copied", _("Copied")), ("speed", _("Speed")), ("eta", _("Time left")), ("files", _("Files copied"))):
+            cell = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
             n = label(title, "lfc-dim", "lfc-small")
-            v = label("—", "lfc-metric-value")
-            metrics.attach(n, col, 0, 1, 1)
-            metrics.attach(v, col, 1, 1, 1)
+            v = label("—", "lfc-metric-value", ellipsize=True)
+            cell.pack_start(n, False, False, 0)
+            cell.pack_start(v, False, False, 0)
+            metrics.add(cell)
             self.metric_values[key], self.metric_names[key] = v, n
         self.pack_start(metrics, False, False, 0)
         self.spark = Sparkline()
@@ -216,7 +220,8 @@ class RunCardWidget(Gtk.Box):
         self.dismiss_btn.set_visible(not active)
 
         bar_ctx = self.bar.get_style_context()
-        (bar_ctx.add_class if paused or not active else bar_ctx.remove_class)("paused")
+        greyed = paused or run.status in (RunStatus.CANCELLED, RunStatus.QUEUED, RunStatus.WAITING)
+        (bar_ctx.add_class if greyed else bar_ctx.remove_class)("paused")
         if run.status is RunStatus.SUCCESS:
             self.bar.set_fraction(1.0)
         elif run.status in (RunStatus.RUNNING, RunStatus.PAUSED) and s.percent == 0 and s.bytes_done == 0:
@@ -238,8 +243,11 @@ class RunCardWidget(Gtk.Box):
         else:
             self.metric_names["eta"].set_text(_("Took"))
             self.metric_values["eta"].set_text(format_duration((run.finished or time.time()) - run.started))
-        self.metric_values["files"].set_text(
-            _("{done} of {total}").format(done=f"{s.files_done:,}", total=f"{s.files_total:,}") if s.files_total else f"{s.files_done:,}")
+        # rsync's total counts folders too, so show files copied (and entries checked while running).
+        files = f"{s.files_done:,}"
+        if active and s.files_total:
+            files += " · " + _("{n} of {total} checked").format(n=f"{s.files_checked:,}", total=f"{s.files_total:,}")
+        self.metric_values["files"].set_text(files)
         self.spark.set_values(run.speed_history)
         self.spark.set_visible(active)
         self.current.set_text(s.current_file if active else "")

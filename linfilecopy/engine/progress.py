@@ -105,6 +105,8 @@ def parse_preview_line(line: str) -> Change | None:
     if not m:
         return None
     code, size, name = m.group(1), int(m.group(2)), m.group(3)
+    if name in ("./", "."):
+        return None   # the transfer root itself is not a change worth listing
     target = None
     if " -> " in name and code[1:2] == "L":
         name, target = name.split(" -> ", 1)

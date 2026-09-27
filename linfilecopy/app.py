@@ -50,6 +50,7 @@ class LinFileCopyApp(Gtk.Application):
         Gtk.Application.do_startup(self)
         paths.ensure_dirs()
         resources.register()
+        resources.set_default_window_icon()
         settings = AppSettings.load()
         theme = ThemeManager()
         theme.apply(settings.style, settings.accent)
@@ -82,8 +83,61 @@ class LinFileCopyApp(Gtk.Application):
             assert self.ctx is not None
             self.window = MainWindow(self, self.ctx, build_pages(self.ctx))
             self.ctx.services["window"] = self.window
+            self.window.connect("delete-event", self._on_close_request)
             self._detect_tools_async()
+            from linfilecopy.ui.manager_tray import TrayManager
+            from linfilecopy.ui.manager_triggers import TriggerManager
+
+            self.tray = TrayManager(self, self.ctx)
+            self.triggers = TriggerManager(self.ctx)
         self.window.present()
+
+    # ----- closing ------------------------------------------------------------
+    def _background_work(self) -> bool:
+        """True when closing the window should keep the app alive in the tray."""
+        assert self.ctx is not None
+        active = bool(self.ctx.runs and [r for r in self.ctx.runs.active() if not r.preview])
+        triggers = bool(getattr(self, "triggers", None) and self.triggers.watchers) or any(
+            j.triggers.on_drive_connected for j in (self.ctx.jobs.list() if self.ctx.jobs else []))
+        return active or triggers
+
+    def _on_close_request(self, win: Gtk.Window, _event: object) -> bool:
+        assert self.ctx is not None
+        tray = getattr(self, "tray", None)
+        if self.ctx.settings.keep_in_tray and tray is not None and tray.available and self._background_work():
+            win.hide()
+            if not getattr(self, "_held", False):
+                self.hold()
+                self._held = True
+            if self.ctx.notifier is not None:
+                self.ctx.notifier.simple("tray", _("LinFileCopy is still running"),
+                                         _("Transfers and triggers continue. Open it again from the tray icon."), "misc-info")
+            return True
+        return not self._confirm_quit()
+
+    def _confirm_quit(self) -> bool:
+        """Ask before quitting with runs in progress. True = quit."""
+        assert self.ctx is not None
+        active = [r for r in (self.ctx.runs.active() if self.ctx.runs else []) if not r.preview]
+        if active:
+            from linfilecopy.ui.components.component_dialogs import confirm
+
+            if not confirm(self.window, _("Stop {n} running jobs and quit?").format(n=len(active)),
+                           _("Partly copied files are kept and resumed next time."), _("Stop and quit"), destructive=True):
+                return False
+            self.ctx.runs.cancel_all()
+            for r in active:
+                r.join(6)
+        return True
+
+    def _quit(self) -> None:
+        if self._confirm_quit():
+            if getattr(self, "triggers", None):
+                self.triggers.shutdown()
+            if getattr(self, "_held", False):
+                self.release()
+                self._held = False
+            self.quit()
 
     # ----- tools -------------------------------------------------------------
     def _detect_tools_async(self) -> None:
@@ -137,7 +191,7 @@ class LinFileCopyApp(Gtk.Application):
     # ----- actions -------------------------------------------------------------
     def _install_actions(self) -> None:
         simple = {
-            "quit": lambda *_: self.quit(),
+            "quit": lambda *_: self._quit(),
             "about": self._on_about,
             "shortcuts": self._on_shortcuts,
         }
@@ -218,7 +272,12 @@ class LinFileCopyApp(Gtk.Application):
         dlg.set_program_name(APP_NAME)
         dlg.set_version(__version__)
         dlg.set_comments(_("Copy and sync jobs for local disks and attached drives, powered by rsync."))
-        dlg.set_logo_icon_name("io.github.mensuramedia.LinFileCopy")
+        try:
+            from gi.repository import GdkPixbuf
+
+            dlg.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size(str(resources.app_icon_path()), 96, 96))
+        except GLib.Error:
+            pass
         dlg.set_license_type(Gtk.License.GPL_3_0)
         dlg.set_website("https://github.com/MensuraMedia/linfilecopy")
         dlg.set_credits_section(_("Icons"), ["Phosphor Icons (MIT) https://phosphoricons.com"])

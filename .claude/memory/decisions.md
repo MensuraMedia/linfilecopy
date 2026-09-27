@@ -12,3 +12,7 @@
 | 2026-09-27 | Adwaita-like light/dark following system, dark palette slate-toned per -universal-themes references, user-selectable accent (starter's accent themes) | Combines spec, theme references and starter |
 | 2026-09-27 | Universal permissions (dontAsk/allow-all) NOT auto-deployed by Claude | Widens Claude's own permissions; left for the user to apply |
 | 2026-09-27 | App ID io.github.mensuramedia.LinFileCopy | Reverse-DNS of GitHub org |
+| 2026-09-28 | Page scrollers allow horizontal scrolling as a fallback | Lets GTK shrink the window past the current layout's minimum so responsive layout switches can trigger |
+| 2026-09-28 | Keep all snapshots from the last 24 h in rotation | Running twice a day must not delete the earlier snapshot |
+| 2026-09-28 | Two-way apply uses rsync --files-from --ignore-times | Decisions are already made; rsync's whole-second quick check could otherwise skip a decided copy |
+| 2026-09-28 | App icon composed at build time from vendored Phosphor glyphs (copy + arrows-clockwise, bold) | "All iconography from the local source" applies to the app icon too |

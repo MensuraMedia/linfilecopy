@@ -58,6 +58,25 @@ def _resource_exists(path: str) -> bool:
         return False
 
 
+APP_ID = "io.github.mensuramedia.LinFileCopy"
+
+
+def app_icon_path() -> Path:
+    return DATA_DIR / "app-icon" / f"{APP_ID}.svg"
+
+
+def set_default_window_icon() -> None:
+    """Use the bundled app icon for every window (installed builds also ship it in hicolor)."""
+    theme = Gtk.IconTheme.get_default()
+    if theme.has_icon(APP_ID):
+        Gtk.Window.set_default_icon_name(APP_ID)
+        return
+    try:
+        Gtk.Window.set_default_icon_from_file(str(app_icon_path()))
+    except GLib.Error as exc:
+        _log.warning("app icon not loaded: %s", exc.message)
+
+
 def load_css(name: str) -> Gtk.CssProvider:
     """Load ``data/<name>`` (from the bundle when registered) into a new provider."""
     provider = Gtk.CssProvider()

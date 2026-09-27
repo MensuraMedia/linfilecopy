@@ -1,6 +1,7 @@
 # LinFileCopy — Technical Concept
 
-> Status: **Draft for review** · Version 0.2 · 2026-09-27
+> Status: **Implemented (v0.1.0)** · Concept version 0.2 · 2026-09-27
+> As-built notes and deviations: [ARCHITECTURE.md](ARCHITECTURE.md)
 > Scope: how the application is built, in what order, and which icons it uses.
 > Mockups: [`docs/mockups/`](mockups/index.html)
 

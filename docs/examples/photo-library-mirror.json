@@ -1,0 +1,119 @@
+{
+  "id": "photo-library-mirror-0001",
+  "name": "Photo library mirror",
+  "description": "",
+  "source": {
+    "path": "/home/sam/Pictures",
+    "volume_uuid": null,
+    "volume_label": null,
+    "relative_path": null,
+    "kind": "unknown",
+    "fs_type": null,
+    "container_uuid": null
+  },
+  "destination": {
+    "path": "/mnt/archive/pictures",
+    "volume_uuid": null,
+    "volume_label": null,
+    "relative_path": null,
+    "kind": "unknown",
+    "fs_type": null,
+    "container_uuid": null
+  },
+  "mode": "mirror",
+  "overwrite": "overwrite",
+  "preview_first": true,
+  "transfer": {
+    "copy_contents": true,
+    "delta": false,
+    "inplace": false,
+    "compare": "size_time",
+    "checksum": true,
+    "resume": true,
+    "sparse": false
+  },
+  "performance": {
+    "limit_speed": true,
+    "speed_limit": 200,
+    "speed_unit": "MB",
+    "low_priority": false,
+    "parallel_streams": 4
+  },
+  "metadata": {
+    "permissions": true,
+    "times": true,
+    "owner": false,
+    "group": false,
+    "acls": false,
+    "xattrs": false,
+    "hardlinks": false,
+    "devices": false,
+    "symlinks": "keep"
+  },
+  "filters": {
+    "presets": [
+      "cache",
+      "temp"
+    ],
+    "rules": [],
+    "exclude_from": null,
+    "files_from": null
+  },
+  "safety": {
+    "atomic": false,
+    "snapshots": false,
+    "link_dest": null,
+    "keep_daily": 14,
+    "keep_weekly": 8
+  },
+  "twoway": {
+    "conflict": "newer",
+    "use_trash": true,
+    "delete_guard_percent": 50
+  },
+  "drive": {
+    "unlock_encrypted": false,
+    "remember_passphrase": false,
+    "lock_after": false,
+    "eject_after": false,
+    "wait_for_drive": false,
+    "wait_minutes": 10
+  },
+  "triggers": {
+    "on_change": false,
+    "watch_paths": [],
+    "debounce_seconds": 2.0,
+    "on_drive_connected": false
+  },
+  "logging": {
+    "level": "normal",
+    "notify_success": true,
+    "notify_failure": true,
+    "retries": 0,
+    "retry_delay_seconds": 30
+  },
+  "schedule": {
+    "kind": "none",
+    "time": "03:00",
+    "weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "once_date": "",
+    "minute": 0,
+    "cron": "",
+    "backend": "auto",
+    "enabled": false,
+    "persistent": true,
+    "ac_power_only": false
+  },
+  "template": null,
+  "created": 1790553600.0,
+  "modified": 1790553600.0,
+  "schema_version": 2
+}

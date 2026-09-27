@@ -1,0 +1,137 @@
+{
+  "id": "home-snapshot-0001",
+  "name": "Home snapshot",
+  "description": "",
+  "source": {
+    "path": "/home/sam",
+    "volume_uuid": null,
+    "volume_label": null,
+    "relative_path": null,
+    "kind": "unknown",
+    "fs_type": null,
+    "container_uuid": null
+  },
+  "destination": {
+    "path": "/mnt/archive/sam",
+    "volume_uuid": "3f2a9c1e-0000-4000-8000-00000000c91e",
+    "volume_label": "Archive",
+    "relative_path": "sam",
+    "kind": "array",
+    "fs_type": "ext4",
+    "container_uuid": "luks-0000-example"
+  },
+  "mode": "copy",
+  "overwrite": "overwrite",
+  "preview_first": true,
+  "transfer": {
+    "copy_contents": true,
+    "delta": false,
+    "inplace": false,
+    "compare": "size_time",
+    "checksum": false,
+    "resume": true,
+    "sparse": true
+  },
+  "performance": {
+    "limit_speed": false,
+    "speed_limit": 50.0,
+    "speed_unit": "MB",
+    "low_priority": true,
+    "parallel_streams": 1
+  },
+  "metadata": {
+    "permissions": true,
+    "times": true,
+    "owner": false,
+    "group": false,
+    "acls": true,
+    "xattrs": true,
+    "hardlinks": true,
+    "devices": false,
+    "symlinks": "keep"
+  },
+  "filters": {
+    "presets": [
+      "cache",
+      "temp",
+      "system"
+    ],
+    "rules": [
+      {
+        "action": "exclude",
+        "pattern": ".cache/"
+      },
+      {
+        "action": "include",
+        "pattern": "Projects/**"
+      },
+      {
+        "action": "exclude",
+        "pattern": "*.iso"
+      },
+      {
+        "action": "exclude",
+        "pattern": "Downloads/"
+      }
+    ],
+    "exclude_from": null,
+    "files_from": null
+  },
+  "safety": {
+    "atomic": false,
+    "snapshots": true,
+    "link_dest": null,
+    "keep_daily": 14,
+    "keep_weekly": 8
+  },
+  "twoway": {
+    "conflict": "newer",
+    "use_trash": true,
+    "delete_guard_percent": 50
+  },
+  "drive": {
+    "unlock_encrypted": true,
+    "remember_passphrase": true,
+    "lock_after": true,
+    "eject_after": false,
+    "wait_for_drive": false,
+    "wait_minutes": 10
+  },
+  "triggers": {
+    "on_change": false,
+    "watch_paths": [],
+    "debounce_seconds": 2.0,
+    "on_drive_connected": false
+  },
+  "logging": {
+    "level": "normal",
+    "notify_success": true,
+    "notify_failure": true,
+    "retries": 3,
+    "retry_delay_seconds": 30
+  },
+  "schedule": {
+    "kind": "daily",
+    "time": "03:00",
+    "weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "once_date": "",
+    "minute": 0,
+    "cron": "",
+    "backend": "auto",
+    "enabled": true,
+    "persistent": true,
+    "ac_power_only": false
+  },
+  "template": null,
+  "created": 1790553600.0,
+  "modified": 1790553600.0,
+  "schema_version": 2
+}

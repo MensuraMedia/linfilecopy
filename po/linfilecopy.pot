@@ -1,0 +1,3649 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the linfilecopy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: linfilecopy 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/MensuraMedia/linfilecopy/issues\n"
+"POT-Creation-Date: 2026-09-27 19:19-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: linfilecopy/app.py:113
+msgid "LinFileCopy is still running"
+msgstr ""
+
+#: linfilecopy/app.py:114
+msgid "Transfers and triggers continue. Open it again from the tray icon."
+msgstr ""
+
+#: linfilecopy/app.py:125
+#, python-brace-format
+msgid "Stop {n} running jobs and quit?"
+msgstr ""
+
+#: linfilecopy/app.py:126
+msgid "Partly copied files are kept and resumed next time."
+msgstr ""
+
+#: linfilecopy/app.py:126
+msgid "Stop and quit"
+msgstr ""
+
+#: linfilecopy/app.py:274
+msgid ""
+"Copy and sync jobs for local disks and attached drives, powered by rsync."
+msgstr ""
+
+#: linfilecopy/app.py:283
+msgid "Icons"
+msgstr ""
+
+#: linfilecopy/cli.py:49
+#, python-brace-format
+msgid "No job with id {id}. Use 'linfilecopy list'."
+msgstr ""
+
+#: linfilecopy/cli.py:69
+msgid "No saved jobs."
+msgstr ""
+
+#: linfilecopy/cli.py:138 linfilecopy/ui/manager_notify.py:38
+#, python-brace-format
+msgid "{job} failed"
+msgstr ""
+
+#: linfilecopy/cli.py:140 linfilecopy/ui/manager_notify.py:29
+#, python-brace-format
+msgid "{job} finished"
+msgstr ""
+
+#: linfilecopy/cli.py:152
+msgid "Run LinFileCopy jobs without the window."
+msgstr ""
+
+#: linfilecopy/cli.py:154
+msgid "run a saved job"
+msgstr ""
+
+#: linfilecopy/cli.py:156
+msgid "show progress but change nothing"
+msgstr ""
+
+#: linfilecopy/cli.py:160
+msgid "list what a job would change"
+msgstr ""
+
+#: linfilecopy/cli.py:163
+msgid "list saved jobs"
+msgstr ""
+
+#: linfilecopy/cli.py:165
+msgid "check a job and print its plan"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:77
+msgid "Removable"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:77
+msgid "Storage array"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:78
+#: linfilecopy/ui/components/component_path_card.py:143
+msgid "Internal"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:78
+#: linfilecopy/ui/components/component_path_card.py:135
+msgid "Drive"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:83
+msgid "LUKS · locked"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:87
+#, python-brace-format
+msgid "{size} free"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:89
+msgid "not mounted"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:107
+#, python-brace-format
+msgid "{n:.0f} TB Volume"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:108
+#, python-brace-format
+msgid "{n:.0f} GB Volume"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:108
+#, python-brace-format
+msgid "{n:.0f} MB Volume"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:113 linfilecopy/ui/pages/page_settings.py:35
+msgid "System"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:115
+msgid "Home"
+msgstr ""
+
+#: linfilecopy/engine/drives.py:333
+msgid "This drive cannot be removed safely from here."
+msgstr ""
+
+#: linfilecopy/engine/drives.py:342
+msgid "You are not allowed to do this. The system refused the request."
+msgstr ""
+
+#: linfilecopy/engine/drives.py:344
+msgid "The drive is busy. Close any files or windows using it and try again."
+msgstr ""
+
+#: linfilecopy/engine/drives.py:346
+msgid "The passphrase is wrong."
+msgstr ""
+
+#: linfilecopy/engine/drives.py:348
+msgid "The drive is already mounted."
+msgstr ""
+
+#: linfilecopy/engine/drives.py:350
+msgid "The drive is no longer connected."
+msgstr ""
+
+#: linfilecopy/engine/drives.py:351
+msgid "The drive operation failed."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:22
+#: linfilecopy/ui/components/component_run_card.py:24
+#: linfilecopy/ui/pages/page_history.py:27
+#: linfilecopy/ui/pages/page_history.py:65
+#: linfilecopy/ui/pages/page_history.py:238
+msgid "Completed"
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:23
+msgid "rsync reported a usage error."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:23
+msgid ""
+"This is a bug in LinFileCopy. Copy the command from the log and report it."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:24
+msgid "rsync and the destination do not agree on the protocol."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:24
+msgid "Update rsync."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:25
+msgid "Some files or folders could not be selected."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:25
+msgid "Check that the source folder exists and that you can read it."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:26
+msgid "This rsync does not support an option the job uses."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:26
+msgid "Update rsync, or turn off the newest options (sparse, ACLs)."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:27
+msgid "rsync could not start."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:27
+msgid "Check that rsync is installed correctly."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:28
+msgid "rsync could not write its log."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:28
+msgid "Check free space in your home folder."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:29
+msgid "Socket error."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:29 linfilecopy/engine/exitcodes.py:32
+#: linfilecopy/engine/exitcodes.py:35 linfilecopy/engine/exitcodes.py:41
+msgid "Try again."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:30
+msgid "Reading or writing a file failed."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:30
+msgid ""
+"The drive may be full, read-only or disconnected. Check free space and "
+"reconnect it."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:31
+msgid "The data stream broke off."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:31
+msgid ""
+"Usually a drive that was removed during the copy. Reconnect it and run "
+"again; resume picks up partial files."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:32
+msgid "rsync failed to write its diagnostics."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:33
+msgid "rsync could not start a helper process."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:33
+msgid "Close other programs and try again."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:34
+msgid "The run was stopped."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:34
+msgid "You cancelled it, or the system was shutting down."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:35
+msgid "A helper process failed."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:36
+msgid "Out of memory."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:36
+msgid "Close other programs, or split the job into smaller folders."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:37
+msgid "Some files could not be copied."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:37
+msgid ""
+"Open the log. Usually permission denied, or names or sizes the destination "
+"filesystem cannot store."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:38
+msgid "Some source files disappeared during the copy."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:38
+msgid "Usually harmless: the files changed while copying."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:39
+msgid "The deletion limit was reached."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:39
+msgid "Check the job; it stopped to avoid deleting too much."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:40
+msgid "Timed out waiting for data."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:40
+msgid "The drive may be very slow or stuck. Reconnect it and try again."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:41
+msgid "Timed out waiting for a connection."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:42 linfilecopy/engine/runner.py:424
+msgid "rsync was not found."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:42 linfilecopy/engine/runner.py:424
+msgid "Install rsync, for example: sudo apt install rsync"
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:57
+msgid "rsync was stopped by a signal."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:57
+msgid "Run the job again."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:58
+#, python-brace-format
+msgid "rsync failed with code {code}."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:58
+msgid "Open the log for details."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:65
+msgid "The destination drive is full."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:66
+msgid "Free up space on the destination or choose a bigger drive."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:68
+msgid "Some files are too large for the destination filesystem."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:69
+msgid "FAT32 drives cannot hold files over 4 GB. Use an exFAT or ext4 drive."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:71
+msgid "The destination is read-only."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:72
+msgid "Remount the drive read-write, or check it for errors."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:75
+msgid ""
+"Some files could not be read or written: permission denied. Give your user "
+"access, or exclude those folders."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:78
+msgid "The drive stopped responding or was removed."
+msgstr ""
+
+#: linfilecopy/engine/exitcodes.py:79
+msgid "Reconnect the drive and run the job again."
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:40 linfilecopy/engine/planner.py:127
+#: linfilecopy/ui/pages/page_designer.py:672
+msgid "permissions"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:42 linfilecopy/engine/planner.py:129
+msgid "owners"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:44 linfilecopy/engine/planner.py:131
+msgid "symbolic links"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:46 linfilecopy/engine/planner.py:133
+#: linfilecopy/ui/pages/page_designer.py:673
+msgid "hard links"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:48 linfilecopy/engine/planner.py:135
+msgid "ACLs and extended attributes"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:55
+msgid "everything supported"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:57
+msgid "files over 4 GB"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:58
+#, python-brace-format
+msgid "no {items}"
+msgstr ""
+
+#: linfilecopy/engine/filesystems.py:82
+msgid "unknown"
+msgstr ""
+
+#: linfilecopy/engine/parallel.py:63
+msgid "Measuring folders to split the work…"
+msgstr ""
+
+#: linfilecopy/engine/parallel.py:69
+#, python-brace-format
+msgid "Cannot read the source folder: {err}"
+msgstr ""
+
+#: linfilecopy/engine/parallel.py:78
+#, python-brace-format
+msgid "Copying with {n} parallel streams"
+msgstr ""
+
+#: linfilecopy/engine/parallel.py:109
+msgid "Removing files that are no longer in the source"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:138
+#, python-brace-format
+msgid "{fs} can't store {items}, so they are skipped."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:140
+msgid "Dates are kept and compared to within 1 second."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:142
+#, python-brace-format
+msgid "Adjusted for {fs}"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:145
+#, python-brace-format
+msgid ""
+"{fs} cannot hold files larger than 4 GB. Such files will be reported as "
+"failed."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:146
+msgid "Use a drive formatted as exFAT or ext4 for large files."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:150
+#, python-brace-format
+msgid ""
+"{fs} does not support hard links, which snapshots and atomic replace need."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:151
+msgid ""
+"Turn off snapshots and atomic replace, or use a drive formatted as ext4, "
+"Btrfs or XFS."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:154
+msgid ""
+"Sparse files with in-place updates need rsync 3.1.3 or newer; sparse "
+"handling is off."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:156
+msgid ""
+"ionice and nice are not installed, so background priority has no effect."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:161 linfilecopy/engine/twoway.py:303
+#: linfilecopy/engine/twoway.py:381
+#: linfilecopy/ui/components/component_path_card.py:69
+msgid "source"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:161 linfilecopy/engine/twoway.py:303
+#: linfilecopy/engine/twoway.py:382
+#: linfilecopy/ui/components/component_path_card.py:69
+msgid "destination"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:163 linfilecopy/engine/planner.py:199
+#: linfilecopy/engine/planner.py:208 linfilecopy/ui/pages/page_scheduler.py:183
+msgid "the drive"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:167
+#, python-brace-format
+msgid "Connect {drive} to use the {side} folder."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:168
+#, python-brace-format
+msgid "The job waits up to {n} minutes for it."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:169
+msgid "Plug in the drive, or turn on \"Wait for the drive\"."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:171
+#, python-brace-format
+msgid "{drive} is locked."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:172
+msgid ""
+"Unlock it from the sidebar, or turn on \"Unlock the encrypted drive before "
+"running\"."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:174
+#, python-brace-format
+msgid "{drive} is not mounted."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:175
+msgid "Mount it in your file manager first."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:177
+#, python-brace-format
+msgid "The source folder does not exist: {path}"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:178
+msgid "Check the path or pick the folder again."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:180
+msgid "rsync is not installed, so jobs cannot run."
+msgstr ""
+
+#: linfilecopy/engine/planner.py:181
+msgid "Install it, for example: sudo apt install rsync"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:191
+#, python-brace-format
+msgid "unlock and mount {drive} (UDisks2)"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:195
+#, python-brace-format
+msgid "mount {drive} (UDisks2)"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:202 linfilecopy/engine/planner.py:210
+#, python-brace-format
+msgid "unmount {drive}"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:203
+#, python-brace-format
+msgid "lock {drive}"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:211
+#, python-brace-format
+msgid "eject {drive}"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:222
+msgid "<source folder>"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:223
+msgid "<destination folder>"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:233
+msgid "two-way sync: compare both sides, then copy each way"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:241
+msgid "compare with the latest snapshot"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:246
+msgid "copy into a new snapshot"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:247
+msgid "point \"latest\" at the new snapshot"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:250
+#, python-brace-format
+msgid "rotate: keep {d} daily, {w} weekly"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:256
+msgid "prepare a staging copy (hard links, no extra space)"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:259
+msgid "copy changes into the staging copy"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:260
+msgid "swap the staging copy into place in one step"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:263
+msgid "remove the previous version"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:267
+#, python-brace-format
+msgid "copy with {n} parallel rsync streams (split by top-level folder)"
+msgstr ""
+
+#: linfilecopy/engine/planner.py:271
+msgid "copy"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:152
+msgid "Removed from the queue."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:225
+#: linfilecopy/ui/components/component_run_card.py:103
+#: linfilecopy/ui/pages/page_designer.py:130
+#: linfilecopy/ui/pages/page_history.py:190
+msgid "Preview"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:225
+msgid "Dry run"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:225
+msgid "Run"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:231
+msgid "Cancelled."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:239
+#, python-brace-format
+msgid "Unexpected error: {err}"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:240
+msgid "Open the log and report the problem."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:253
+#, python-brace-format
+msgid "{n} changes found"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:254 linfilecopy/ui/pages/page_dashboard.py:142
+#, python-brace-format
+msgid "{size}, {files} files in {time}"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:299
+msgid "The drive was not connected in time."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:299 linfilecopy/engine/runner.py:566
+msgid "Connect it and run the job again."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:301
+msgid "Waiting for the drive to be connected"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:374
+#, python-brace-format
+msgid "This step is not supported yet: {step}"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:401
+#, python-brace-format
+msgid "Attempt {n} failed ({msg}). Retrying in {s} s."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:402
+#, python-brace-format
+msgid "Retrying in {s} s…"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:541
+#, python-brace-format
+msgid "removed old snapshot {name}"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:543
+#, python-brace-format
+msgid "{step} failed: {err}"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:544
+msgid "Check free space and permissions on the destination."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:559
+msgid "Drive control is not available (UDisks2 is missing)."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:560
+msgid "Mount the drive in your file manager and run the job again."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:566
+msgid "The drive is not connected."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:575
+#, python-brace-format
+msgid "{drive} is locked and no passphrase was given."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:576
+msgid "Unlock it from the sidebar, or save its passphrase in the keyring."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:580
+msgid "Check the passphrase and try again."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:596
+#, python-brace-format
+msgid "mounted {drive} at {path}"
+msgstr ""
+
+#: linfilecopy/engine/runner.py:598
+msgid "Mount the drive in your file manager and try again."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:624
+#, python-brace-format
+msgid "{drive} can now be unplugged."
+msgstr ""
+
+#: linfilecopy/engine/runner.py:679
+#, python-brace-format
+msgid "Starts when {job} finishes (same destination)"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:64
+msgid "Not scheduled"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:66
+#, python-brace-format
+msgid "Every hour at :{m:02d}"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:68 linfilecopy/engine/scheduler.py:71
+#, python-brace-format
+msgid "Daily at {t}"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:71
+#, python-brace-format
+msgid "{days} at {t}"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:73
+#, python-brace-format
+msgid "Once on {d} at {t}"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:75
+#, python-brace-format
+msgid "Custom: {expr}"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:77
+msgid "paused"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:136
+msgid "The job has no schedule."
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:139
+msgid ""
+"systemd cannot express \"day of month OR weekday\"; use cron for this "
+"schedule."
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:196
+msgid "systemd user timers are not available on this system."
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:200
+msgid "crontab is not installed."
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:211
+msgid ""
+"Neither systemd user timers nor crontab are available, so jobs cannot be "
+"scheduled."
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:217 linfilecopy/engine/scheduler.py:230
+msgid "Invalid job id."
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:293
+#, python-brace-format
+msgid "systemd could not reload: {err}"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:297
+#, python-brace-format
+msgid "systemd could not {verb} the timer: {err}"
+msgstr ""
+
+#: linfilecopy/engine/scheduler.py:316
+#, python-brace-format
+msgid "crontab could not be updated: {err}"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:135 linfilecopy/engine/tools.py:139
+msgid "Copy engine"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:135
+msgid "Jobs cannot run until rsync is installed."
+msgstr ""
+
+#: linfilecopy/engine/tools.py:140
+msgid "rsync 3.1.0 or newer is required for progress reporting."
+msgstr ""
+
+#: linfilecopy/engine/tools.py:152 linfilecopy/engine/tools.py:153
+msgid "Background priority"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:152 linfilecopy/engine/tools.py:153
+msgid "Background priority is unavailable."
+msgstr ""
+
+#: linfilecopy/engine/tools.py:155
+msgid "Mount, unlock and eject drives"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:156
+msgid "Drives must be mounted by hand; unlock and eject are unavailable."
+msgstr ""
+
+#: linfilecopy/engine/tools.py:159
+msgid "Scheduled runs"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:160
+msgid "Schedules fall back to crontab."
+msgstr ""
+
+#: linfilecopy/engine/tools.py:162
+msgid "Scheduled runs (fallback)"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:162
+msgid "Only systemd timers can be used."
+msgstr ""
+
+#: linfilecopy/engine/tools.py:165
+msgid "Tray icon"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:165
+msgid "No tray icon; triggers work only while the window is open."
+msgstr ""
+
+#: linfilecopy/engine/tools.py:168
+msgid "Remember drive passphrases"
+msgstr ""
+
+#: linfilecopy/engine/tools.py:169
+msgid "Passphrases are asked for on every run."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:82 linfilecopy/engine/twoway.py:84
+msgid "deleted on the other side"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:222
+#: linfilecopy/ui/components/component_dialogs.py:178
+msgid "changed on both sides"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:235
+#, python-brace-format
+msgid "destination copy kept as {name}"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:239
+#, python-brace-format
+msgid "source copy kept as {name}"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:242
+msgid "source copy wins"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:242
+msgid "destination copy wins"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:253
+msgid "a folder on one side, a file on the other"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:307
+#, python-brace-format
+msgid ""
+"{n} of {total} files would be deleted on the {side} side ({pct}% — more than "
+"the {limit}% limit)."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:377
+msgid "Comparing both sides…"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:387
+msgid "First two-way run for these folders: both sides are merged."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:398
+msgid ""
+"Check that the right drive is connected. If the deletions are intended, "
+"raise the limit in Settings."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:400
+#, python-brace-format
+msgid "{n} files changed on both sides and need your decision."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:401
+msgid ""
+"Open Preview to see them, then choose a conflict policy other than \"Ask\"."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:403
+msgid "Both sides are already in step."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:421
+#, python-brace-format
+msgid "Could not move a file aside: {err}"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:421
+msgid "Check permissions on both folders."
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:429
+msgid "Copying to the destination"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:430
+msgid "Copying to the source"
+msgstr ""
+
+#: linfilecopy/engine/twoway.py:446
+msgid "Saving sync state"
+msgstr ""
+
+#: linfilecopy/model/cron.py:16
+msgid "minute"
+msgstr ""
+
+#: linfilecopy/model/cron.py:16
+msgid "hour"
+msgstr ""
+
+#: linfilecopy/model/cron.py:16
+msgid "day of month"
+msgstr ""
+
+#: linfilecopy/model/cron.py:16
+msgid "month"
+msgstr ""
+
+#: linfilecopy/model/cron.py:16
+msgid "day of week"
+msgstr ""
+
+#: linfilecopy/model/cron.py:81
+#, python-brace-format
+msgid "'{token}' is not valid in the {field} field"
+msgstr ""
+
+#: linfilecopy/model/cron.py:90
+#, python-brace-format
+msgid "Empty item in the {field} field"
+msgstr ""
+
+#: linfilecopy/model/cron.py:95
+#, python-brace-format
+msgid "Invalid step '/{step}' in the {field} field"
+msgstr ""
+
+#: linfilecopy/model/cron.py:106
+#, python-brace-format
+msgid "The {field} must be between {lo} and {hi}"
+msgstr ""
+
+#: linfilecopy/model/cron.py:118
+msgid "A cron expression needs 5 fields: minute hour day month weekday"
+msgstr ""
+
+#: linfilecopy/model/templates.py:67
+#: linfilecopy/ui/components/component_shortcuts.py:13
+#: linfilecopy/ui/pages/page_designer.py:608
+#: linfilecopy/ui/pages/page_designer.py:698 linfilecopy/ui/window.py:83
+msgid "New job"
+msgstr ""
+
+#: linfilecopy/model/validation.py:62
+msgid "The job has no name."
+msgstr ""
+
+#: linfilecopy/model/validation.py:62
+msgid "Type a name at the top of the designer."
+msgstr ""
+
+#: linfilecopy/model/validation.py:64
+msgid "Choose a source folder."
+msgstr ""
+
+#: linfilecopy/model/validation.py:64
+msgid "Drop a folder on the source field or press Browse."
+msgstr ""
+
+#: linfilecopy/model/validation.py:66
+msgid "The source must be a full path starting with /."
+msgstr ""
+
+#: linfilecopy/model/validation.py:66 linfilecopy/model/validation.py:70
+msgid "Use Browse to pick the folder."
+msgstr ""
+
+#: linfilecopy/model/validation.py:68
+msgid "Choose a destination folder."
+msgstr ""
+
+#: linfilecopy/model/validation.py:68
+msgid "Drop a folder on the destination field or press Browse."
+msgstr ""
+
+#: linfilecopy/model/validation.py:70
+msgid "The destination must be a full path starting with /."
+msgstr ""
+
+#: linfilecopy/model/validation.py:74
+msgid "Source and destination are the same folder."
+msgstr ""
+
+#: linfilecopy/model/validation.py:74
+msgid "Pick a different destination."
+msgstr ""
+
+#: linfilecopy/model/validation.py:77
+msgid "The destination is inside the source, so the copy would include itself."
+msgstr ""
+
+#: linfilecopy/model/validation.py:78 linfilecopy/model/validation.py:82
+msgid "Choose a destination outside the source folder."
+msgstr ""
+
+#: linfilecopy/model/validation.py:81
+msgid ""
+"The snapshot folder is inside the source, so each snapshot would copy the "
+"previous ones."
+msgstr ""
+
+#: linfilecopy/model/validation.py:85
+#, python-brace-format
+msgid ""
+"{path} is a system or home folder. Mirror and two-way jobs could delete "
+"files there."
+msgstr ""
+
+#: linfilecopy/model/validation.py:86
+msgid "Choose a dedicated folder, for example a folder on a backup drive."
+msgstr ""
+
+#: linfilecopy/model/validation.py:89
+#, python-brace-format
+msgid ""
+"{path} is a system or home folder. Two-way jobs can delete files on both "
+"sides."
+msgstr ""
+
+#: linfilecopy/model/validation.py:90
+msgid "Choose a specific folder such as ~/Notes."
+msgstr ""
+
+#: linfilecopy/model/validation.py:94
+msgid "Mirror deletes files at the destination that are not in the source."
+msgstr ""
+
+#: linfilecopy/model/validation.py:95
+msgid "You will be asked to confirm before anything is deleted."
+msgstr ""
+
+#: linfilecopy/model/validation.py:98
+msgid "Two-way sync cannot be combined with snapshots or atomic replace."
+msgstr ""
+
+#: linfilecopy/model/validation.py:99
+msgid "Turn off snapshots and atomic replace, or use Copy or Mirror."
+msgstr ""
+
+#: linfilecopy/model/validation.py:101
+msgid "Parallel streams are not available for two-way sync."
+msgstr ""
+
+#: linfilecopy/model/validation.py:102
+msgid "Set parallel streams to 1."
+msgstr ""
+
+#: linfilecopy/model/validation.py:104
+msgid "Two-way sync cannot use a list of files."
+msgstr ""
+
+#: linfilecopy/model/validation.py:105
+msgid "Clear \"Only files listed in\" or use Copy."
+msgstr ""
+
+#: linfilecopy/model/validation.py:107
+msgid ""
+"Atomic replace is not needed with snapshots: each snapshot is written to a "
+"new folder."
+msgstr ""
+
+#: linfilecopy/model/validation.py:108
+msgid "Turn off atomic replace."
+msgstr ""
+
+#: linfilecopy/model/validation.py:111
+msgid ""
+"Parallel streams are not available with snapshots or atomic replace yet."
+msgstr ""
+
+#: linfilecopy/model/validation.py:112
+msgid "Set parallel streams to 1, or turn off snapshots and atomic replace."
+msgstr ""
+
+#: linfilecopy/model/validation.py:114
+msgid "Parallel streams must be between 1 and 16."
+msgstr ""
+
+#: linfilecopy/model/validation.py:117
+msgid ""
+"Updating files in place would change files shared with older snapshots or "
+"the live copy."
+msgstr ""
+
+#: linfilecopy/model/validation.py:118
+msgid "Turn off \"Update files in place\"."
+msgstr ""
+
+#: linfilecopy/model/validation.py:120
+msgid "With in-place updates, interrupted files are resumed in place."
+msgstr ""
+
+#: linfilecopy/model/validation.py:124
+msgid "Checksums replace the size-only comparison."
+msgstr ""
+
+#: linfilecopy/model/validation.py:125
+msgid "Set \"Decide what changed by\" to size and time, or turn off checksums."
+msgstr ""
+
+#: linfilecopy/model/validation.py:128
+msgid ""
+"Keeping owner and group only works when the job runs as root. Otherwise "
+"files are owned by you."
+msgstr ""
+
+#: linfilecopy/model/validation.py:129
+msgid "Turn off Owner and Group unless you run LinFileCopy as root."
+msgstr ""
+
+#: linfilecopy/model/validation.py:134
+#, python-brace-format
+msgid "Filter rule {n} is empty."
+msgstr ""
+
+#: linfilecopy/model/validation.py:134
+msgid "Type a pattern or remove the rule."
+msgstr ""
+
+#: linfilecopy/model/validation.py:137
+msgid "List files must be full paths."
+msgstr ""
+
+#: linfilecopy/model/validation.py:137
+msgid "Use the file picker."
+msgstr ""
+
+#: linfilecopy/model/validation.py:141
+msgid "The speed limit must be more than 0."
+msgstr ""
+
+#: linfilecopy/model/validation.py:141
+msgid "Enter a speed, or turn the limit off."
+msgstr ""
+
+#: linfilecopy/model/validation.py:146
+msgid "Unlocking needs a drive picked from the drive list."
+msgstr ""
+
+#: linfilecopy/model/validation.py:147
+msgid "Choose the encrypted drive with the drive button, or turn this off."
+msgstr ""
+
+#: linfilecopy/model/validation.py:149
+msgid "\"When drive connected\" needs a drive picked from the drive list."
+msgstr ""
+
+#: linfilecopy/model/validation.py:150
+msgid "Choose the drive with the drive button."
+msgstr ""
+
+#: linfilecopy/model/validation.py:153
+msgid "Neither folder is on a removable drive, so there is nothing to eject."
+msgstr ""
+
+#: linfilecopy/model/validation.py:154
+msgid "Turn off \"Eject when finished\"."
+msgstr ""
+
+#: linfilecopy/model/validation.py:158
+msgid "Retries must be between 0 and 10."
+msgstr ""
+
+#: linfilecopy/model/validation.py:160
+msgid "The delete guard must be between 1 and 100 %."
+msgstr ""
+
+#: linfilecopy/model/validation.py:165
+msgid "Enter the time as HH:MM, for example 03:00."
+msgstr ""
+
+#: linfilecopy/model/validation.py:167
+msgid "Pick at least one day of the week."
+msgstr ""
+
+#: linfilecopy/model/validation.py:169
+msgid "Pick the date for the one-time run."
+msgstr ""
+
+#: linfilecopy/model/validation.py:171
+msgid "The minute must be between 0 and 59."
+msgstr ""
+
+#: linfilecopy/model/validation.py:176
+msgid "Example: 30 2 * * 1-5 runs at 02:30 on weekdays."
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:53
+#, python-brace-format
+msgid "Preview: {job}"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:60
+msgid "Copy list"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:60
+msgid "Copy the list of changes"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:63
+msgid "Run for real"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:63
+msgid "Sync now"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:78
+#: linfilecopy/ui/components/component_dialogs.py:136
+msgid "Comparing source and destination…"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:88
+msgid "All"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:88
+msgid "New"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:88
+msgid "Updated"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:89
+#: linfilecopy/ui/pages/page_history.py:250
+msgid "Deleted"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:89
+msgid "Conflicts"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:93
+msgid "Filter paths"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:103
+msgid "Planned changes"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:135
+#, python-brace-format
+msgid "Comparing… {n} change found"
+msgid_plural "Comparing… {n} changes found"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:148
+msgid "The preview could not be completed."
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:152
+msgid "Preview cancelled."
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:157
+msgid "Nothing to do: both sides already match."
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:159
+msgid "This is what will happen. Nothing has been changed yet."
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:161
+#, python-brace-format
+msgid "{n} new"
+msgid_plural "{n} new"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:162
+#, python-brace-format
+msgid "{n} updated"
+msgid_plural "{n} updated"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:163
+#, python-brace-format
+msgid "{n} deleted"
+msgid_plural "{n} deleted"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:164
+#, python-brace-format
+msgid "{n} conflict"
+msgid_plural "{n} conflicts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:165
+#, python-brace-format
+msgid "{n} details only"
+msgid_plural "{n} details only"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:170
+#, python-brace-format
+msgid "{size} to copy"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:176
+#: linfilecopy/ui/components/component_dialogs.py:254
+#, python-brace-format
+msgid "… and {n} more"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:182
+msgid "to destination"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:182
+msgid "to source"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:186
+msgid "moved to .lfc-trash"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:186
+msgid "deleted"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:189
+msgid "will be deleted"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:191
+msgid "dates or permissions"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:229
+msgid "Confirm deletion"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:238
+#, python-brace-format
+msgid "Delete {n} file from {dest}?"
+msgid_plural "Delete {n} files from {dest}?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:242
+#, python-brace-format
+msgid ""
+"Mirror makes <b>{dest}</b> match <b>{src}</b>. This file exists only at the "
+"destination and will be removed. This cannot be undone."
+msgid_plural ""
+"Mirror makes <b>{dest}</b> match <b>{src}</b>. These {n} files exist only at "
+"the destination and will be removed. This cannot be undone."
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_dialogs.py:256
+#: linfilecopy/ui/components/component_dialogs.py:271
+#: linfilecopy/ui/components/component_path_card.py:176
+#: linfilecopy/ui/components/component_run_card.py:110
+#: linfilecopy/ui/manager_secrets.py:77
+#: linfilecopy/ui/pages/page_designer.py:517
+#: linfilecopy/ui/pages/page_designer.py:588
+#: linfilecopy/ui/pages/page_designer.py:916
+#: linfilecopy/ui/pages/page_designer.py:926
+#: linfilecopy/ui/pages/page_designer.py:1007
+msgid "Cancel"
+msgstr ""
+
+#: linfilecopy/ui/components/component_dialogs.py:257
+msgid "Delete and mirror"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:27
+msgid "Filter rules"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:29
+msgid "No custom rules. Everything is copied except the presets you picked."
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:35
+msgid "Add a rule"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:37
+msgid "Remove the selected rule"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:39
+msgid "Move the selected rule up"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:41
+msgid "Move the selected rule down"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:59
+msgid "Exclude"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:60
+msgid "Include"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:62
+#, python-brace-format
+msgid "Rule {n} action"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:65
+msgid "Pattern, e.g. *.iso or Downloads/"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:67
+#, python-brace-format
+msgid "Rule {n} pattern"
+msgstr ""
+
+#: linfilecopy/ui/components/component_filter_editor.py:68
+msgid ""
+"* matches within a name, ** across folders, a trailing / matches folders "
+"only, a leading / anchors at the source folder."
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:26
+#: linfilecopy/ui/components/component_panels.py:57
+msgid "Command"
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:39
+msgid "Command that will run"
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:49
+#: linfilecopy/ui/components/component_panels.py:80
+#: linfilecopy/ui/components/component_shortcuts.py:17
+#: linfilecopy/ui/pages/page_history.py:140
+msgid "Copy command"
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:49
+msgid "Copy the command to the clipboard (Ctrl+Shift+C)"
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:57
+#, python-brace-format
+msgid "Plan · {n} steps"
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:76
+#: linfilecopy/ui/components/component_run_card.py:142
+#: linfilecopy/ui/pages/page_history.py:84
+msgid "Copied"
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:94
+msgid "Checking…"
+msgstr ""
+
+#: linfilecopy/ui/components/component_panels.py:113
+#, python-brace-format
+msgid "{n} problem to fix"
+msgid_plural "{n} problems to fix"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_panels.py:117
+#, python-brace-format
+msgid "Ready · {n} warning"
+msgid_plural "Ready · {n} warnings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/components/component_panels.py:121
+msgid "Ready to run"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:51
+msgid "FROM · SOURCE"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:51
+msgid "TO · DESTINATION"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:60
+#: linfilecopy/ui/components/component_path_card.py:140
+msgid "Folder"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:67
+msgid "Choose a drive"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:68
+#, python-brace-format
+msgid "Choose a drive for the {role}"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:76
+msgid "Drop a folder here or press Browse"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:77
+msgid "Source folder"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:77
+msgid "Destination folder"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:83
+#: linfilecopy/ui/components/component_path_card.py:84
+msgid "Browse for a folder"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:92
+#: linfilecopy/ui/components/component_path_card.py:238
+msgid "Drag a folder from your file manager onto this card"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:100
+msgid "Copy the folder itself"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:100
+msgid "Copy what is inside it"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:102
+msgid "Creates a folder with the same name inside the destination."
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:103
+msgid "Puts the files straight into the destination folder."
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:136
+msgid "Not connected"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:175
+msgid "Choose the source folder"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:175
+msgid "Choose the destination folder"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:176
+#: linfilecopy/ui/pages/page_designer.py:517
+msgid "Choose"
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:197
+msgid "No drives found. Use Browse to pick a folder."
+msgstr ""
+
+#: linfilecopy/ui/components/component_path_card.py:234
+msgid "Release to use this folder"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:20
+#: linfilecopy/ui/pages/page_history.py:33
+msgid "Queued"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:21
+#: linfilecopy/ui/pages/page_dashboard.py:241
+#: linfilecopy/ui/pages/page_history.py:34
+msgid "Waiting"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:22
+#: linfilecopy/ui/components/component_run_card.py:100
+#: linfilecopy/ui/pages/page_history.py:31
+msgid "Running"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:23
+#: linfilecopy/ui/pages/page_history.py:32
+#: linfilecopy/ui/pages/page_scheduler.py:297
+msgid "Paused"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:25
+msgid "Completed with warnings"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:26
+#: linfilecopy/ui/pages/page_history.py:29
+msgid "Failed"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:27
+#: linfilecopy/ui/pages/page_history.py:30
+msgid "Cancelled"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:40
+msgid "Speed over the last minute"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:105
+msgid "Ejects when done"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:108
+#: linfilecopy/ui/components/component_run_card.py:207
+#: linfilecopy/ui/pages/page_dashboard.py:222
+#: linfilecopy/ui/pages/page_dashboard.py:247
+msgid "Pause"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:108
+msgid "Pause (Space)"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:110
+msgid "Cancel (Escape)"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:112
+msgid "Start now"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:112
+msgid "Start without waiting"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:114
+msgid "Unlock…"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:117
+#: linfilecopy/ui/manager_notify.py:49
+#: linfilecopy/ui/pages/page_dashboard.py:146
+#: linfilecopy/ui/pages/page_history.py:136
+#: linfilecopy/ui/pages/page_history.py:241
+msgid "Retry"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:119
+msgid "Dismiss"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:142
+#: linfilecopy/ui/pages/page_designer.py:397
+msgid "Speed"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:142
+#: linfilecopy/ui/components/component_run_card.py:237
+msgid "Time left"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:142
+#: linfilecopy/ui/pages/page_history.py:248
+msgid "Files copied"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:159
+msgid "Live log"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:186
+#, python-brace-format
+msgid "Cancel \"{job}\"?"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:187
+msgid ""
+"Files copied so far stay at the destination. Partly copied files can be "
+"resumed next time."
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:188
+msgid "Cancel run"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:207
+#: linfilecopy/ui/pages/page_dashboard.py:247
+msgid "Resume"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:230
+#, python-brace-format
+msgid "{done} of {total}"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:234
+msgid "Paused for"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:240
+msgid "Took"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:245
+#, python-brace-format
+msgid "{n} of {total} checked"
+msgstr ""
+
+#: linfilecopy/ui/components/component_run_card.py:260
+msgid ""
+"If a drive is unplugged while paused, the job stops. Run it again later and "
+"it continues from the partial files."
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:12
+#: linfilecopy/ui/pages/page_designer.py:90
+msgid "Jobs"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:14
+msgid "Save job"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:15
+#: linfilecopy/ui/pages/page_designer.py:132
+#: linfilecopy/ui/pages/page_designer.py:854
+msgid "Start"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:16
+msgid "Preview (dry run)"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:19
+msgid "Transfers"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:20
+msgid "Pause or resume the selected transfer"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:21
+msgid "Cancel the selected transfer (asks first)"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:22
+msgid "Eject the destination drive"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:24
+msgid "Navigation"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:25
+#: linfilecopy/ui/pages/page_dashboard.py:31 linfilecopy/ui/sidebar.py:14
+msgid "Dashboard"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:26
+#: linfilecopy/ui/pages/page_designer.py:60
+#: linfilecopy/ui/pages/page_designer.py:702 linfilecopy/ui/sidebar.py:15
+msgid "Job Designer"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:27
+#: linfilecopy/ui/pages/page_transfers.py:22
+#: linfilecopy/ui/pages/page_transfers.py:86 linfilecopy/ui/sidebar.py:16
+msgid "Active Transfers"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:28
+#: linfilecopy/ui/pages/page_history.py:55 linfilecopy/ui/sidebar.py:17
+msgid "History & Logs"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:29
+#: linfilecopy/ui/pages/page_scheduler.py:32 linfilecopy/ui/sidebar.py:18
+msgid "Scheduler"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:30
+#: linfilecopy/ui/pages/page_settings.py:25 linfilecopy/ui/sidebar.py:19
+msgid "Settings"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:31
+#: linfilecopy/ui/pages/page_settings.py:91
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: linfilecopy/ui/components/component_shortcuts.py:32
+#: linfilecopy/ui/manager_tray.py:101 linfilecopy/ui/window.py:103
+msgid "Quit"
+msgstr ""
+
+#: linfilecopy/ui/manager_notify.py:31
+msgid "can now be unplugged."
+msgstr ""
+
+#: linfilecopy/ui/manager_notify.py:32
+msgid "The drive"
+msgstr ""
+
+#: linfilecopy/ui/manager_notify.py:33
+#, python-brace-format
+msgid "{drive} was ejected and can be unplugged."
+msgstr ""
+
+#: linfilecopy/ui/manager_notify.py:50
+msgid "Open log"
+msgstr ""
+
+#: linfilecopy/ui/manager_notify.py:53
+msgid "Show details"
+msgstr ""
+
+#: linfilecopy/ui/manager_secrets.py:59
+#, python-brace-format
+msgid "LinFileCopy: passphrase for {drive}"
+msgstr ""
+
+#: linfilecopy/ui/manager_secrets.py:75 linfilecopy/ui/window.py:180
+#, python-brace-format
+msgid "Unlock {drive}"
+msgstr ""
+
+#: linfilecopy/ui/manager_secrets.py:78
+#: linfilecopy/ui/pages/page_settings.py:166
+msgid "Unlock"
+msgstr ""
+
+#: linfilecopy/ui/manager_secrets.py:87
+#, python-brace-format
+msgid "<b>{job}</b> needs {drive} unlocked."
+msgstr ""
+
+#: linfilecopy/ui/manager_secrets.py:88
+#, python-brace-format
+msgid "Enter the passphrase for {drive}."
+msgstr ""
+
+#: linfilecopy/ui/manager_secrets.py:92 linfilecopy/ui/manager_secrets.py:94
+msgid "Passphrase"
+msgstr ""
+
+#: linfilecopy/ui/manager_secrets.py:96
+msgid "Remember in the keyring (needed for scheduled runs)"
+msgstr ""
+
+#: linfilecopy/ui/manager_tray.py:79
+msgid "Show LinFileCopy"
+msgstr ""
+
+#: linfilecopy/ui/manager_tray.py:84 linfilecopy/ui/pages/page_transfers.py:88
+#, python-brace-format
+msgid "{n} running"
+msgid_plural "{n} running"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/manager_tray.py:89
+msgid "Resume all"
+msgstr ""
+
+#: linfilecopy/ui/manager_tray.py:91
+msgid "Pause all"
+msgstr ""
+
+#: linfilecopy/ui/manager_tray.py:93
+msgid "Nothing running"
+msgstr ""
+
+#: linfilecopy/ui/manager_tray.py:99 linfilecopy/ui/window.py:176
+#, python-brace-format
+msgid "Eject {drive}"
+msgstr ""
+
+#: linfilecopy/ui/manager_triggers.py:93
+msgid "A drive"
+msgstr ""
+
+#: linfilecopy/ui/manager_triggers.py:94
+#, python-brace-format
+msgid "{job} started"
+msgstr ""
+
+#: linfilecopy/ui/manager_triggers.py:95
+#, python-brace-format
+msgid "{drive} was plugged in."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:38
+msgid "copied in the last 7 days"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:39
+msgid "files copied in the last 7 days"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:40
+msgid "saved jobs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:41
+msgid "failed runs need attention"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:51
+msgid "Running now"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:54
+msgid "Recent activity"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:58
+msgid "Start from a template"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:60
+msgid "Coming up"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:118
+#, python-brace-format
+msgid "saved job · {n} scheduled"
+msgid_plural "saved jobs · {n} scheduled"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:121
+msgid "failed run needs attention"
+msgid_plural "failed runs need attention"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:122
+msgid "no failed runs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:130
+#: linfilecopy/ui/pages/page_history.py:106
+msgid "No runs yet"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:130
+msgid "Design a job, then press Start."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:138
+#, python-brace-format
+msgid "{n} change found"
+msgid_plural "{n} changes found"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:144
+msgid "preview"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:148
+#: linfilecopy/ui/pages/page_history.py:241
+msgid "Run again"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:165
+msgid "its drive"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:166
+#, python-brace-format
+msgid "When {drive} is plugged in"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:168
+msgid "When files change in the source folder"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:171
+msgid "Nothing scheduled"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:171
+msgid "Open the Scheduler to run jobs automatically."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:181
+msgid "Create a new job from this template"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:239
+#, python-brace-format
+msgid "Paused at {p}%"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:244
+#, python-brace-format
+msgid "{p}% · {speed}/s · {eta} left"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:262
+msgid "rsync is required to run jobs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:268
+#: linfilecopy/ui/pages/page_history.py:45
+#, python-brace-format
+msgid "Today {t}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_dashboard.py:270
+#, python-brace-format
+msgid "Tomorrow {t}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:46
+msgid ""
+"Copy adds new files and updates changed ones. Nothing at the destination is "
+"deleted."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:47
+msgid ""
+"Mirror makes the destination identical to the source: files that exist only "
+"at the destination are deleted after you confirm."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:48
+msgid ""
+"Two-way keeps both folders in step: changes and deletions on either side are "
+"copied to the other. Deleted files are kept in .lfc-trash."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:51
+msgid "Hidden files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:51
+msgid "Files and folders whose names start with a dot"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:52
+msgid "Cache folders"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:52
+msgid ".cache, __pycache__, node_modules, thumbnails"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:53
+msgid "Temp files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:53
+msgid "*.tmp, *~, lock files, partial downloads"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:54
+msgid "System folders"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:54
+msgid "lost+found, trash, System Volume Information, .DS_Store"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:93
+msgid "Open a saved job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:99
+#: linfilecopy/ui/pages/page_designer.py:100
+msgid "Job name"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:103
+msgid "Simple"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:103
+msgid "Advanced"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:108
+#: linfilecopy/ui/pages/page_designer.py:109
+msgid "More job actions"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:112
+#: linfilecopy/ui/pages/page_designer.py:590
+msgid "Save"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:112
+msgid "Save the job (Ctrl+S)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:130
+msgid "Show what would change, without changing anything (Ctrl+Shift+P)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:132
+msgid "Run the job now (Ctrl+Return)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:221
+msgid "Swap source and destination"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:232
+#: linfilecopy/ui/pages/page_settings.py:213
+msgid "Copy"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:232
+msgid "Mirror"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:233
+msgid "Two-way"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:235
+msgid "Copy new and changed files. Never deletes."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:236
+msgid "Make the destination identical. Deletes extra files (asks first)."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:237
+msgid "Keep both folders in step in both directions."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:240
+msgid "What should happen?"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:244
+msgid "Overwrite"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:245
+msgid "Skip"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:246
+msgid "Overwrite if newer"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:248
+msgid "Replace files that differ"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:249
+msgid "Never replace a file that already exists"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:250
+msgid "Replace only when the source file is newer"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:251
+msgid "When a file already exists"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:266
+#, python-brace-format
+msgid "Skip {what}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:271
+msgid "Custom…"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:271
+msgid "Add your own include and exclude rules"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:275
+msgid "Skip these"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:280
+msgid "Keep dates and permissions"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:280
+msgid "Files keep their modification time and access rights"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:284
+msgid "Always preview first"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:284
+msgid "Show the list of changes before copying"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:287
+msgid "Notify me when it finishes"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:287
+msgid "Desktop notification on success or failure"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:291
+msgid "Eject the drive when finished"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:291
+msgid "Safe to unplug as soon as the notification appears"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:309
+msgid "ADVANCED OPTIONS"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:316
+#: linfilecopy/ui/pages/page_settings.py:98
+msgid "Drives"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:318
+msgid "Unlock the encrypted drive before running"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:318
+msgid "For LUKS-encrypted drives. The passphrase is never saved in the job."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:321
+msgid "Remember the passphrase in the keyring"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:321
+msgid "Needed for scheduled runs while you are away"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:324
+msgid "Lock and unmount when finished"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:327
+msgid "Minutes to wait"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:330
+msgid "Wait for the drive if it is not connected"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:330
+msgid "Otherwise the run fails with \"Connect the drive\""
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:331
+msgid "min"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:336
+msgid "Transfer"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:338
+msgid "Delta transfer"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:338
+msgid ""
+"Off by default for local copies. Turn on for large files that change a "
+"little, like VM images."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:341
+msgid "Update files in place"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:341
+msgid "Saves space for huge files; a crash can leave a file half-updated"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:344
+msgid "Size and modification time"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:344
+msgid "Size only"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:345
+#: linfilecopy/ui/pages/page_designer.py:346
+msgid "Decide what changed by"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:347
+msgid "Resume interrupted files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:347
+msgid "Partial files are kept in .lfc-partial and continued next time"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:350
+msgid "Verify with checksums"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:350
+msgid "Slower: reads every file on both sides"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:353
+msgid "Handle sparse files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:353
+msgid "Virtual-machine disks and databases"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:360
+msgid "Keep file details"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:364
+msgid "Permissions"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:364
+msgid "Modification times"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:364
+msgid "Owner"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:365
+msgid "Group"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:365
+#: linfilecopy/ui/pages/page_designer.py:673
+msgid "ACLs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:365
+msgid "Extended attributes"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:366
+msgid "Hard links"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:366
+msgid "Devices & specials"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:373
+msgid "Copy as links"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:373
+msgid "Copy the files they point to"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:374
+msgid "Leave them out"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:375
+#: linfilecopy/ui/pages/page_designer.py:377
+msgid "Symbolic links"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:377
+msgid "Drives formatted as FAT or exFAT cannot store links"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:381
+msgid "Filters"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:381
+msgid "#5 · rules apply top to bottom"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:387
+msgid "Exclude list from a file"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:387
+msgid "One pattern per line, like rsync --exclude-from"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:389
+msgid "Copy only files listed in"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:389
+msgid "Paths relative to the source folder, one per line"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:391
+msgid "Test filters"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:391
+msgid "See which files the filters keep and skip"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:399
+msgid "Speed limit"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:401
+msgid "Speed unit"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:404
+msgid "Limit speed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:404
+msgid ""
+"Useful for slow USB sticks that overheat, or to keep a disk free for other "
+"work"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:406
+msgid "Run in background priority"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:406
+msgid "Keeps the desktop responsive while copying"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:410
+#: linfilecopy/ui/pages/page_designer.py:411
+msgid "Parallel streams"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:411
+msgid ""
+"Helps on NVMe drives and arrays; slows down single USB sticks and hard disks"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:418
+#: linfilecopy/ui/pages/page_settings.py:78
+msgid "Safety"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:421
+#: linfilecopy/ui/pages/page_designer.py:682
+msgid "Atomic replace"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:421
+msgid "The destination is swapped in one step: never half-updated"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:424
+msgid "Keep hard-linked snapshots"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:424
+msgid "A dated folder per run; unchanged files take no extra space"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:428
+msgid "Latest snapshot (automatic)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:430
+#: linfilecopy/ui/pages/page_designer.py:433
+msgid "Link against"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:433
+msgid "Leave empty to use the latest snapshot"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:434
+msgid "Daily snapshots to keep"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:435
+msgid "Weekly snapshots to keep"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:436
+msgid "Keep"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:436
+msgid "Snapshots from the last 24 hours are always kept"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:437
+msgid "daily"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:437
+msgid "weekly"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:442
+msgid "Two-way sync"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:443
+msgid "Choose Two-way under \"What should happen?\" to use these options."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:446
+msgid "Newer file wins"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:446
+msgid "Larger file wins"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:447
+msgid "Keep both (rename the older one)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:448
+msgid "Source always wins"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:448
+msgid "Ask me (stop and list)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:449
+msgid "When both sides changed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:450
+msgid "When a file changed on both sides"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:451
+msgid "Keep deleted and replaced files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:451
+msgid "They go to .lfc-trash on the same drive instead of being erased"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:455
+msgid "Delete guard percent"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:456
+msgid "Stop if more than this share of files would be deleted"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:456
+msgid "Protects against an empty or wrong drive"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:462
+msgid "Run automatically"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:464
+msgid "Run when files change"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:464
+msgid "Watches the source folder while LinFileCopy is open or in the tray"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:468
+msgid "Delay in seconds"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:469
+msgid "Wait for changes to settle"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:469
+msgid "Seconds without changes before the job starts"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:470
+msgid "Run when the drive is plugged in"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:470
+msgid "For jobs that use a removable drive"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:473
+msgid "Open Scheduler"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:473
+msgid "Set a time-based schedule"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:475
+msgid "Schedule"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:481
+msgid "Logging and alerts"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:483
+msgid "Errors only"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:483
+msgid "Normal"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:484
+msgid "Detailed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:484
+msgid "Debug"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:485
+#: linfilecopy/ui/pages/page_designer.py:486
+msgid "Log detail"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:487
+msgid "Notify on success"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:490
+msgid "Notify on failure"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:493
+msgid "Retries"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:495
+msgid "First retry delay"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:496
+msgid "Retry after I/O errors"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:496
+msgid "The wait doubles after each attempt"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:497
+msgid "times, first after"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:505
+#: linfilecopy/ui/pages/page_designer.py:512
+msgid "None"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:508
+msgid "Clear"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:513
+msgid "Choose a file"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:517
+msgid "Choose a list file"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:541
+msgid "Duplicate"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:542
+msgid "Export to file…"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:543
+msgid "Import from file…"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:544
+msgid "Delete job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:586
+#, python-brace-format
+msgid "Save changes to \"{job}\"?"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:587
+msgid "Your changes will be lost if you don't save them."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:589
+msgid "Discard"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:616
+msgid "SAVED JOBS"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:644
+msgid "Mirror deletes files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:644
+msgid ""
+"Files at the destination that are not in the source will be removed. You "
+"will see the list and confirm first."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:665
+msgid "unlock encrypted"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:665
+msgid "wait for drive"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:666
+msgid "eject after"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:666
+msgid "Defaults"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:668
+msgid "delta"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:668
+msgid "in place"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:669
+msgid "checksums"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:669
+msgid "size only"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:670
+msgid "resume"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:670
+msgid "sparse"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:672
+msgid "times"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:672
+msgid "owner"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:672
+msgid "group"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:673
+msgid "xattrs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:674
+msgid "Nothing"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:676
+#, python-brace-format
+msgid "{n} rules"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:676
+msgid "Presets only"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:679
+msgid "background priority"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:680
+#, python-brace-format
+msgid "{n} streams"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:680
+msgid "Full speed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:681
+#, python-brace-format
+msgid "Snapshots: keep {d} daily, {w} weekly"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:682
+#: linfilecopy/ui/pages/page_designer.py:683
+#: linfilecopy/ui/pages/page_scheduler.py:25
+msgid "Off"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:683
+#, python-brace-format
+msgid "Conflicts: {p}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:684
+msgid "on file change"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:684
+msgid "when drive connected"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:686
+msgid "Manual only"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:688
+#, python-brace-format
+msgid "{level} · {n} retries"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:702
+msgid "Job Designer · unsaved changes"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:777
+#, python-brace-format
+msgid "Could not mount {drive}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:790
+#, python-brace-format
+msgid "Could not unlock {drive}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:829
+msgid "two-way · rsync"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:832
+msgid "Compares both folders, then copies each way with rsync --files-from."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:833
+msgid "Deleted and replaced files go to .lfc-trash."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:845
+#, python-brace-format
+msgid "{free} free on {drive}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:854
+msgid "Start preview"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:883
+msgid "Untitled job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:893
+#, python-brace-format
+msgid "{name} (copy)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:900
+#, python-brace-format
+msgid "Delete \"{job}\"?"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:901
+msgid ""
+"The job and its schedule are removed. History and copied files are kept."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:901
+msgid "Delete"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:916
+msgid "Export job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:916
+msgid "Export"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:926
+msgid "Import job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:926
+msgid "Import"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:928
+msgid "LinFileCopy jobs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:939
+msgid "Could not import the job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:999
+msgid "Checking"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1005
+msgid "Checking what would be deleted…"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1019
+msgid "The check failed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1028
+msgid "Choose a source folder first"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1028
+msgid "The test lists what the filters keep and skip in the source folder."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1031
+msgid "Filter test"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1033
+msgid "Close"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1039
+msgid "Scanning…"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1074
+#, python-brace-format
+msgid ""
+"{kept} files are copied. {skipped} files and folders are skipped (a skipped "
+"folder hides everything inside it)."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_designer.py:1076
+msgid "Nothing is skipped."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:28
+msgid "Warnings"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:36
+msgid "you"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:36
+msgid "schedule"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:36
+msgid "file change"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:37
+msgid "drive connected"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:37
+msgid "retry"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:47
+#, python-brace-format
+msgid "Yesterday {t}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:61
+msgid "Search jobs, commands, errors"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:65
+msgid "All results"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:65
+msgid "Failed only"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:66
+msgid "Previews"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:67
+msgid "Result filter"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:69
+msgid "Last 7 days"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:69
+msgid "Last 30 days"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:69
+msgid "Last year"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:69
+msgid "Everything"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:71
+msgid "Date range"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:78
+msgid "Runs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:83
+msgid "Job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:83
+#: linfilecopy/ui/pages/page_history.py:245
+msgid "Started"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:83
+#: linfilecopy/ui/pages/page_history.py:246
+msgid "Duration"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:84
+msgid "Files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:84
+msgid "Result"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:106
+msgid "Runs appear here with their results, statistics and logs."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:131
+msgid "Run statistics"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:136
+msgid "Run this job again"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:138
+msgid "Open full log"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:142
+msgid "Edit job"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:192
+#: linfilecopy/ui/pages/page_history.py:194
+#, python-brace-format
+msgid "Code {n}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:196
+msgid "changes"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:234
+msgid "The run failed."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:247
+msgid "Files checked"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:248
+#, python-brace-format
+msgid " ({n} failed)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:249
+msgid "Data copied"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:251
+msgid "Average speed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:252
+msgid "Exit code"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:253
+msgid "Started by"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:256
+msgid "Kind"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:256
+msgid "Preview (nothing changed)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_history.py:267
+msgid "The log file is no longer available."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:24
+msgid "Mo"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:24
+msgid "Tu"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:24
+msgid "We"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:24
+msgid "Th"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:24
+msgid "Fr"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:24
+msgid "Sa"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:24
+msgid "Su"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:25
+msgid "Once"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:26
+msgid "Hourly"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:26
+msgid "Daily"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:27
+msgid "Weekly"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:27
+msgid "Custom"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:44
+msgid "Jobs and their schedules"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:45
+msgid "Schedules and triggers"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:47
+msgid ""
+"Drive and folder triggers work while LinFileCopy is open or in the tray. "
+"Timed schedules run even when it is closed."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:49
+msgid "No saved jobs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:49
+msgid "Save a job in the Job Designer, then schedule it here."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:61
+msgid "Schedule enabled"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:70
+msgid "Time (HH:MM)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:74
+msgid "Date (YYYY-MM-DD)"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:77
+msgid "Minute past the hour"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:90
+msgid "Cron expression"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:91
+msgid ""
+"minute hour day-of-month month day-of-week, e.g. 30 2 * * 1-5 = 02:30 on "
+"weekdays"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:93
+msgid "Automatic"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:93
+#: linfilecopy/ui/pages/page_scheduler.py:327
+msgid "systemd user timer"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:94
+msgid "cron"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:96
+msgid "Scheduling method"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:98
+msgid "On"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:98
+msgid "At"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:99
+msgid "Minute"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:99
+msgid "Days"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:100
+msgid "Expression"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:100
+msgid "Using"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:111
+msgid "Catch up after the computer was off"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:111
+msgid "Runs at the next start if a time was missed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:114
+msgid "Only on AC power"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:114
+msgid "systemd timers only"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:129
+msgid "Run now"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:131
+msgid "Save schedule"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:181
+#, python-brace-format
+msgid "next: {when}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:183
+#, python-brace-format
+msgid "when {drive} is plugged in"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:185
+msgid "when files change"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:191
+msgid "not installed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:193
+msgid "drive"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:195
+msgid "watch"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:203
+#, python-brace-format
+msgid "{n} of {total} jobs"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:296
+#, python-brace-format
+msgid "Next run: {when}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:298
+msgid "No timed schedule."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:303
+msgid "# Nothing is installed for this job."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:323
+msgid "The schedule could not be saved"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:326
+msgid "Schedule saved"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:326
+#, python-brace-format
+msgid "Installed as a {how}."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:327
+msgid "cron entry"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_scheduler.py:327
+msgid "The schedule was removed."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:35
+msgid "Light"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:35
+msgid "Dark"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:37
+msgid "Style"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:37
+msgid "System follows your desktop's light or dark setting"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:50
+#, python-brace-format
+msgid "Accent colour {name}"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:55
+msgid "Accent colour"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:56
+msgid "Keep running in the tray"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:56
+msgid "Needed for drive and folder triggers after the window is closed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:59
+msgid "Open new jobs in the Simple view"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:63
+msgid "Appearance"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:67
+msgid "Preview new jobs first"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:67
+msgid "Recommended while you are learning the app"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:70
+msgid "Confirm before deleting files"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:70
+msgid "Mirror jobs, and two-way jobs that don't keep a trash folder"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:74
+#: linfilecopy/ui/pages/page_settings.py:75
+msgid "Default two-way delete limit"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:75
+msgid "New two-way jobs stop if more than this share of files would be deleted"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:82
+msgid "When a job finishes"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:84
+msgid "When a job fails"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:87
+msgid "Days of history to keep"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:88
+msgid "Keep history and logs for"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:88
+msgid "days"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:90
+msgid "Notifications and history"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:99
+msgid "Show system partitions"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:99
+msgid "Boot and EFI partitions"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:109
+msgid "System tools"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:121
+msgid "Checking tools…"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:162
+msgid "No drives found"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:162
+msgid "UDisks2 is not available, or no drives are connected."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:170
+msgid "Mount"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:174
+msgid "Eject"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:178
+msgid "encrypted"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_settings.py:193
+#, python-brace-format
+msgid "{drive}: the operation failed"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_transfers.py:28
+msgid "Nothing is running"
+msgstr ""
+
+#: linfilecopy/ui/pages/page_transfers.py:29
+msgid ""
+"Start a job from the Job Designer, or wait for a schedule. Finished runs "
+"stay here until you dismiss them."
+msgstr ""
+
+#: linfilecopy/ui/pages/page_transfers.py:90
+#, python-brace-format
+msgid "{n} waiting"
+msgid_plural "{n} waiting"
+msgstr[0] ""
+msgstr[1] ""
+
+#: linfilecopy/ui/sidebar.py:61
+msgid "Pages"
+msgstr ""
+
+#: linfilecopy/ui/sidebar.py:74
+msgid "DRIVES"
+msgstr ""
+
+#: linfilecopy/ui/window.py:77 linfilecopy/ui/window.py:78
+msgid "Show pages"
+msgstr ""
+
+#: linfilecopy/ui/window.py:83
+msgid "Create a new job (Ctrl+N)"
+msgstr ""
+
+#: linfilecopy/ui/window.py:90
+msgid "Templates"
+msgstr ""
+
+#: linfilecopy/ui/window.py:94
+msgid "Start a new job from a template"
+msgstr ""
+
+#: linfilecopy/ui/window.py:99
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: linfilecopy/ui/window.py:100
+msgid "About LinFileCopy"
+msgstr ""
+
+#: linfilecopy/ui/window.py:108 linfilecopy/ui/window.py:109
+msgid "Main menu"
+msgstr ""
+
+#: linfilecopy/ui/window.py:115
+msgid "Preview mode"
+msgstr ""
+
+#: linfilecopy/ui/window.py:120
+msgid ""
+"When on, Start only shows what would change. Nothing is copied or deleted."
+msgstr ""
+
+#: linfilecopy/ui/window.py:171
+msgid "locked"
+msgstr ""
+
+#: linfilecopy/ui/window.py:172
+msgid "free"
+msgstr ""

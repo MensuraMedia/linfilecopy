@@ -24,7 +24,10 @@ class BasePage(Gtk.ScrolledWindow):
     def __init__(self, ctx: AppContext, scroll: bool = True) -> None:
         super().__init__()
         self.ctx = ctx
-        self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC if scroll else Gtk.PolicyType.NEVER)
+        # Horizontal AUTOMATIC keeps the page's minimum width small, so the window can
+        # always shrink; pages re-flow to one column before a scrollbar is needed.
+        self.set_policy(Gtk.PolicyType.AUTOMATIC if scroll else Gtk.PolicyType.NEVER,
+                        Gtk.PolicyType.AUTOMATIC if scroll else Gtk.PolicyType.NEVER)
         self.content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
         add_classes(self.content, "lfc-page")
         self.add(self.content)

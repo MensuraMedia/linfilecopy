@@ -134,3 +134,7 @@ empty-transfers          pulse                    light    No active transfers
 delta-create             plus-circle              fill     Preview: new file
 delta-update             arrow-circle-up          fill     Preview: updated file
 delta-delete             minus-circle             fill     Preview: deleted file
+
+# --- application icon (composited by tools/build_app_icon.py) -------------
+app-glyph                copy                     bold     App icon main glyph
+app-badge                arrows-clockwise         bold     App icon sync badge

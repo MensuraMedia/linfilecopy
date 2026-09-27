@@ -121,3 +121,5 @@ Source: Phosphor Icons v2.0.8 (MIT, see LICENSE-phosphor).
 | `lfc-delta-create-symbolic` | plus-circle | fill | Preview: new file |
 | `lfc-delta-update-symbolic` | arrow-circle-up | fill | Preview: updated file |
 | `lfc-delta-delete-symbolic` | minus-circle | fill | Preview: deleted file |
+| `lfc-app-glyph-symbolic` | copy | bold | App icon main glyph |
+| `lfc-app-badge-symbolic` | arrows-clockwise | bold | App icon sync badge |

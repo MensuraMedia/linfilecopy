@@ -27,7 +27,6 @@ class MainWindow(Gtk.ApplicationWindow):
         self.ctx = ctx
         self.set_default_size(1180, 780)
         self.set_size_request(360, 480)
-        self.set_icon_name("io.github.mensuramedia.LinFileCopy")
         self.nav = NavigationManager()
         self._narrow = False
         self._layout_mode = ""
@@ -69,6 +68,9 @@ class MainWindow(Gtk.ApplicationWindow):
         self.title_label = label(APP_NAME, xalign=0.5)
         self.title_label.get_style_context().add_class("title")
         self.subtitle_label = label("", "subtitle", xalign=0.5)
+        for lbl in (self.title_label, self.subtitle_label):
+            lbl.set_ellipsize(3)          # Pango.EllipsizeMode.END: long job names never widen the window
+            lbl.set_max_width_chars(28)
         title_box.pack_start(self.title_label, False, False, 0)
         title_box.pack_start(self.subtitle_label, False, False, 0)
         hb.set_custom_title(title_box)
@@ -78,6 +80,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.sidebar_toggle.set_tooltip_text(_("Show pages"))
         self.sidebar_toggle.get_accessible().set_name(_("Show pages"))
         self.sidebar_toggle.connect("toggled", lambda b: self.sidebar.set_visible(b.get_active()))
+        self.sidebar_toggle.get_child().show()   # the button itself is excluded from show_all()
         self.sidebar_toggle.set_no_show_all(True)
         hb.pack_start(self.sidebar_toggle)
 

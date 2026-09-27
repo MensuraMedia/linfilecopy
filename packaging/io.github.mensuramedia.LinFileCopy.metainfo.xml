@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.mensuramedia.LinFileCopy</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>LinFileCopy</name>
+  <summary>Copy and sync folders between local disks and external drives</summary>
+  <developer id="io.github.mensuramedia">
+    <name>MensuraMedia</name>
+  </developer>
+  <description>
+    <p>
+      LinFileCopy is a dashboard for copy and sync jobs between internal disks, USB sticks,
+      external drives and local storage arrays, powered by rsync. Design a job with a clear
+      form, preview exactly what will change, run it, watch live progress and get notified
+      when it finishes. You never have to type an rsync command, but the exact command is
+      always shown.
+    </p>
+    <ul>
+      <li>Copy, mirror, or keep two folders in step in both directions</li>
+      <li>Preview every change before anything is copied or deleted</li>
+      <li>Adapts to the drive's filesystem (exFAT, FAT32, NTFS) and ejects it when done</li>
+      <li>Hard-linked snapshots, atomic replace, resume, checksums and speed limits</li>
+      <li>Unlocks encrypted drives, runs on a schedule, on file changes or when a drive is plugged in</li>
+      <li>History with logs, plain-language errors and one-click retry</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">io.github.mensuramedia.LinFileCopy.desktop</launchable>
+  <url type="homepage">https://github.com/MensuraMedia/linfilecopy</url>
+  <url type="bugtracker">https://github.com/MensuraMedia/linfilecopy/issues</url>
+  <content_rating type="oars-1.1"/>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <releases>
+    <release version="0.1.0" date="2026-09-28">
+      <description><p>First release.</p></description>
+    </release>
+  </releases>
+</component>
