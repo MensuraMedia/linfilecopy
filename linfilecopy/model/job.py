@@ -48,6 +48,7 @@ class Endpoint:
     relative_path: str | None = None   # path inside the volume
     kind: DriveKind = DriveKind.UNKNOWN
     fs_type: str | None = None         # last seen filesystem type (informational)
+    container_uuid: str | None = None  # LUKS container holding the volume (#10)
 
 
 @dataclass
