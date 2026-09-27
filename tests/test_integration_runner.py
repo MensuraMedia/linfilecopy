@@ -182,6 +182,46 @@ class StrategyTest(RunnerTestBase):
         self.assertFalse((self.dst / "stale").exists())
 
 
+class SafetyRegressionTest(RunnerTestBase):
+    def test_parallel_copy_folder_itself_goes_into_named_subfolder(self) -> None:
+        write(self.src / "a" / "x.txt", "x")
+        write(self.src / "#b.txt", "b")
+        write(self.dst / "src" / "stale.txt", "old")
+        write(self.dst / "keep-me.txt", "outside the mirrored folder")
+        j = self.job(mode=Mode.MIRROR)
+        j.transfer.copy_contents = False
+        j.performance.parallel_streams = 2
+        run = self.run_job(j)
+        self.assertEqual(run.status, RunStatus.SUCCESS, run.message)
+        self.assertTrue((self.dst / "src" / "a" / "x.txt").exists())
+        self.assertTrue((self.dst / "src" / "#b.txt").exists())
+        self.assertFalse((self.dst / "src" / "stale.txt").exists())
+        self.assertTrue((self.dst / "keep-me.txt").exists())
+        self.assertFalse((self.dst / "a").exists())
+
+    def test_mirror_from_empty_source_refused(self) -> None:
+        write(self.dst / "important.txt", "x")
+        run = self.run_job(self.job(mode=Mode.MIRROR))
+        self.assertEqual(run.status, RunStatus.FAILED)
+        self.assertTrue((self.dst / "important.txt").exists())
+
+    def test_failed_snapshot_is_not_kept_as_complete(self) -> None:
+        write(self.src / "f.txt", "1")
+        j = self.job()
+        j.safety.snapshots = True
+        self.run_job(j)
+        good = [p.name for p in self.dst.iterdir() if p.name[0].isdigit()]
+        self.assertEqual(len(good), 1)
+        self.assertFalse(any(p.name.endswith(".incomplete") for p in self.dst.iterdir()))
+        # a leftover partial snapshot from a crashed run is cleaned by the next rotation
+        (self.dst / "2099-01-01T000000.incomplete").mkdir()
+        time.sleep(1.1)
+        self.run_job(j)
+        names = sorted(p.name for p in self.dst.iterdir())
+        self.assertNotIn("2099-01-01T000000.incomplete", names)
+        self.assertIn(good[0], names)
+
+
 class TwoWayTest(RunnerTestBase):
     def tw(self, **kw) -> SyncJob:
         j = self.job(mode=Mode.TWO_WAY)
@@ -239,13 +279,59 @@ class TwoWayTest(RunnerTestBase):
             write(self.src / f"f{i}.txt", str(i))
         j = self.tw(delete_guard_percent=50)
         self.run_job(j)
+        for i in range(15):
+            (self.dst / f"f{i}.txt").unlink()
+        run = self.run_job(j)
+        self.assertEqual(run.status, RunStatus.FAILED)
+        self.assertIn("deleted", run.message)
+        self.assertEqual(len(list(self.src.glob("f*.txt"))), 20)
+
+    def test_emptied_side_stops_instead_of_deleting(self) -> None:
+        for i in range(3):
+            write(self.src / f"f{i}.txt", str(i))
+        j = self.tw()
+        self.run_job(j)
         for p in self.dst.iterdir():
             if p.is_file():
                 p.unlink()
         run = self.run_job(j)
         self.assertEqual(run.status, RunStatus.FAILED)
-        self.assertIn("deleted", run.message)
-        self.assertEqual(len(list(self.src.glob("f*.txt"))), 20)
+        self.assertIn("missing or empty", run.message)
+        self.assertEqual(len(list(self.src.glob("f*.txt"))), 3)
+
+    @unittest.skipIf(os.geteuid() == 0, "root can read everything")
+    def test_unreadable_folder_is_not_treated_as_deleted(self) -> None:
+        for i in range(12):
+            write(self.src / f"f{i}.txt", str(i))
+        write(self.src / "secret" / "s1", "keep me")
+        j = self.tw()
+        self.run_job(j)
+        os.chmod(self.dst / "secret", 0)
+        try:
+            run = self.run_job(j)
+        finally:
+            os.chmod(self.dst / "secret", 0o755)
+        self.assertEqual(run.status, RunStatus.FAILED)
+        self.assertEqual((self.src / "secret" / "s1").read_text(), "keep me")
+
+    def test_names_starting_with_hash_are_copied(self) -> None:
+        write(self.src / "#notes.txt", "a")
+        write(self.src / ";odd", "b")
+        run = self.run_job(self.tw())
+        self.assertEqual(run.status, RunStatus.SUCCESS, run.message)
+        self.assertTrue((self.dst / "#notes.txt").exists() and (self.dst / ";odd").exists())
+
+    def test_folder_deletion_propagates(self) -> None:
+        write(self.src / "d" / "x.txt", "x")
+        write(self.src / "keep.txt", "k")
+        j = self.tw()
+        self.run_job(j)
+        import shutil as _sh
+        _sh.rmtree(self.dst / "d")
+        run = self.run_job(j)
+        self.assertEqual(run.status, RunStatus.SUCCESS, run.message + run.fix)
+        self.assertFalse((self.src / "d").exists())
+        self.assertTrue(list((self.src / ".lfc-trash").rglob("x.txt")))
 
 
 class ManagerTest(RunnerTestBase):

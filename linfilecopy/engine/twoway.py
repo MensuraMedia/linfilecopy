@@ -20,6 +20,7 @@ import socket
 import sqlite3
 import tempfile
 import time
+import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Iterable
@@ -95,14 +96,26 @@ class Decision:
 # ---------------------------------------------------------------------------
 # scanning
 
+class ScanError(Exception):
+    """Part of a side could not be read. Never treat unreadable items as deleted."""
+
+
+def _raise_scan_error(exc: OSError) -> None:
+    raise ScanError(f"{exc.filename}: {exc.strerror}") from exc
+
+
 def scan(root: str, matcher: FilterMatcher, check: Callable[[], None] | None = None,
          progress: Callable[[str], None] | None = None) -> Tree:
-    """Relative path -> Entry for everything under ``root`` that the filters keep."""
+    """Relative path -> Entry for everything under ``root`` that the filters keep.
+
+    Raises :class:`ScanError` when any folder or file cannot be read: an
+    incomplete scan would make the unread items look deleted.
+    """
     tree: Tree = {}
     if not os.path.isdir(root):
         return tree
     count = 0
-    for dirpath, dirnames, filenames in os.walk(root):
+    for dirpath, dirnames, filenames in os.walk(root, onerror=_raise_scan_error):
         rel_dir = os.path.relpath(dirpath, root)
         rel_dir = "" if rel_dir == "." else rel_dir
         keep_dirs = []
@@ -112,7 +125,10 @@ def scan(root: str, matcher: FilterMatcher, check: Callable[[], None] | None = N
             if matcher.excluded(rel, True):
                 continue
             if os.path.islink(full):
-                st = os.lstat(full)
+                try:
+                    st = os.lstat(full)
+                except OSError as exc:
+                    _raise_scan_error(exc)
                 tree[rel] = Entry(False, st.st_size, st.st_mtime_ns)
                 continue
             tree[rel] = Entry(True, 0, 0)
@@ -124,8 +140,8 @@ def scan(root: str, matcher: FilterMatcher, check: Callable[[], None] | None = N
                 continue
             try:
                 st = os.lstat(os.path.join(dirpath, f))
-            except OSError:
-                continue
+            except OSError as exc:
+                _raise_scan_error(exc)
             tree[rel] = Entry(False, st.st_size, st.st_mtime_ns)
         count += 1
         if check and count % 50 == 0:
@@ -312,17 +328,31 @@ def guard_violation(d: Decision, a: Tree, b: Tree, percent: int) -> str | None:
 # ---------------------------------------------------------------------------
 # applying
 
+def free_name(path: str) -> str:
+    """``path`` if unused, else ``path`` with " (2)", " (3)"… before the extension."""
+    if not os.path.lexists(path):
+        return path
+    stem, ext = os.path.splitext(path)
+    n = 2
+    while os.path.lexists(f"{stem} ({n}){ext}"):
+        n += 1
+    return f"{stem} ({n}){ext}"
+
+
 def _to_trash(root: str, rel: str, stamp: str, use_trash: bool) -> None:
+    """Remove one decided path. Folders are only removed once empty (their tracked
+    children were handled first); anything else inside them is left alone."""
     src = os.path.join(root, rel)
     if not os.path.lexists(src):
         return
-    if not use_trash:
-        if os.path.isdir(src) and not os.path.islink(src):
-            os.rmdir(src) if not os.listdir(src) else None
-        else:
-            os.unlink(src)
+    if os.path.isdir(src) and not os.path.islink(src):
+        if not os.listdir(src):
+            os.rmdir(src)
         return
-    dst = os.path.join(root, rb.TRASH_DIR, stamp, rel)
+    if not use_trash:
+        os.unlink(src)
+        return
+    dst = free_name(os.path.join(root, rb.TRASH_DIR, stamp, rel))   # never overwrite earlier trash
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     os.rename(src, dst)
 
@@ -339,9 +369,11 @@ def _rsync_argv(job: SyncJob, src_root: str, dst_root: str, list_file: str, tras
     flag_i = next(i for i, a in enumerate(argv) if a.startswith("-") and not a.startswith("--") and a.startswith("-r"))
     argv[flag_i] = "-d" + argv[flag_i][2:]            # listed dirs are created, not recursed
     argv = [a for a in argv if not a.startswith("--exclude=")]
+    # The list is NUL-separated and "./"-prefixed (see parallel.write_list).
     # The decision is already made: copy every listed file even when rsync's
     # whole-second quick check would call it unchanged.
     argv.insert(flag_i + 1, "--ignore-times")
+    argv.insert(flag_i + 1, "--from0")   # NUL-separated list: names may start with # or ; or contain newlines
     if trash_stamp:
         argv[flag_i + 1:flag_i + 1] = ["--backup", f"--backup-dir={rb.TRASH_DIR}/{trash_stamp}"]
     return argv
@@ -376,13 +408,29 @@ def run_twoway(run: "JobRun", step: "Step") -> None:
 
     run.step_description = _("Comparing both sides…")
     run._notify(force=True)
-    if not os.path.isdir(root_b) and not preview:
-        os.makedirs(root_b, exist_ok=True)
-    tree_a = scan(root_a, matcher, run._check_cancel, scanning(_("source")))
-    tree_b = scan(root_b, matcher, run._check_cancel, scanning(_("destination")))
     store = StateStore(job.id)
     sig = signature(job)
     state = store.load(sig)
+    if state:
+        # After a successful sync both sides existed. A side that is now missing or
+        # empty means a renamed folder or an unmounted drive, not "delete everything".
+        for root, label in ((root_a, _("source")), (root_b, _("destination"))):
+            if not os.path.isdir(root):
+                raise StepFailed(_("The {side} folder {path} is missing or empty, but it was synced before.").format(side=label, path=root),
+                                 _("Check that the right drive is connected and mounted. To start over, delete and recreate the job."))
+    elif not os.path.isdir(root_b) and not preview:
+        os.makedirs(root_b, exist_ok=True)
+    try:
+        tree_a = scan(root_a, matcher, run._check_cancel, scanning(_("source")))
+        tree_b = scan(root_b, matcher, run._check_cancel, scanning(_("destination")))
+    except ScanError as exc:
+        raise StepFailed(_("Could not read {what}. Nothing was changed.").format(what=exc),
+                         _("Fix the permissions or check the drive, then run again.")) from exc
+    if state and any(not e.is_dir for e in state.values()):
+        for tree, root, label in ((tree_a, root_a, _("source")), (tree_b, root_b, _("destination"))):
+            if not any(not e.is_dir for e in tree.values()):
+                raise StepFailed(_("The {side} folder {path} is missing or empty, but it was synced before.").format(side=label, path=root),
+                                 _("Check that the right drive is connected and mounted. To start over, delete and recreate the job."))
     if state is None:
         run.log(_("First two-way run for these folders: both sides are merged."))
     decision = decide(tree_a, tree_b, state, job.twoway.conflict, tol_ns)
@@ -404,7 +452,7 @@ def run_twoway(run: "JobRun", step: "Step") -> None:
         store.save(sig, {p: e for p, e in tree_a.items() if p in tree_b and _same(e, tree_b[p], tol_ns)})
         return
 
-    stamp = dt.datetime.now().strftime("%Y-%m-%dT%H%M%S")
+    stamp = f"{dt.datetime.now():%Y-%m-%dT%H%M%S}-{uuid.uuid4().hex[:6]}"
     use_trash = job.twoway.use_trash
     try:
         for rel in sorted(decision.delete_a, key=len, reverse=True):
@@ -412,11 +460,13 @@ def run_twoway(run: "JobRun", step: "Step") -> None:
         for rel in sorted(decision.delete_b, key=len, reverse=True):
             _to_trash(root_b, rel, stamp, use_trash)
         for rel, new in decision.rename_a.items():
-            os.rename(os.path.join(root_a, rel), os.path.join(root_a, new))
-            decision.copy_a_to_b.append(new)
+            target = free_name(os.path.join(root_a, new))
+            os.rename(os.path.join(root_a, rel), target)
+            decision.copy_a_to_b.append(os.path.relpath(target, root_a))
         for rel, new in decision.rename_b.items():
-            os.rename(os.path.join(root_b, rel), os.path.join(root_b, new))
-            decision.copy_b_to_a.append(new)
+            target = free_name(os.path.join(root_b, new))
+            os.rename(os.path.join(root_b, rel), target)
+            decision.copy_b_to_a.append(os.path.relpath(target, root_b))
     except OSError as exc:
         raise StepFailed(_("Could not move a file aside: {err}").format(err=exc), _("Check permissions on both folders.")) from exc
 
@@ -431,8 +481,9 @@ def run_twoway(run: "JobRun", step: "Step") -> None:
             if not items:
                 continue
             list_file = os.path.join(tmp, "list.txt")
-            with open(list_file, "w", encoding="utf-8") as fh:
-                fh.write("\n".join(_with_parents(items)) + "\n")
+            from linfilecopy.engine.parallel import write_list
+
+            write_list(list_file, _with_parents(items))
             run.step_description = label
             run._notify(force=True)
             code = run.run_rsync(_rsync_argv(job, src, dst, list_file, stamp if use_trash else None, wrapper, rsync_path))

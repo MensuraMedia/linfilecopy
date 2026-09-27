@@ -33,6 +33,20 @@ class ValidationTest(unittest.TestCase):
         self.assertIn("destination.path", fields(job("/a", "/a/backup")))
         self.assertNotIn("destination.path", fields(job("/a/b", "/a/bc")))  # prefix, not inside
 
+    def test_source_inside_destination(self) -> None:
+        self.assertIn("destination.path", fields(job("/mnt/b/data/photos", "/mnt/b/data", mode=Mode.MIRROR)))
+        self.assertIn("destination.path", fields(job("/mnt/b/data/photos", "/mnt/b/data", mode=Mode.TWO_WAY)))
+        self.assertIn("destination.path", fields(job("/mnt/b/data/photos", "/mnt/b/data"), WARNING))
+
+    def test_mount_roots_protected(self) -> None:
+        for d in ("/media/sam", "/run/media/sam", "/media"):
+            self.assertIn("destination.path", fields(job(src="/data", dst=d, mode=Mode.MIRROR)), d)
+        self.assertNotIn("destination.path", fields(job(src="/data", dst="/media/sam/USB/backup", mode=Mode.MIRROR)))
+
+    def test_parallel_with_files_from_blocked(self) -> None:
+        j = job(); j.performance.parallel_streams = 2; j.filters.files_from = "/home/x/list"
+        self.assertIn("performance.parallel_streams", fields(j))
+
     def test_mirror_into_protected_folder_blocked(self) -> None:
         self.assertIn("destination.path", fields(job(dst="/", mode=Mode.MIRROR)))
         self.assertIn("destination.path", fields(job(src="/data", dst=os.path.expanduser("~"), mode=Mode.MIRROR)))

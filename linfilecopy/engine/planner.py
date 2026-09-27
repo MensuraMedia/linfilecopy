@@ -23,6 +23,7 @@ from linfilecopy.model.job import SyncJob
 from linfilecopy.model.validation import ERROR, INFO, WARNING, Issue, validate_job
 
 SNAPSHOT_FORMAT = "%Y-%m-%dT%H%M%S"
+INCOMPLETE = ".incomplete"
 LATEST = "latest"
 
 
@@ -63,6 +64,7 @@ class PlanEnv:
     destination: ResolvedEndpoint
     dest_fs: FsCapabilities
     source_exists: bool = True
+    source_empty: bool = False
     dest_exists: bool = True
     latest_snapshot_exists: bool = False
     rsync_path: str | None = "rsync"
@@ -176,6 +178,10 @@ def _endpoint_issues(job: SyncJob, env: PlanEnv, issues: list[Issue]) -> None:
     if env.source.state is EndpointState.READY and job.source.path.strip() and not env.source_exists:
         issues.append(Issue(ERROR, "source.path", _("The source folder does not exist: {path}").format(path=env.source.path),
                             _("Check the path or pick the folder again.")))
+    if job.mode is Mode.MIRROR and env.source.state is EndpointState.READY and env.source_empty:
+        issues.append(Issue(ERROR, "source.path",
+                            _("The source folder is empty. Mirroring it would delete everything at the destination."),
+                            _("Check that the right drive is connected and mounted, or use Copy.")))
     if not env.rsync_path or env.rsync_version is None:
         issues.append(Issue(ERROR, "engine", _("rsync is not installed, so jobs cannot run."),
                             _("Install it, for example: sudo apt install rsync")))
@@ -241,10 +247,12 @@ def plan_job(job: SyncJob, env: PlanEnv, preview: bool = False, dry_run: bool = 
             steps.append(Step(StepKind.RSYNC, _("compare with the latest snapshot"), argv))
         else:
             name = env.now.strftime(SNAPSHOT_FORMAT)
-            target = os.path.join(dst, name)
+            # Written under a temporary name and renamed only after rsync succeeds, so a
+            # failed or cancelled run never looks like a complete snapshot.
+            target = os.path.join(dst, name + INCOMPLETE)
             argv = rb.build_rsync_argv(eff, src, target, fs, replace(opts, link_dest=link_dest))
             steps.append(Step(StepKind.RSYNC, _("copy into a new snapshot"), argv, {"snapshot": name, "target": target}))
-            steps.append(Step(StepKind.UPDATE_LATEST, _("point \"latest\" at the new snapshot"),
+            steps.append(Step(StepKind.UPDATE_LATEST, _("mark the snapshot complete and point \"latest\" at it"),
                               ["ln", "-sfn", name, os.path.join(dst, LATEST)], {"root": dst, "name": name}))
             steps.append(Step(StepKind.ROTATE,
                               _("rotate: keep {d} daily, {w} weekly").format(d=eff.safety.keep_daily, w=eff.safety.keep_weekly),
@@ -273,6 +281,14 @@ def plan_job(job: SyncJob, env: PlanEnv, preview: bool = False, dry_run: bool = 
     return Plan(eff, steps, issues, src, dst, notes)
 
 
+def _is_empty(path: str) -> bool:
+    try:
+        with os.scandir(path) as it:
+            return next(it, None) is None
+    except OSError:
+        return False
+
+
 def gather_env(
     job: SyncJob,
     drives: list[DriveInfo],
@@ -294,6 +310,7 @@ def gather_env(
     return PlanEnv(
         source=src, destination=dst, dest_fs=capabilities_for(fs_type),
         source_exists=bool(src.path) and os.path.isdir(src.path) if src.state is EndpointState.READY else True,
+        source_empty=src.state is EndpointState.READY and bool(src.path) and os.path.isdir(src.path) and _is_empty(src.path),
         dest_exists=bool(dst.path) and os.path.isdir(dst.path),
         latest_snapshot_exists=bool(dst.path) and os.path.isdir(os.path.join(dst.path, LATEST)),
         rsync_path=rsync_path, rsync_version=rsync_version, has_ionice=has_ionice, has_nice=has_nice,

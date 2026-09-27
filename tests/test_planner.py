@@ -54,7 +54,7 @@ class PlannerTest(unittest.TestCase):
         self.assertEqual(kinds(p), [StepKind.RSYNC, StepKind.UPDATE_LATEST, StepKind.ROTATE])
         a = p.steps[0].argv
         self.assertIn("--link-dest=/media/sam/USB/Docs/latest", a)
-        self.assertEqual(a[-1], "/media/sam/USB/Docs/2026-09-28T030000/")
+        self.assertEqual(a[-1], "/media/sam/USB/Docs/2026-09-28T030000.incomplete/")
         self.assertTrue(p.display_text().startswith("# 1. copy into a new snapshot"))
         first = plan_job(j, env(latest_snapshot_exists=False))
         self.assertFalse(any(x.startswith("--link-dest") for x in first.steps[0].argv))

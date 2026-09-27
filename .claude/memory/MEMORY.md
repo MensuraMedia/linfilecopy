@@ -7,6 +7,7 @@
 
 ## Changes
 <!-- Add newest first -->
+- [Data-safety fixes](changes/2026-09-28_data-safety-fixes.md)
 - [P7–P9 triggers, polish, packaging](changes/2026-09-28_p7-p9-triggers-polish-packaging.md)
 - [P3/P6 runner + strategies](changes/2026-09-27_p3-runner-strategies.md)
 - [P2 drives + builder](changes/2026-09-27_p2-drives-builder.md)

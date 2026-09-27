@@ -19,6 +19,16 @@ def list_snapshots(root: str) -> list[str]:
     return sorted(names)
 
 
+INCOMPLETE = ".incomplete"
+
+
+def finish_snapshot(root: str, name: str) -> None:
+    """Rename ``<name>.incomplete`` to ``<name>`` once its copy succeeded."""
+    partial = os.path.join(root, name + INCOMPLETE)
+    if os.path.isdir(partial):
+        os.rename(partial, os.path.join(root, name))
+
+
 def update_latest(root: str, name: str) -> None:
     """Point ``root/latest`` at ``name`` atomically (relative link, survives remounts)."""
     tmp = os.path.join(root, f".{LATEST}.tmp")
@@ -71,6 +81,11 @@ def rotate(root: str, keep_daily: int, keep_weekly: int) -> list[str]:
     removed = select_to_remove(names, keep_daily, keep_weekly, {latest_target} if latest_target else None)
     for name in removed:
         shutil.rmtree(os.path.join(root, name), ignore_errors=False, onerror=_force_writable)
+    # Leftovers of failed or cancelled runs (never linked as "latest").
+    for entry in os.scandir(root):
+        if entry.is_dir(follow_symlinks=False) and entry.name.endswith(INCOMPLETE) and SNAPSHOT_RE.match(entry.name[: -len(INCOMPLETE)]):
+            shutil.rmtree(entry.path, onerror=_force_writable)
+            removed.append(entry.name)
     return removed
 
 

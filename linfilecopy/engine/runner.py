@@ -312,7 +312,13 @@ class JobRun:
             for s in pre:
                 self._check_cancel()
                 self._run_step(s)
-            plan = planner.plan_job(self.job, self._env(), preview=self.preview, dry_run=self.dry_run)
+            env = self._env()
+            not_ready = [label for label, res in ((_("source"), env.source), (_("destination"), env.destination))
+                         if res.state is not EndpointState.READY]
+            if not_ready:
+                raise StepFailed(_("The {side} drive is still not available after mounting.").format(side=not_ready[0]),
+                                 _("Mount it in your file manager and run the job again."))
+            plan = planner.plan_job(self.job, env, preview=self.preview, dry_run=self.dry_run)
             self._raise_blocking(plan)
             plan.steps = [s for s in plan.steps if s.kind not in (StepKind.UNLOCK, StepKind.MOUNT)]
         for issue in plan.issues:
@@ -331,14 +337,14 @@ class JobRun:
         post_kinds = (StepKind.UNMOUNT, StepKind.LOCK, StepKind.POWER_OFF)
         main = [s for s in plan.steps if s.kind not in post_kinds]
         post = [s for s in plan.steps if s.kind in post_kinds]
-        failure: StepFailed | None = None
+        failure: BaseException | None = None
         try:
             for i, step in enumerate(main):
                 self._check_cancel()
                 self.step_index, self.step_description = i, step.description
                 self._notify(force=True)
                 self._run_step(step)
-        except StepFailed as exc:
+        except Exception as exc:  # noqa: BLE001 - includes RunCancelled: still lock the drive below
             failure = exc
         # Always lock/unmount afterwards for safety; only eject after success.
         for step in post:
@@ -350,6 +356,8 @@ class JobRun:
                 self.log(f"{step.description}: {exc.message}")
                 if failure is None:
                     self.message = exc.message
+            except Exception as exc:  # noqa: BLE001
+                self.log(f"{step.description}: {exc}")
         if failure is not None:
             raise failure
 
@@ -534,6 +542,7 @@ class JobRun:
             elif step.kind is StepKind.REMOVE_TREE:
                 atomic.remove_tree(step.params["path"])
             elif step.kind is StepKind.UPDATE_LATEST:
+                snapshots.finish_snapshot(step.params["root"], step.params["name"])
                 snapshots.update_latest(step.params["root"], step.params["name"])
             elif step.kind is StepKind.ROTATE:
                 removed = snapshots.rotate(step.params["root"], step.params["keep_daily"], step.params["keep_weekly"])

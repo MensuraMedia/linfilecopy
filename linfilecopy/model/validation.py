@@ -51,6 +51,23 @@ def protected_paths() -> set[str]:
     return PROTECTED | {_norm(os.path.expanduser("~"))}
 
 
+def _real(path: str) -> str:
+    """Normalised path with symlinks resolved (so two spellings of one folder compare equal)."""
+    return os.path.realpath(path) if path else ""
+
+
+def is_protected(path: str) -> bool:
+    """System/home folders, and folders that hold other drives' mount points
+    (/media/<user>, /run/media/<user>): deleting inside them would reach every mounted drive."""
+    for p in {_norm(path), _real(path)}:
+        if p in protected_paths():
+            return True
+        parts = p.strip("/").split("/")
+        if (parts[:1] == ["media"] and len(parts) == 2) or (parts[:2] == ["run", "media"] and len(parts) == 3):
+            return True
+    return False
+
+
 def validate_job(job: SyncJob) -> list[Issue]:
     """Return every structural problem with ``job`` (empty list = valid)."""
     issues: list[Issue] = []
@@ -70,7 +87,8 @@ def validate_job(job: SyncJob) -> list[Issue]:
         add(Issue(ERROR, "destination.path", _("The destination must be a full path starting with /."), _("Use Browse to pick the folder.")))
 
     if src and dst and os.path.isabs(src) and os.path.isabs(dst):
-        if _norm(src) == _norm(dst):
+        src_inside_dst = _inside(src, dst) or _inside(_real(src), _real(dst))
+        if _norm(src) == _norm(dst) or _real(src) == _real(dst):
             add(Issue(ERROR, "destination.path", _("Source and destination are the same folder."), _("Pick a different destination.")))
         elif _inside(dst, src) and not job.safety.snapshots:
             add(Issue(ERROR, "destination.path",
@@ -80,11 +98,19 @@ def validate_job(job: SyncJob) -> list[Issue]:
             add(Issue(ERROR, "destination.path",
                       _("The snapshot folder is inside the source, so each snapshot would copy the previous ones."),
                       _("Choose a destination outside the source folder.")))
-        if job.mode in (Mode.MIRROR, Mode.TWO_WAY) and _norm(dst) in protected_paths():
+        elif src_inside_dst and job.mode in (Mode.MIRROR, Mode.TWO_WAY):
+            add(Issue(ERROR, "destination.path",
+                      _("The source is inside the destination. Mirror and two-way would delete the source itself."),
+                      _("Choose a destination that does not contain the source folder.")))
+        elif src_inside_dst:
+            add(Issue(WARNING, "destination.path",
+                      _("The source is inside the destination, so its files are copied next to it."),
+                      _("Usually a mistake: choose a destination that does not contain the source folder.")))
+        if job.mode in (Mode.MIRROR, Mode.TWO_WAY) and is_protected(dst):
             add(Issue(ERROR, "destination.path",
                       _("{path} is a system or home folder. Mirror and two-way jobs could delete files there.").format(path=dst),
                       _("Choose a dedicated folder, for example a folder on a backup drive.")))
-        if job.mode is Mode.TWO_WAY and _norm(src) in protected_paths():
+        if job.mode is Mode.TWO_WAY and is_protected(src):
             add(Issue(ERROR, "source.path",
                       _("{path} is a system or home folder. Two-way jobs can delete files on both sides.").format(path=src),
                       _("Choose a specific folder such as ~/Notes.")))
@@ -106,6 +132,10 @@ def validate_job(job: SyncJob) -> list[Issue]:
     if job.safety.atomic and job.safety.snapshots:
         add(Issue(ERROR, "safety.atomic", _("Atomic replace is not needed with snapshots: each snapshot is written to a new folder."),
                   _("Turn off atomic replace.")))
+    if job.performance.parallel_streams > 1 and job.filters.files_from:
+        add(Issue(ERROR, "performance.parallel_streams",
+                  _("Parallel streams cannot be combined with \"Copy only files listed in\"."),
+                  _("Set parallel streams to 1, or clear the file list.")))
     if job.performance.parallel_streams > 1 and (job.safety.atomic or job.safety.snapshots):
         add(Issue(ERROR, "performance.parallel_streams",
                   _("Parallel streams are not available with snapshots or atomic replace yet."),

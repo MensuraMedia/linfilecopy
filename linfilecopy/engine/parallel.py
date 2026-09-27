@@ -54,6 +54,18 @@ def split_buckets(sizes: dict[str, int], n: int) -> list[list[str]]:
     return [sorted(names) for _, names in buckets if names]
 
 
+def write_list(path: str, names: list[str]) -> None:
+    """A --files-from list rsync reads verbatim: NUL-separated (use with --from0) and
+    "./"-prefixed, because rsync skips entries starting with # or ; as comments."""
+    with open(path, "wb") as fh:
+        fh.write(b"".join(b"./" + os.fsencode(n) + b"\0" for n in names))
+
+
+def _rsync_index(argv: list[str]) -> int:
+    """Position of the rsync binary: the element just before the short-flag cluster."""
+    return next(i for i, a in enumerate(argv) if a.startswith("-r") or a.startswith("-d")) - 1
+
+
 def run_parallel(run: "JobRun", step: "Step") -> None:
     from linfilecopy.engine.runner import StepFailed
 
@@ -78,14 +90,22 @@ def run_parallel(run: "JobRun", step: "Step") -> None:
     run.step_description = _("Copying with {n} parallel streams").format(n=len(buckets))
     run._notify(force=True)
 
-    template = step.argv or []
+    # Positional arguments: always list relative to inside the source. When the job
+    # copies "the folder itself", the buckets go into dest/<folder name>/, exactly
+    # where a single rsync run would put them.
+    template = list(step.argv or [])
+    dest = step.params["destination"].rstrip("/")
+    if not run.job.transfer.copy_contents:
+        dest = os.path.join(dest, os.path.basename(source.rstrip("/")))
+    template[-2:] = [source.rstrip("/") + "/", dest + "/"]
+    at = _rsync_index(template)
+    template.insert(at + 2, "--from0")
     codes: dict[int, int] = {}
     with tempfile.TemporaryDirectory(prefix="lfc-par-") as tmp:
         threads = []
         for i, names in enumerate(buckets):
             list_path = os.path.join(tmp, f"bucket-{i}.txt")
-            with open(list_path, "w", encoding="utf-8") as fh:
-                fh.write("\n".join(names) + "\n")
+            write_list(list_path, names)
             argv = [f"--files-from={list_path}" if a == "--files-from=<bucket>" else a for a in template]
 
             def worker(i: int = i, argv: list[str] = argv) -> None:
@@ -108,12 +128,14 @@ def run_parallel(run: "JobRun", step: "Step") -> None:
     if run.job.mode is Mode.MIRROR:
         run.step_description = _("Removing files that are no longer in the source")
         run._notify(force=True)
-        argv = [a for a in template if not a.startswith("--files-from")]
-        # Delete-only pass: --existing + --ignore-existing transfers nothing.
-        rsync_at = next(i for i, a in enumerate(argv) if os.path.basename(a) == "rsync")
+        argv = [a for a in template if not a.startswith("--files-from") and a != "--from0"]
+        # Delete-only pass: --existing + --ignore-existing transfers nothing. It keeps the
+        # job's filters (excluded files stay protected) and uses the same roots as the copy.
+        rsync_at = _rsync_index(argv)
+        roots = argv[-2:]
         argv = argv[: rsync_at + 1] + ["-r", "--existing", "--ignore-existing", "--delete-delay"] + [
-            a for a in argv[rsync_at + 1:] if a.startswith(("--exclude", "--include", "--filter")) or a in (argv[-2], argv[-1])
-        ]
+            a for a in argv[rsync_at + 1:-2] if a.startswith(("--exclude", "--include", "--filter"))
+        ] + roots
         code = run.run_rsync(argv, stream=len(buckets))
         if code not in (0, 24):
             from linfilecopy.engine import exitcodes

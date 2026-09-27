@@ -74,7 +74,11 @@ def swap_into_place(stage: str, target: str, target_exists: bool) -> None:
         # Filesystem without exchange support: two quick renames.
         old = target + ".lfc-old"
         os.rename(target, old)
-        os.rename(stage, target)
+        try:
+            os.rename(stage, target)
+        except OSError:
+            os.rename(old, target)   # put the live tree back
+            raise
         os.rename(old, stage)
 
 
