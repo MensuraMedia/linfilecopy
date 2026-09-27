@@ -49,6 +49,8 @@ action-more              dots-three-vertical      regular  Row overflow menu
 action-close             x                        regular  Close dialog / dismiss
 action-install           download-simple          regular  Show install instructions
 action-edit              pencil-simple            regular  Edit job
+action-open-job          folders                  regular  Open a saved job (job picker)
+action-import-file       file-arrow-down          regular  Pick a list file (exclude-from / files-from)
 misc-info                info                     regular  Inline help
 misc-shortcuts           keyboard                 regular  Keyboard shortcuts
 misc-theme               circle-half              regular  Theme selector

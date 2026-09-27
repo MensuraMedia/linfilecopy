@@ -48,9 +48,16 @@ class MainWindow(Gtk.ApplicationWindow):
         body.pack_start(self.stack, True, True, 0)
         self.add(body)
 
+        self._build_templates_menu()
+        ctx.subscribe("drives", self._fill_sidebar_drives)
+        ctx.subscribe("settings-changed", lambda _s: self._fill_sidebar_drives(ctx.drives.drives if ctx.drives else []))
+        if ctx.drives is not None:
+            self._fill_sidebar_drives(ctx.drives.drives)
         self.nav.on_navigate(self._on_navigated)
         self.connect("size-allocate", self._on_size_allocate)
         self.show_all()
+        for page in pages:
+            page.after_show_all()
         self.show_page("dashboard")
 
     # ----- header ---------------------------------------------------------
@@ -117,6 +124,68 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_titlebar(hb)
         self.header = hb
 
+    def _build_templates_menu(self) -> None:
+        from linfilecopy.model.templates import load_templates
+
+        pop = Gtk.Popover()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        for side in ("top", "bottom", "start", "end"):
+            getattr(box, f"set_margin_{side}")(6)
+        for tpl in load_templates():
+            b = Gtk.Button(relief=Gtk.ReliefStyle.NONE)
+            row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            row.pack_start(icon(tpl.icon), False, False, 0)
+            text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+            text.pack_start(label(_(tpl.name)), False, False, 0)
+            desc = label(_(tpl.description), "lfc-dim", "lfc-small", wrap=True)
+            desc.set_max_width_chars(42)
+            text.pack_start(desc, False, False, 0)
+            row.pack_start(text, True, True, 0)
+            b.add(row)
+            b.connect("clicked", lambda _b, key=tpl.key: (pop.popdown(), self.ctx.publish("new-from-template", key)))
+            box.pack_start(b, False, False, 0)
+        box.show_all()
+        pop.add(box)
+        self.templates_button.set_popover(pop)
+
+    def _fill_sidebar_drives(self, drives: list) -> None:  # type: ignore[type-arg]
+        from linfilecopy.engine.drives import visible_drives
+        from linfilecopy.model.enums import DriveKind
+        from linfilecopy.ui.components.component_common import clear
+        from linfilecopy.ui.components.component_path_card import drive_icon
+
+        clear(self.sidebar.drives_list)
+        shown = [d for d in visible_drives(drives, self.ctx.settings.show_system_partitions)
+                 if d.kind is not DriveKind.INTERNAL or d.mount_point not in ("/",)]
+        for d in shown:
+            row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            row.get_style_context().add_class("lfc-drive-row")
+            img = icon(drive_icon(d))
+            img.get_style_context().add_class("lfc-dim")
+            row.pack_start(img, False, False, 0)
+            text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+            name = label(d.label, ellipsize=True)
+            name.set_max_width_chars(14)
+            text.pack_start(name, False, False, 0)
+            from linfilecopy.formatting import format_bytes
+
+            detail = (_("locked") if d.encrypted and d.locked else
+                      f"{d.fs.label} · {format_bytes(d.free)} " + _("free") if d.free is not None else d.fs.label)
+            text.pack_start(label(detail, "lfc-dim", "lfc-small", ellipsize=True), False, False, 0)
+            row.pack_start(text, True, True, 0)
+            if d.kind is DriveKind.REMOVABLE and (d.mounted or d.can_power_off):
+                b = button("action-eject", None, _("Eject {drive}").format(drive=d.label), flat=True)
+                b.connect("clicked", lambda _b, d=d: self.ctx.drives.eject(d))
+                row.pack_start(b, False, False, 0)
+            elif d.encrypted and d.locked:
+                b = button("ep-unlock", None, _("Unlock {drive}").format(drive=d.label), flat=True)
+                b.connect("clicked", lambda _b, d=d: self.page("settings")._unlock(d))
+                row.pack_start(b, False, False, 0)
+            row.set_tooltip_text(f"{d.label}\n{d.describe()}\n{d.mount_point or d.device}")
+            self.sidebar.drives_list.pack_start(row, False, False, 0)
+        self.sidebar.drives_box.set_visible(bool(shown) and not self.sidebar._compact)
+        self.sidebar.drives_list.show_all()
+
     # ----- navigation -----------------------------------------------------
     def show_page(self, page_id: str) -> None:
         self.nav.navigate_to(page_id)
@@ -137,6 +206,8 @@ class MainWindow(Gtk.ApplicationWindow):
             self.subtitle_label.set_text(page.subtitle())
 
     def _on_navigated(self, page_id: str) -> None:
+        if page_id != "designer":
+            self.title_label.set_text(APP_NAME)
         self.refresh_subtitle()
 
     # ----- responsive layout ----------------------------------------------

@@ -72,7 +72,7 @@ button.lfc-chip:checked { background-image: none; background-color: @lfc_accent_
 /* command preview */
 .lfc-cmd, .lfc-cmd text {
   font-family: "Source Code Pro", "DejaVu Sans Mono", monospace;
-  font-size: 0.9em;
+  font-size: 0.86em;
   background-color: @lfc_code_bg;
 }
 .lfc-cmd-frame { border: 1px solid @lfc_border; border-radius: 8px; background-color: @lfc_code_bg; }

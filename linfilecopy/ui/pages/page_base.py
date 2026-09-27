@@ -36,6 +36,9 @@ class BasePage(Gtk.ScrolledWindow):
     def on_shown(self) -> None:
         """Called each time the page becomes visible."""
 
+    def after_show_all(self) -> None:
+        """Called once after the window's first show_all(): re-apply hidden states."""
+
     def subtitle(self) -> str:
         """Text shown under the window title while this page is visible."""
         return self.title

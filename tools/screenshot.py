@@ -73,6 +73,11 @@ def main() -> int:
     def run_sequence() -> bool:
         win = app.window
         win.resize(args.width, args.height)
+        # Park the pointer in a corner so hover effects and tooltips stay out of the shots.
+        display = Gdk.Display.get_default()
+        seat = display.get_default_seat() if display else None
+        if seat is not None and seat.get_pointer() is not None:
+            seat.get_pointer().warp(display.get_default_screen(), 1399, 999)
 
         def step(i: int) -> bool:
             if i >= len(pages):

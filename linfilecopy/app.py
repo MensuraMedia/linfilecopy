@@ -11,6 +11,10 @@ from gi.repository import Gio, GLib, Gtk  # noqa: E402
 
 from linfilecopy import APP_ID, APP_NAME, __version__, paths, resources  # noqa: E402
 from linfilecopy.engine import tools  # noqa: E402
+from linfilecopy.engine.drives import UDisksClient  # noqa: E402
+from linfilecopy.engine.runner import EngineServices, JobRun, RunHooks, RunManager  # noqa: E402
+from linfilecopy.model.history import HistoryStore  # noqa: E402
+from linfilecopy.model.store import JobStore  # noqa: E402
 from linfilecopy.i18n import _  # noqa: E402
 from linfilecopy.log import get_logger, setup_logging  # noqa: E402
 from linfilecopy.model.settings import AppSettings  # noqa: E402
@@ -49,7 +53,25 @@ class LinFileCopyApp(Gtk.Application):
         settings = AppSettings.load()
         theme = ThemeManager()
         theme.apply(settings.style, settings.accent)
-        self.ctx = AppContext(settings=settings, theme=theme)
+        self.ctx = ctx = AppContext(settings=settings, theme=theme)
+        ctx.jobs = JobStore()
+        ctx.history = HistoryStore()
+        interrupted = ctx.history.mark_interrupted()
+        if interrupted:
+            _log.info("marked %d interrupted runs as failed", interrupted)
+        self._prune_history()
+        udisks = UDisksClient()
+        self.engine = EngineServices(history=ctx.history, udisks=udisks, capabilities=None)
+        ctx.runs = RunManager(self.engine, RunHooks(
+            on_update=lambda run: GLib.idle_add(self._publish_run, "run-updated", run),
+            on_finished=lambda run: GLib.idle_add(self._on_run_finished, run),
+            request_passphrase=self._request_passphrase,
+        ))
+        from linfilecopy.ui.manager_drives import DriveManager
+        from linfilecopy.ui.manager_notify import NotificationManager
+
+        ctx.drives = DriveManager(ctx, udisks)
+        ctx.notifier = NotificationManager(self, ctx)
         self._install_actions()
 
     def do_activate(self) -> None:
@@ -74,8 +96,43 @@ class LinFileCopyApp(Gtk.Application):
     def _on_capabilities(self, caps: tools.Capabilities) -> bool:
         assert self.ctx is not None
         self.ctx.capabilities = caps
+        self.engine.capabilities = caps
+        if not caps.udisks.available:
+            self.engine.udisks = None
         self.ctx.publish("capabilities", caps)
         return GLib.SOURCE_REMOVE
+
+    # ----- runs --------------------------------------------------------------------
+    def _publish_run(self, topic: str, run: JobRun) -> bool:
+        assert self.ctx is not None
+        self.ctx.publish(topic, run)
+        return GLib.SOURCE_REMOVE
+
+    def _on_run_finished(self, run: JobRun) -> bool:
+        assert self.ctx is not None
+        self.ctx.publish("run-updated", run)
+        self.ctx.publish("run-finished", run)
+        self.ctx.publish("history-changed")
+        if self.ctx.notifier is not None:
+            self.ctx.notifier.run_finished(run)
+        if self.ctx.drives is not None and run.job.drive.eject_after:
+            self.ctx.drives.refresh()
+        return GLib.SOURCE_REMOVE
+
+    def _request_passphrase(self, run: JobRun, drive) -> str | None:  # type: ignore[no-untyped-def]
+        from linfilecopy.ui import manager_secrets
+
+        return manager_secrets.request_from_worker(lambda: self.window, drive, run.job.name)
+
+    def _prune_history(self) -> None:
+        import os
+
+        assert self.ctx is not None and self.ctx.history is not None
+        for path in self.ctx.history.prune(self.ctx.settings.history_days):
+            try:
+                os.unlink(path)
+            except OSError:
+                pass
 
     # ----- actions -------------------------------------------------------------
     def _install_actions(self) -> None:
@@ -96,6 +153,11 @@ class LinFileCopyApp(Gtk.Application):
         page = Gio.SimpleAction.new("page", GLib.VariantType.new("i"))
         page.connect("activate", lambda _a, v: self.window and self.window.show_page_index(v.get_int32()))
         self.add_action(page)
+        for name, cb in (("show-run", self._on_show_run), ("retry-run", self._on_retry_run),
+                         ("open-log", self._on_open_log)):
+            action = Gio.SimpleAction.new(name, GLib.VariantType.new("s"))
+            action.connect("activate", cb)
+            self.add_action(action)
         preview = Gio.SimpleAction.new_stateful("preview-mode", None, GLib.Variant.new_boolean(False))
         preview.connect("change-state", self._on_preview_mode)
         self.add_action(preview)
@@ -109,8 +171,47 @@ class LinFileCopyApp(Gtk.Application):
     def _on_preview_mode(self, action: Gio.SimpleAction, value: GLib.Variant) -> None:
         action.set_state(value)
         assert self.ctx is not None
-        self.ctx.services["preview_mode"] = value.get_boolean()
+        self.ctx.preview_mode = value.get_boolean()
         self.ctx.publish("preview-mode", value.get_boolean())
+
+    def _on_show_run(self, _action: Gio.SimpleAction, param: GLib.Variant) -> None:
+        self.activate()
+        assert self.ctx is not None
+        run_id = param.get_string()
+        run = self.ctx.runs.get(run_id) if self.ctx.runs else None
+        if run is not None and run.active:
+            self.window.show_page("transfers")
+        else:
+            self.window.show_page("history")
+            self.ctx.publish("select-run", run_id)
+
+    def _on_retry_run(self, _action: Gio.SimpleAction, param: GLib.Variant) -> None:
+        assert self.ctx is not None
+        from linfilecopy.model.enums import Trigger
+
+        rec = self.ctx.history.get(param.get_string()) if self.ctx.history else None
+        if rec is None:
+            return
+        job = self.ctx.jobs.get(rec.job_id) if self.ctx.jobs else None
+        if job is None:
+            from linfilecopy.model.job import SyncJob
+            import json
+
+            job = SyncJob.from_dict(json.loads(rec.job_json))
+        self.ctx.runs.start(job, Trigger.RETRY)
+        self.activate()
+        self.window.show_page("transfers")
+
+    def _on_open_log(self, _action: Gio.SimpleAction, param: GLib.Variant) -> None:
+        assert self.ctx is not None
+        rec = self.ctx.history.get(param.get_string()) if self.ctx.history else None
+        if rec is not None and rec.log_path:
+            from gi.repository import Gio as _Gio
+
+            try:
+                _Gio.AppInfo.launch_default_for_uri(_Gio.File.new_for_path(rec.log_path).get_uri(), None)
+            except GLib.Error as exc:
+                _log.warning("cannot open log: %s", exc.message)
 
     def _on_about(self, *_args: object) -> None:
         dlg = Gtk.AboutDialog(transient_for=self.window, modal=True)

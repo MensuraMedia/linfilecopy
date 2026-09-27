@@ -48,6 +48,8 @@ Source: Phosphor Icons v2.0.8 (MIT, see LICENSE-phosphor).
 | `lfc-action-close-symbolic` | x | regular | Close dialog / dismiss |
 | `lfc-action-install-symbolic` | download-simple | regular | Show install instructions |
 | `lfc-action-edit-symbolic` | pencil-simple | regular | Edit job |
+| `lfc-action-open-job-symbolic` | folders | regular | Open a saved job (job picker) |
+| `lfc-action-import-file-symbolic` | file-arrow-down | regular | Pick a list file (exclude-from / files-from) |
 | `lfc-misc-info-symbolic` | info | regular | Inline help |
 | `lfc-misc-shortcuts-symbolic` | keyboard | regular | Keyboard shortcuts |
 | `lfc-misc-theme-symbolic` | circle-half | regular | Theme selector |

@@ -90,15 +90,15 @@ class Plan:
     def main_step(self) -> Step | None:
         return next((s for s in self.steps if s.transfers), None)
 
-    def display_text(self) -> str:
+    def display_text(self, width: int = 60) -> str:
         """Human-readable plan: comments for bookkeeping steps, wrapped rsync commands."""
         if len(self.steps) == 1 and self.steps[0].argv:
-            return rb.wrapped_display(self.steps[0].argv)
+            return rb.wrapped_display(self.steps[0].argv, width)
         lines: list[str] = []
         for n, step in enumerate(self.steps, start=1):
             lines.append(f"# {n}. {step.description}")
             if step.argv:
-                lines.append(rb.wrapped_display(step.argv))
+                lines.append(rb.wrapped_display(step.argv, width))
         return "\n".join(lines)
 
     def command_text(self) -> str:
@@ -173,7 +173,7 @@ def _endpoint_issues(job: SyncJob, env: PlanEnv, issues: list[Issue]) -> None:
         elif res.state is EndpointState.NOT_MOUNTED and not env.udisks:
             issues.append(Issue(ERROR, f"{side}.path", _("{drive} is not mounted.").format(drive=name),
                                 _("Mount it in your file manager first.")))
-    if env.source.state is EndpointState.READY and not env.source_exists:
+    if env.source.state is EndpointState.READY and job.source.path.strip() and not env.source_exists:
         issues.append(Issue(ERROR, "source.path", _("The source folder does not exist: {path}").format(path=env.source.path),
                             _("Check the path or pick the folder again.")))
     if not env.rsync_path or env.rsync_version is None:
@@ -218,7 +218,9 @@ def plan_job(job: SyncJob, env: PlanEnv, preview: bool = False, dry_run: bool = 
     issues = validate_job(job)
     _endpoint_issues(job, env, issues)
     eff, notes = _adjust_for_environment(job, env, issues)
-    src, dst = env.source.path, env.destination.path
+    # Placeholders keep the preview readable before folders are chosen (the plan is not runnable then).
+    src = env.source.path or _("<source folder>")
+    dst = env.destination.path or _("<destination folder>")
     opts = rb.BuildOptions(
         dry_run=dry_run, preview=preview, priority_wrapper=() if preview else _priority(eff, env),
         rsync_path=env.rsync_path or "rsync", rsync_version=env.rsync_version or (0, 0, 0),
