@@ -30,6 +30,15 @@ DEFAULT_ICON_DIR = Path(
     os.environ.get("LFC_ICON_SRC", "/home/user/projects/assets/Icons/phosphoricons")
 )
 
+SIDEBAR_RE = re.compile(r"\{\{sidebar:([a-z]+)\}\}")
+PAGES = [
+    ("dashboard", "Dashboard"),
+    ("designer", "Job Designer"),
+    ("transfers", "Active Transfers"),
+    ("history", "History &amp; Logs"),
+    ("scheduler", "Scheduler"),
+    ("settings", "Settings"),
+]
 ICON_RE = re.compile(r"\{\{i:([a-z0-9-]+)(?:\|([^}]*))?\}\}")
 SVG_RE = re.compile(r"<svg[^>]*>(.*)</svg>", re.S)
 
@@ -90,6 +99,28 @@ def use_tag(sid: str, classes: str | None) -> str:
     return f'<svg class="{cls}" aria-hidden="true"><use href="#i-{sid}"/></svg>'
 
 
+def sidebar(active: str) -> str:
+    """Render the shared sidebar (navigation + connected drives) with one page selected."""
+    if active not in {key for key, _ in PAGES}:
+        raise SystemExit(f"unknown sidebar page: {active}")
+    items = []
+    for key, label in PAGES:
+        on = key == active
+        icon = f"nav-{key}-active" if on else f"nav-{key}"
+        count = '<span class="count">2</span>' if key == "transfers" else ""
+        items.append(f'<div class="nav{" on" if on else ""}">{{{{i:{icon}}}}}{label}{count}</div>')
+    drives = (
+        '<div class="spacer"></div><div class="drives"><div class="dh2">Drives</div>'
+        '<div class="drv">{{i:ep-removable}}<div class="t"><b>62 GB Volume</b><small>exFAT · 41.3 GB free</small></div>'
+        '<button class="btn flat ico" title="Eject 62 GB Volume">{{i:action-eject}}</button></div>'
+        '<div class="drv">{{i:ep-removable}}<div class="t"><b>T7 Shield</b><small>ext4 · 612 GB free</small></div>'
+        '<button class="btn flat ico" title="Eject T7 Shield">{{i:action-eject}}</button></div>'
+        '<div class="drv">{{i:ep-array}}<div class="t"><b>Archive</b><small>RAID 1 · locked</small></div>'
+        '<button class="btn flat ico" title="Unlock Archive">{{i:ep-unlock}}</button></div></div>'
+    )
+    return f'<nav class="sb">{"".join(items)}{drives}</nav>'
+
+
 def legend(entries: dict[str, IconEntry]) -> str:
     """Render every manifest icon grouped by section."""
     out: list[str] = []
@@ -121,6 +152,7 @@ def build(icon_dir: Path) -> tuple[int, int]:
 
     text = SRC.read_text(encoding="utf-8")
     text = text.replace("{{LEGEND}}", legend(entries))
+    text = SIDEBAR_RE.sub(lambda m: sidebar(m.group(1)), text)
 
     used: list[str] = []
     unknown: set[str] = set()

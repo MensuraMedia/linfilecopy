@@ -1,7 +1,11 @@
 # LinFileCopy
 
 A native GTK 3 + Python desktop dashboard for building, running, monitoring and
-scheduling file copy and sync jobs, powered by **rsync** and **rclone**.
+scheduling file copy and sync jobs between **local disks, removable drives and local
+storage arrays**, powered by **rsync**. No cloud or network storage.
+
+**Stack:** Python 3.10+ · GTK 3 (PyGObject) · GLib/Gio · UDisks2 (D-Bus) · rsync ·
+Python standard library only (no pip runtime dependencies).
 
 > **Status: design phase.** Nothing is implemented yet. The technical concept and
 > mockups are up for review.

@@ -81,6 +81,12 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 .sb .spacer{flex:1}
 .sb .tools{border-top:1px solid var(--border);padding:10px 6px 4px;display:grid;gap:6px;font-size:12px;color:var(--dim)}
 .sb .tools div{display:flex;align-items:center;gap:8px}
+.drives{border-top:1px solid var(--border);padding:8px 2px 2px;display:grid;gap:2px}
+.dh2{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--dim);padding:0 8px 4px}
+.drv{display:flex;align-items:center;gap:10px;padding:4px 4px 4px 10px;border-radius:6px}
+.drv>.i{color:var(--dim)}
+.drv .t b{font-size:13px}.drv .t small{font-size:11.5px}
+.drv .btn.ico{width:28px;height:28px}
 .main{padding:22px 26px 26px;display:flex;flex-direction:column;gap:20px;min-width:0}
 .pagehead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pagehead h3{margin:0;font-size:20px;flex:1;min-width:0}
@@ -232,7 +238,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 
 <header class="intro">
   <h1><svg class="appicon" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#3584e4"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#ffffff"><use href="#i-action-duplicate"/></svg></svg>LinFileCopy mockups</h1>
-  <p>Ten screens that show how the GTK 3 app will look and behave before any UI code is written. Every icon on this page is a Phosphor SVG read from the local asset folder and inlined here, using the same icon IDs the app will ship with. Fonts are the system's own (Cantarell on GNOME); nothing is fetched from the network.</p>
+  <p>Ten screens that show how the GTK 3 app will look and behave before any UI code is written. The app works with local storage only: internal disks, removable drives and local storage arrays, with rsync as its only copy engine. Every icon on this page is a Phosphor SVG read from the local asset folder and inlined here, using the same icon IDs the app will ship with. Fonts are the system's own (Cantarell on GNOME); nothing is fetched from the network.</p>
   <p>The windows follow your light or dark theme, the same way the app follows the desktop setting. Tags under each heading show which features the screen covers: <b>B1–B10</b> are the basic features and <b>#1–#20</b> are the advanced ones.</p>
   <div class="toolbar">
     <span>Preview theme</span>
@@ -246,23 +252,23 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
     <li><a href="#dashboard">Dashboard</a></li>
     <li><a href="#designer-simple">Job Designer · Simple</a></li>
     <li><a href="#designer-advanced">Job Designer · Advanced</a></li>
-    <li><a href="#preview">Preview and delete confirmation</a></li>
+    <li><a href="#preview">Preview, delete and two-way</a></li>
     <li><a href="#transfers">Active Transfers</a></li>
     <li><a href="#history">History &amp; Logs</a></li>
     <li><a href="#scheduler">Scheduler</a></li>
-    <li><a href="#settings">Settings and missing tools</a></li>
+    <li><a href="#settings">Settings, drives and tools</a></li>
     <li><a href="#narrow">Narrow window and notifications</a></li>
     <li><a href="#icons">Icon legend</a></li>
   </ol>
   <ol class="phases" aria-label="Build phases">
     <li><b>P0 Foundation</b>shell, icons, CSS</li>
     <li><b>P1 Model</b>SyncJob, store</li>
-    <li><b>P2 Builders</b>rsync / rclone argv</li>
+    <li><b>P2 Drives + builder</b>UDisks2, fs limits, argv</li>
     <li><b>P3 Runner</b>progress, pause, exit codes</li>
     <li class="mvp"><b>P4 MVP UI</b>B1–B10 usable</li>
     <li><b>P5 Advanced</b>designer, preview pane</li>
-    <li><b>P6 Strategies</b>atomic, snapshots, bisync</li>
-    <li><b>P7 Scheduling</b>timers, headless run</li>
+    <li><b>P6 Strategies</b>snapshots, LUKS, two-way</li>
+    <li><b>P7 Scheduling</b>timers, drive triggers</li>
     <li><b>P8–P9</b>polish, packaging</li>
   </ol>
 </header>
@@ -271,8 +277,8 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 <section class="shot" id="dashboard">
   <header>
     <h2>1 · Dashboard</h2>
-    <p>The landing page. It shows totals first, then what is running now, what ran recently (with one-click re-run), and what is coming up.</p>
-    <div class="covers"><span class="b">B3</span><span class="b">B8</span><span>#11</span><span>#18</span><span>#19</span></div>
+    <p>The landing page. It shows totals first, then what is running now, what ran recently (with one-click re-run), and what is coming up. The sidebar footer lists connected drives with eject and unlock buttons, and appears on every page.</p>
+    <div class="covers"><span class="b">B3</span><span class="b">B8</span><span>#10</span><span>#11</span><span>#18</span><span>#19</span><span>#20</span></div>
   </header>
   <div class="stage"><div class="win">
     <div class="hb">
@@ -284,24 +290,12 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
       <span class="wc">{{i:action-close}}</span>
     </div>
     <div class="layout">
-      <nav class="sb">
-        <div class="nav on">{{i:nav-dashboard-active}}Dashboard</div>
-        <div class="nav">{{i:nav-designer}}Job Designer</div>
-        <div class="nav">{{i:nav-transfers}}Active Transfers<span class="count">2</span></div>
-        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
-        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
-        <div class="nav">{{i:nav-settings}}Settings</div>
-        <div class="spacer"></div>
-        <div class="tools">
-          <div><span class="c-new">{{i:status-success}}</span>rsync 3.2.7</div>
-          <div><span style="color:var(--warn)">{{i:status-missing-tool}}</span>rclone not installed</div>
-        </div>
-      </nav>
+      {{sidebar:dashboard}}
       <main class="main">
         <div class="tiles">
           <div class="tile">{{i:stat-data}}<div><div class="num">48.2 GB</div><small>copied in the last 7 days</small></div></div>
           <div class="tile">{{i:stat-files}}<div><div class="num">18,406</div><small>files transferred</small></div></div>
-          <div class="tile">{{i:stat-jobs}}<div><div class="num">7</div><small>saved jobs · 3 scheduled</small></div></div>
+          <div class="tile">{{i:stat-jobs}}<div><div class="num">7</div><small>saved jobs · 4 scheduled</small></div></div>
           <div class="tile bad">{{i:status-failed}}<div><div class="num">1</div><small>failed run needs attention</small></div></div>
         </div>
         <div class="cols">
@@ -311,12 +305,12 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
               <div class="list">
                 <div class="row">
                   <span style="color:var(--accent)">{{i:status-running|spin}}</span>
-                  <div class="t"><b>Documents backup</b><div class="bar" style="margin:6px 0 4px"><span style="width:62%"></span></div><small>62% · 38.4 MB/s · 3 min 12 s left</small></div>
+                  <div class="t"><b>Documents to USB stick</b><div class="bar" style="margin:6px 0 4px"><span style="width:62%"></span></div><small>62% · 38.4 MB/s · 3 min 12 s left</small></div>
                   <button class="btn ico" title="Pause">{{i:action-pause}}</button>
                 </div>
                 <div class="row">
                   <span style="color:var(--dim)">{{i:status-paused}}</span>
-                  <div class="t"><b>Website mirror</b><div class="bar paused" style="margin:6px 0 4px"><span style="width:18%"></span></div><small>Paused at 18% · 4 min ago</small></div>
+                  <div class="t"><b>Video projects → T7 Shield</b><div class="bar paused" style="margin:6px 0 4px"><span style="width:18%"></span></div><small>Paused at 18% · 4 min ago</small></div>
                   <button class="btn ico" title="Resume">{{i:action-start}}</button>
                 </div>
               </div>
@@ -324,9 +318,9 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
             <div class="group">
               <div class="gh">{{i:nav-history}}Recent activity</div>
               <div class="list">
-                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Music to NAS</b><small>Today 08:14 · 1.2 GB, 214 files in 1 min 03 s</small></div><button class="btn flat">{{i:action-rerun}}Run again</button></div>
-                <div class="row"><span class="c-del">{{i:status-failed}}</span><div class="t"><b>Photos → NAS</b><small>Today 02:00 · rsync code 23: 3 files could not be read</small></div><button class="btn flat">{{i:action-retry}}Retry</button></div>
-                <div class="row"><span style="color:var(--accent-fg)">{{i:status-dryrun}}</span><div class="t"><b>Cloud sync · preview</b><small>Yesterday 17:40 · 42 new, 118 updated, 0 deleted</small></div><button class="btn flat">{{i:action-rerun}}Run again</button></div>
+                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Music → T7 Shield</b><small>Today 08:14 · 1.2 GB, 214 files in 1 min 03 s · drive ejected</small></div><button class="btn flat">{{i:action-rerun}}Run again</button></div>
+                <div class="row"><span class="c-del">{{i:status-failed}}</span><div class="t"><b>Photos → Archive</b><small>Today 02:00 · rsync code 23: 3 files could not be read</small></div><button class="btn flat">{{i:action-retry}}Retry</button></div>
+                <div class="row"><span style="color:var(--accent-fg)">{{i:status-dryrun}}</span><div class="t"><b>Notes two-way · preview</b><small>Yesterday 17:40 · 12 to stick, 5 to computer, 1 conflict</small></div><button class="btn flat">{{i:action-rerun}}Run again</button></div>
                 <div class="row"><span style="color:var(--warn)">{{i:status-warning}}</span><div class="t"><b>Home snapshot</b><small>Yesterday 03:00 · finished; 12 files vanished during copy (code 24)</small></div><button class="btn flat">{{i:action-open-log}}Log</button></div>
               </div>
             </div>
@@ -335,18 +329,18 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
             <div class="group">
               <div class="gh">{{i:action-templates}}Start from a template</div>
               <div class="list">
-                <div class="row">{{i:ep-local}}<div class="t"><b>Backup Documents</b><small>Copy · keep dates &amp; permissions · skip caches</small></div>{{i:action-expand}}</div>
-                <div class="row">{{i:mode-mirror}}<div class="t"><b>Mirror Website</b><small>Mirror over SSH · compress · checksum</small></div>{{i:action-expand}}</div>
-                <div class="row">{{i:ep-cloud}}<div class="t"><b>Cloud Sync</b><small>rclone · two-way · needs rclone</small></div><span class="badge warn">{{i:status-missing-tool}}rclone</span></div>
-                <div class="row">{{i:feat-snapshots}}<div class="t"><b>Snapshot Backup</b><small>Hard-linked daily snapshots · keep 14</small></div>{{i:action-expand}}</div>
+                <div class="row">{{i:ep-removable}}<div class="t"><b>Backup to external drive</b><small>Copy · adapts to the drive's filesystem · eject when done</small></div>{{i:action-expand}}</div>
+                <div class="row">{{i:mode-mirror}}<div class="t"><b>Mirror to storage array</b><small>Mirror · checksum · confirm deletes</small></div>{{i:action-expand}}</div>
+                <div class="row">{{i:mode-twoway}}<div class="t"><b>Two-way with a USB stick</b><small>Runs when plugged in · deleted files kept in .lfc-trash</small></div>{{i:action-expand}}</div>
+                <div class="row">{{i:feat-snapshots}}<div class="t"><b>Snapshot backup</b><small>Hard-linked daily snapshots · keep 14</small></div>{{i:action-expand}}</div>
               </div>
             </div>
             <div class="group">
               <div class="gh">{{i:nav-scheduler}}Coming up</div>
               <div class="list">
-                <div class="row">{{i:status-scheduled}}<div class="t"><b>Photos → NAS</b><small>Tomorrow 02:00 · systemd timer</small></div></div>
-                <div class="row">{{i:status-scheduled}}<div class="t"><b>Home snapshot</b><small>Tomorrow 03:00 · systemd timer</small></div></div>
-                <div class="row">{{i:feat-realtime}}<div class="t"><b>Notes folder</b><small>Runs on change · watching 1 folder</small></div></div>
+                <div class="row">{{i:status-scheduled}}<div class="t"><b>Photos → Archive</b><small>Tomorrow 02:00 · systemd timer</small></div></div>
+                <div class="row">{{i:status-scheduled}}<div class="t"><b>Home snapshot</b><small>Tomorrow 03:00 · unlocks Archive first</small></div></div>
+                <div class="row">{{i:trigger-drive}}<div class="t"><b>Notes two-way</b><small>When 62 GB Volume is plugged in</small></div></div>
               </div>
             </div>
           </div>
@@ -360,42 +354,35 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 <section class="shot" id="designer-simple">
   <header>
     <h2>2 · Job Designer · Simple view</h2>
-    <p>New jobs open here. It holds only the ten basic features. The command preview on the right updates on every change, and Start stays disabled until validation passes. A folder is being dragged onto the destination field.</p>
+    <p>New jobs open here. It holds only the ten basic features. The destination is a real exFAT USB stick, so the app explains what it changed for that filesystem and updates the command. A folder is being dragged onto the destination field.</p>
     <div class="covers"><span class="b">B1</span><span class="b">B2</span><span class="b">B4</span><span class="b">B5</span><span class="b">B6</span><span class="b">B7</span><span class="b">B9</span><span class="b">B10</span><span>#4</span><span>#20</span></div>
   </header>
   <ul class="checks">
-    <li>Source is marked blue with FROM and destination green with TO. The swap button sits between them.</li>
-    <li>Two-way is visible but disabled, with the reason given (rclone missing).</li>
+    <li>Source is marked blue with FROM and destination green with TO. Each card shows the drive, its filesystem and its free space.</li>
+    <li>Filesystem limits are handled automatically and explained, never silently.</li>
   </ul>
   <div class="stage"><div class="win">
     <div class="hb">
       <button class="btn">{{i:action-new}}New job</button>
       <button class="btn flat">{{i:action-templates}}Templates{{i:action-collapse|caret}}</button>
-      <div class="title"><b>Documents backup</b><small>Job Designer · unsaved changes</small></div>
+      <div class="title"><b>Documents to USB stick</b><small>Job Designer · unsaved changes</small></div>
       <button class="btn flat">{{i:action-save}}Save</button>
       <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
       <span class="wc">{{i:action-close}}</span>
     </div>
     <div class="layout">
-      <nav class="sb">
-        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
-        <div class="nav on">{{i:nav-designer-active}}Job Designer</div>
-        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
-        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
-        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
-        <div class="nav">{{i:nav-settings}}Settings</div>
-      </nav>
+      {{sidebar:designer}}
       <main class="main">
         <div class="pagehead">
-          <div class="entry" style="max-width:340px"><span>Documents backup</span></div>
+          <div class="entry" style="max-width:340px"><span>Documents to USB stick</span></div>
           <div class="linked" style="margin-left:auto"><button class="btn on">Simple</button><button class="btn">Advanced</button></div>
         </div>
         <div class="designer">
           <div class="stack">
             <div class="pathcard">
-              <div class="cap">{{i:ep-source}}From · source<span class="muted">Drop a folder or browse</span></div>
+              <div class="cap">{{i:ep-source}}From · source<span class="muted">Home · ext4 · internal</span></div>
               <div class="pathline">
-                <button class="btn">{{i:ep-local}}Local folder{{i:action-collapse|caret}}</button>
+                <button class="btn">{{i:ep-internal}}Home{{i:action-collapse|caret}}</button>
                 <div class="entry"><span>/home/sam/Documents</span></div>
                 <button class="btn ico" title="Browse">{{i:action-browse}}</button>
               </div>
@@ -403,23 +390,24 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
             </div>
             <div class="swaprow"><button class="btn ico" title="Swap source and destination">{{i:action-swap}}</button></div>
             <div class="pathcard dst">
-              <div class="cap">{{i:ep-destination}}To · destination<span class="muted">1 folder being dropped</span></div>
+              <div class="cap">{{i:ep-destination}}To · destination<span class="muted">Removable · exFAT · 41.3 GB free of 57.8 GB</span></div>
               <div class="pathline">
-                <button class="btn">{{i:ep-local}}Local folder{{i:action-collapse|caret}}</button>
-                <div class="entry focus"><span>/media/sam/Backup/Documents</span></div>
+                <button class="btn">{{i:ep-removable}}62 GB Volume{{i:action-collapse|caret}}</button>
+                <div class="entry focus"><span>/media/sam/B49B-37C5/Documents</span></div>
                 <button class="btn ico" title="Browse">{{i:action-browse}}</button>
               </div>
-              <div class="drop hot">{{i:action-drop}}Release to use <b>/media/sam/Backup/Documents</b></div>
+              <div class="drop hot">{{i:action-drop}}Release to use <b>/media/sam/B49B-37C5/Documents</b></div>
             </div>
+            <div class="infobar" style="background:var(--accent-soft);color:var(--accent-fg)">{{i:misc-info}}<div class="t"><b>Adjusted for exFAT</b><small>This drive can't store permissions or symbolic links, so they are skipped. Dates are kept, compared to within 2 seconds.</small></div><button class="btn flat">Details</button></div>
 
             <div class="group">
               <div class="gh">What should happen?</div>
               <div class="linked">
                 <button class="btn on">{{i:mode-copy}}Copy</button>
                 <button class="btn">{{i:mode-mirror}}Mirror</button>
-                <button class="btn dis">{{i:mode-twoway}}Two-way</button>
+                <button class="btn">{{i:mode-twoway}}Two-way</button>
               </div>
-              <small style="color:var(--dim)">Copy adds new files and updates changed ones. Nothing at the destination is deleted. Two-way needs rclone.</small>
+              <small style="color:var(--dim)">Copy adds new files and updates changed ones. Nothing on the USB stick is deleted.</small>
             </div>
 
             <div class="group">
@@ -443,16 +431,17 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
             </div>
 
             <div class="list">
-              <div class="row">{{i:feat-metadata}}<div class="t"><b>Keep dates and permissions</b><small>Files keep their modification time and access rights</small></div><span class="switch on"></span></div>
+              <div class="row">{{i:feat-metadata}}<div class="t"><b>Keep dates and permissions</b><small>Dates kept · permissions not supported on exFAT</small></div><span class="switch on"></span></div>
               <div class="row">{{i:action-preview}}<div class="t"><b>Always preview first</b><small>Show the list of changes before copying</small></div><span class="switch on"></span></div>
               <div class="row">{{i:feat-notify}}<div class="t"><b>Notify me when it finishes</b><small>Desktop notification on success or failure</small></div><span class="switch on"></span></div>
+              <div class="row">{{i:action-eject}}<div class="t"><b>Eject the drive when finished</b><small>Safe to unplug as soon as the notification appears</small></div><span class="switch on"></span></div>
             </div>
           </div>
 
           <aside class="side">
             <div class="panel">
-              <div class="ph">{{i:misc-command}}Command<span class="badge info">Engine: rsync 3.2.7</span></div>
-<pre class="cmd"><span class="k">rsync</span> <span class="f">-rlptD</span> <span class="f">--update</span>
+              <div class="ph">{{i:misc-command}}Command<span class="badge info">rsync 3.2.7</span></div>
+<pre class="cmd"><span class="k">rsync</span> <span class="f">-rt</span> <span class="f">--modify-window=</span>1 <span class="f">--update</span>
   <span class="f">--info=progress2,name1,stats2</span> <span class="f">--outbuf=L</span>
   <span class="f">--exclude=</span>'.*'
   <span class="f">--exclude=</span>'.cache/' <span class="f">--exclude=</span>'__pycache__/'
@@ -460,12 +449,13 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
   <span class="f">--exclude=</span>'*.tmp' <span class="f">--exclude=</span>'*~'
   <span class="f">--exclude=</span>'.~lock*'
   <span class="s">/home/sam/Documents/</span>
-  <span class="d">/media/sam/Backup/Documents/</span></pre>
+  <span class="d">/media/sam/B49B-37C5/Documents/</span>
+<span class="c"># then: eject 62 GB Volume</span></pre>
               <div class="actions" style="justify-content:flex-start"><button class="btn">{{i:action-copy-command}}Copy command</button></div>
             </div>
             <div class="panel">
               <div class="ph"><span class="c-new">{{i:status-success}}</span>Ready to run</div>
-              <small style="color:var(--dim)">4.1 GB free space needed · 212 GB available on Backup</small>
+              <small style="color:var(--dim)">About 4.1 GB to copy · 41.3 GB free on 62 GB Volume · no files over exFAT limits</small>
             </div>
             <div class="actions">
               <button class="btn big">{{i:action-preview}}Preview</button>
@@ -482,8 +472,8 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 <section class="shot" id="designer-advanced">
   <header>
     <h2>3 · Job Designer · Advanced view</h2>
-    <p>This view has every advanced control, grouped into sections with the icons from the legend. Collapsed sections show a one-line summary. The example job backs up to an SSH host using daily hard-linked snapshots. Validation explains why some options are unavailable for this job instead of hiding them.</p>
-    <div class="covers"><span>#1</span><span>#2</span><span>#3</span><span>#5</span><span>#6</span><span>#7</span><span>#8</span><span>#9</span><span>#10</span><span>#12</span><span>#13</span><span>#14</span><span>#15</span><span>#16</span><span>#17</span><span>#18</span><span>#19</span><span>#20</span></div>
+    <p>This view has every advanced control, grouped into sections with the icons from the legend. Collapsed sections show a one-line summary. The example job makes daily hard-linked snapshots of the home folder on an encrypted RAID 1 array. It unlocks the array first and locks it again afterwards. Validation explains why some options are unavailable for this job instead of hiding them.</p>
+    <div class="covers"><span>#1</span><span>#2</span><span>#3</span><span>#5</span><span>#6</span><span>#7</span><span>#8</span><span>#10</span><span>#12</span><span>#13</span><span>#14</span><span>#15</span><span>#16</span><span>#17</span><span>#18</span><span>#19</span><span>#20</span></div>
   </header>
   <div class="stage"><div class="win">
     <div class="hb">
@@ -495,14 +485,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
       <span class="wc">{{i:action-close}}</span>
     </div>
     <div class="layout">
-      <nav class="sb">
-        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
-        <div class="nav on">{{i:nav-designer-active}}Job Designer</div>
-        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
-        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
-        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
-        <div class="nav">{{i:nav-settings}}Settings</div>
-      </nav>
+      {{sidebar:designer}}
       <main class="main">
         <div class="pagehead">
           <div class="entry" style="max-width:340px"><span>Home snapshot</span></div>
@@ -511,30 +494,31 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
         <div class="designer">
           <div class="stack">
             <div class="group">
-              <div class="gh">{{i:feat-backends}}Where · source and destination<span class="note">#10 #20</span></div>
+              <div class="gh">{{i:feat-drives}}Drives<span class="note">#10 #20</span></div>
               <div class="list">
-                <div class="row">{{i:ep-source}}<div class="t"><b>Source</b><small>Local folder · /home/sam</small></div><button class="btn">{{i:ep-local}}Local{{i:action-collapse|caret}}</button></div>
-                <div class="row">{{i:ep-destination}}<div class="t"><b>Destination</b><small>Snapshots are created inside this folder</small></div><button class="btn">{{i:ep-ssh}}SSH{{i:action-collapse|caret}}</button></div>
-                <div class="row sub"><div class="t"><b>Host and path</b></div><div class="entry" style="flex:0 1 330px"><span>sam@backup.lan:/srv/backups/sam</span></div><div class="entry sm"><span class="ph">Port</span>&nbsp;22</div></div>
-                <div class="row sub">{{i:ep-key}}<div class="t"><b>Key file</b><small>Passwords are never saved in the job</small></div><div class="entry" style="flex:0 1 250px"><span>~/.ssh/id_ed25519</span></div><button class="btn">{{i:action-test}}Test connection</button></div>
+                <div class="row">{{i:ep-source}}<div class="t"><b>Source · /home/sam</b><small>Home · internal NVMe · ext4</small></div><button class="btn">{{i:ep-internal}}Home{{i:action-collapse|caret}}</button></div>
+                <div class="row">{{i:ep-destination}}<div class="t"><b>Destination · Archive › sam</b><small>Storage array · RAID 1 · ext4 · 4.1 TB free · snapshots go inside this folder</small></div><button class="btn">{{i:ep-array}}Archive{{i:action-collapse|caret}}</button></div>
+                <div class="row sub"><div class="t"><b>Found by filesystem ID</b><small>3f2a9c1e-…-c91e · works even if the mount point changes</small></div></div>
+                <div class="row">{{i:ep-encrypted}}<div class="t"><b>Unlock the encrypted drive before running</b><small>Archive is LUKS-encrypted</small></div><span class="switch on"></span></div>
+                <div class="row sub">{{i:ep-password}}<div class="t"><b>Remember the passphrase in the keyring</b><small>Needed for scheduled runs while you are away</small></div><span class="switch on"></span></div>
+                <div class="row sub"><div class="t"><b>Lock and unmount when finished</b></div><span class="switch on"></span></div>
+                <div class="row">{{i:status-drive-missing}}<div class="t"><b>Wait for the drive if it is not connected</b><small>Otherwise the run fails with "Connect Archive"</small></div><div class="entry sm" style="opacity:.5"><span>10 min</span></div><span class="switch"></span></div>
               </div>
             </div>
 
             <div class="group">
-              <div class="gh">{{i:feat-delta}}Transfer<span class="note">#1 #2 #7 #8 #9 #15</span></div>
+              <div class="gh">{{i:feat-delta}}Transfer<span class="note">#1 #2 #7 #8 #15</span></div>
               <div class="list">
-                <div class="row">{{i:feat-delta}}<div class="t"><b>Delta transfer</b><small>Send only the changed blocks of large files</small></div><span class="switch on"></span></div>
-                <div class="row sub"><div class="t"><b>Update files in place</b><small>Saves space; unsafe with snapshots, so it is off here</small></div><span class="switch dis"></span></div>
+                <div class="row">{{i:feat-delta}}<div class="t"><b>Delta transfer</b><small>Off by default for local copies. Turn on for large files that change a little, like VM images</small></div><span class="switch"></span></div>
                 <div class="row">{{i:feat-incremental}}<div class="t"><b>Decide what changed by</b></div><button class="btn">Size and modification time{{i:action-collapse|caret}}</button></div>
                 <div class="row">{{i:feat-resume}}<div class="t"><b>Resume interrupted files</b><small>Partial files are kept in .lfc-partial</small></div><span class="switch on"></span></div>
                 <div class="row">{{i:feat-checksum}}<div class="t"><b>Verify with checksums</b><small>Slower; reads every file on both sides</small></div><span class="switch"></span></div>
-                <div class="row">{{i:feat-compress}}<div class="t"><b>Compress during transfer</b><small>Helps on slow networks</small></div><div class="entry sm"><span class="ph">Level</span>&nbsp;6</div><span class="switch on"></span></div>
-                <div class="row">{{i:feat-sparse}}<div class="t"><b>Handle sparse files</b><small>Virtual-machine disks and databases</small></div><span class="switch"></span></div>
+                <div class="row">{{i:feat-sparse}}<div class="t"><b>Handle sparse files</b><small>Virtual-machine disks and databases</small></div><span class="switch on"></span></div>
               </div>
             </div>
 
             <div class="group">
-              <div class="gh">{{i:feat-metadata}}Keep file details<span class="note">#3</span></div>
+              <div class="gh">{{i:feat-metadata}}Keep file details<span class="note">#3 · all supported by ext4</span></div>
               <div class="list"><div class="metagrid">
                 <label><span class="check on"></span>Permissions</label><label><span class="check on"></span>Modification times</label><label><span class="check on"></span>Owner</label><label><span class="check on"></span>Group</label>
                 <label><span class="check on"></span>ACLs</label><label><span class="check on"></span>Extended attributes</label><label><span class="check on"></span>Hard links</label><label><span class="check"></span>Devices &amp; specials</label>
@@ -560,7 +544,8 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
             <div class="group">
               <div class="gh">{{i:feat-bandwidth}}Speed<span class="note">#6 #12</span></div>
               <div class="list">
-                <div class="row">{{i:feat-bandwidth}}<div class="t"><b>Limit bandwidth</b></div><div class="entry sm"><span>20</span></div><button class="btn">MB/s{{i:action-collapse|caret}}</button><span class="switch on"></span></div>
+                <div class="row">{{i:feat-bandwidth}}<div class="t"><b>Limit speed</b><small>Useful for slow USB sticks that overheat</small></div><div class="entry sm" style="opacity:.5"><span>50</span></div><button class="btn dis">MB/s{{i:action-collapse|caret}}</button><span class="switch"></span></div>
+                <div class="row">{{i:feat-priority}}<div class="t"><b>Run in background priority</b><small>Keeps the desktop responsive while copying</small></div><span class="switch on"></span></div>
                 <div class="row dis">{{i:feat-parallel}}<div class="t"><b>Parallel streams</b><small>Not available with snapshots yet. Turn snapshots off to use it.</small></div><div class="entry sm" style="opacity:.5"><span>4</span></div></div>
               </div>
             </div>
@@ -568,7 +553,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
             <div class="group">
               <div class="gh">{{i:feat-snapshots}}Safety<span class="note">#16 #17</span></div>
               <div class="list">
-                <div class="row dis">{{i:feat-atomic}}<div class="t"><b>Atomic replace</b><small>Only for local destinations</small></div><span class="switch dis"></span></div>
+                <div class="row dis">{{i:feat-atomic}}<div class="t"><b>Atomic replace</b><small>Not needed: each snapshot is written to a new folder</small></div><span class="switch dis"></span></div>
                 <div class="row">{{i:feat-snapshots}}<div class="t"><b>Keep hard-linked snapshots</b><small>Unchanged files take no extra space</small></div><span class="switch on"></span></div>
                 <div class="row sub">{{i:feat-linkdest}}<div class="t"><b>Link against</b></div><button class="btn">Latest snapshot (automatic){{i:action-collapse|caret}}</button></div>
                 <div class="row sub"><div class="t"><b>Keep</b></div><div class="entry sm"><span>14</span></div><span style="color:var(--dim)">daily</span><div class="entry sm"><span>8</span></div><span style="color:var(--dim)">weekly</span></div>
@@ -576,39 +561,38 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
             </div>
 
             <div class="list">
-              <div class="row">{{i:action-expand}}{{i:feat-bidirectional}}<div class="t"><b>Two-way sync</b><small>Conflict policy, first-run resync</small></div><span class="badge warn">{{i:status-missing-tool}}Needs rclone</span></div>
+              <div class="row">{{i:action-expand}}{{i:feat-bidirectional}}<div class="t"><b>Two-way sync</b><small>Off · choose Two-way above to use it</small></div></div>
               <div class="row">{{i:action-expand}}{{i:feat-realtime}}<div class="t"><b>Run when files change</b><small>Off</small></div></div>
               <div class="row">{{i:action-collapse}}{{i:feat-logging}}<div class="t"><b>Logging and alerts</b></div></div>
               <div class="row sub"><div class="t"><b>Log detail</b></div><button class="btn">Normal{{i:action-collapse|caret}}</button></div>
               <div class="row sub">{{i:feat-notify}}<div class="t"><b>Notify on failure</b></div><span class="switch on"></span></div>
-              <div class="row sub">{{i:action-retry}}<div class="t"><b>Retry after network errors</b><small>Waits 30 s, then 60 s, then 120 s</small></div><div class="entry sm"><span>3</span></div></div>
+              <div class="row sub">{{i:action-retry}}<div class="t"><b>Retry after I/O errors</b><small>Waits 30 s, then 60 s, then 120 s</small></div><div class="entry sm"><span>3</span></div></div>
               <div class="row">{{i:action-expand}}{{i:feat-schedule}}<div class="t"><b>Schedule</b><small>Daily at 03:00 · systemd timer</small></div></div>
             </div>
           </div>
 
           <aside class="side">
             <div class="panel">
-              <div class="ph">{{i:misc-command}}Plan · 3 steps<span class="badge info">Engine: rsync</span></div>
-<pre class="cmd"><span class="c"># 1. copy into a new snapshot</span>
-<span class="k">rsync</span> <span class="f">-rlptgoAXH</span>
+              <div class="ph">{{i:misc-command}}Plan · 5 steps<span class="badge info">rsync 3.2.7</span></div>
+<pre class="cmd"><span class="c"># 1. unlock and mount Archive (UDisks2)</span>
+<span class="c"># 2. copy into a new snapshot</span>
+<span class="k">ionice</span> <span class="f">-c3</span> <span class="k">nice</span> <span class="f">-n19</span> <span class="k">rsync</span> <span class="f">-rlptgoAXHS</span>
   <span class="f">--info=progress2,name1,stats2</span>
   <span class="f">--partial --partial-dir=</span>.lfc-partial
-  <span class="f">-z --compress-level=</span>6 <span class="f">--bwlimit=</span>20480
-  <span class="f">-e</span> "ssh -p 22 -i ~/.ssh/id_ed25519
-      -o BatchMode=yes -o ServerAliveInterval=15"
   <span class="f">--exclude=</span>'.cache/' <span class="f">--include=</span>'Projects/**'
   <span class="f">--exclude=</span>'*.iso' <span class="f">--exclude=</span>'Downloads/'
-  <span class="f">--link-dest=</span>../latest
+  <span class="f">--link-dest=</span>/mnt/archive/sam/latest
   <span class="s">/home/sam/</span>
-  <span class="d">sam@backup.lan:/srv/backups/sam/2026-09-28T030000/</span>
-<span class="c"># 2. point "latest" at it</span>
-<span class="k">ssh</span> … ln -sfn 2026-09-28T030000 latest
-<span class="c"># 3. rotate: keep 14 daily, 8 weekly</span></pre>
+  <span class="d">/mnt/archive/sam/2026-09-28T030000/</span>
+<span class="c"># 3. point "latest" at the new snapshot</span>
+<span class="k">ln</span> <span class="f">-sfn</span> 2026-09-28T030000 /mnt/archive/sam/latest
+<span class="c"># 4. rotate: keep 14 daily, 8 weekly</span>
+<span class="c"># 5. unmount and lock Archive</span></pre>
               <div class="actions" style="justify-content:flex-start"><button class="btn">{{i:action-copy-command}}Copy command</button></div>
             </div>
             <div class="panel">
               <div class="ph"><span style="color:var(--warn)">{{i:status-warning}}</span>1 warning</div>
-              <small>Keeping owner and group needs root on backup.lan. Files are otherwise saved as user sam.</small>
+              <small>Keeping owner and group needs the job to run as root. As your user, files are saved as owned by sam.</small>
             </div>
             <div class="actions">
               <button class="btn big">{{i:action-preview}}Preview</button>
@@ -624,31 +608,31 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 <!-- ============================ 4. PREVIEW + CONFIRM ============================ -->
 <section class="shot" id="preview">
   <header>
-    <h2>4 · Preview results and delete confirmation</h2>
-    <p>Preview runs the job as a dry run and lists every planned change. Running a mirror job that will delete files always asks first and gives the exact count, even when the user skipped the preview.</p>
-    <div class="covers"><span class="b">B2</span><span class="b">B7</span><span>#4</span></div>
+    <h2>4 · Preview results, delete confirmation and two-way conflicts</h2>
+    <p>Preview runs the job as a dry run and lists every planned change. Running a mirror job that will delete files always asks first and gives the exact count, even when the user skipped the preview. A two-way preview shows the direction of each change and resolves conflicts according to the chosen policy.</p>
+    <div class="covers"><span class="b">B2</span><span class="b">B7</span><span>#4</span><span>#13</span></div>
   </header>
   <div class="stage"><div class="pair">
     <div class="win" style="min-width:720px;width:720px;height:560px">
-      <div class="hb"><div class="title"><b>Website mirror</b><small>Job Designer</small></div><span class="wc">{{i:action-close}}</span></div>
+      <div class="hb"><div class="title"><b>Photo library mirror</b><small>Job Designer</small></div><span class="wc">{{i:action-close}}</span></div>
       <div class="scrim">
         <div class="dlg">
-          <div class="dh">{{i:action-preview}}<b>Preview: Website mirror</b><button class="btn flat ico" title="Close">{{i:action-close}}</button></div>
+          <div class="dh">{{i:action-preview}}<b>Preview: Photo library mirror</b><button class="btn flat ico" title="Close">{{i:action-close}}</button></div>
           <div class="db">
             <div class="chips">
               <span class="badge ok">{{i:delta-create}}42 new</span>
               <span class="badge info">{{i:delta-update}}118 updated</span>
               <span class="badge err">{{i:delta-delete}}7 deleted</span>
-              <span class="badge">3.1 GB to transfer</span>
+              <span class="badge">3.1 GB to copy · 4.1 TB free</span>
             </div>
             <div class="pathline"><div class="linked"><button class="btn on">All</button><button class="btn">New</button><button class="btn">Updated</button><button class="btn">Deleted</button></div><div class="entry">{{i:action-search}}<span class="ph">Filter paths</span></div></div>
             <div class="files">
-              <div class="file"><span class="c-new">{{i:delta-create}}</span><span>assets/img/hero-2026.webp</span><small>412 KB</small></div>
-              <div class="file"><span class="c-upd">{{i:delta-update}}</span><span>index.html</span><small>18 KB</small></div>
-              <div class="file"><span class="c-upd">{{i:delta-update}}</span><span>assets/css/site.css</span><small>44 KB</small></div>
-              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/landing-2024.html</span><small>deleted</small></div>
-              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/assets/promo.mp4</span><small>deleted</small></div>
-              <div class="file"><span class="c-new">{{i:delta-create}}</span><span>blog/2026/09/release-notes.html</span><small>9 KB</small></div>
+              <div class="file"><span class="c-new">{{i:delta-create}}</span><span>2026/09/IMG_4412.jpg</span><small>6.1 MB</small></div>
+              <div class="file"><span class="c-upd">{{i:delta-update}}</span><span>2026/09/IMG_4398.xmp</span><small>12 KB</small></div>
+              <div class="file"><span class="c-upd">{{i:delta-update}}</span><span>library/catalog.db</span><small>188 MB</small></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>2019/duplicates/IMG_0113 (1).jpg</span><small>deleted</small></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>2019/duplicates/IMG_0114 (1).jpg</span><small>deleted</small></div>
+              <div class="file"><span class="c-new">{{i:delta-create}}</span><span>2026/09/VID_4420.mp4</span><small>1.4 GB</small></div>
             </div>
           </div>
           <div class="df"><button class="btn">{{i:action-copy-command}}Copy list</button><span style="flex:1"></span><button class="btn">Close</button><button class="btn sug">{{i:action-start}}Run for real</button></div>
@@ -656,20 +640,44 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
       </div>
     </div>
     <div class="win" style="min-width:560px;width:560px;height:560px">
-      <div class="hb"><div class="title"><b>Website mirror</b><small>Job Designer</small></div><span class="wc">{{i:action-close}}</span></div>
+      <div class="hb"><div class="title"><b>Photo library mirror</b><small>Job Designer</small></div><span class="wc">{{i:action-close}}</span></div>
       <div class="scrim">
         <div class="dlg small alert">
           <div class="db">
             <svg class="i big-i" aria-hidden="true"><use href="#i-status-missing-tool"/></svg>
-            <h4>Delete 7 files from the destination?</h4>
-            <p>Mirror makes <b>sam@web01:/var/www/site</b> match your source. These 7 files exist only there and will be removed. This cannot be undone.</p>
+            <h4>Delete 7 files from Archive?</h4>
+            <p>Mirror makes <b>Archive › pictures</b> match <b>~/Pictures</b>. These 7 files exist only on Archive and will be removed. This cannot be undone.</p>
             <div class="files" style="width:100%;text-align:left">
-              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/landing-2024.html</span></div>
-              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/assets/promo.mp4</span></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>2019/duplicates/IMG_0113 (1).jpg</span></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>2019/duplicates/IMG_0114 (1).jpg</span></div>
               <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>… and 5 more</span></div>
             </div>
           </div>
           <div class="df"><button class="btn">{{i:action-preview}}Show all changes</button><span style="flex:1"></span><button class="btn">Cancel</button><button class="btn des">{{i:action-delete}}Delete and mirror</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="win" style="min-width:720px;width:720px;height:520px">
+      <div class="hb"><div class="title"><b>Notes two-way</b><small>Job Designer</small></div><span class="wc">{{i:action-close}}</span></div>
+      <div class="scrim">
+        <div class="dlg">
+          <div class="dh">{{i:feat-bidirectional}}<b>Preview: Notes two-way</b><button class="btn flat ico" title="Close">{{i:action-close}}</button></div>
+          <div class="db">
+            <div class="chips">
+              <span class="badge info">{{i:ep-removable}}12 to 62 GB Volume</span>
+              <span class="badge info">{{i:ep-internal}}5 to this computer</span>
+              <span class="badge warn">{{i:policy-conflict}}1 conflict · newer wins</span>
+              <span class="badge">{{i:feat-trash}}2 moved to .lfc-trash</span>
+            </div>
+            <div class="files">
+              <div class="file"><span class="c-upd">{{i:mode-copy}}</span><span>meetings/2026-09-26.md</span><small>to stick</small></div>
+              <div class="file"><span class="c-upd">{{i:mode-copy}}</span><span>ideas/linfilecopy.md</span><small>to stick</small></div>
+              <div class="file"><span class="c-new">{{i:action-swap}}</span><span>travel/packing-list.md</span><small>to computer</small></div>
+              <div class="file"><span style="color:var(--warn)">{{i:policy-conflict}}</span><span>todo.md · changed on both · stick copy is newer</span><small>stick wins; yours kept as todo.conflict-2026-09-27.md</small></div>
+              <div class="file"><span class="c-del">{{i:feat-trash}}</span><span>drafts/old-plan.md · deleted on stick</span><small>moved to .lfc-trash</small></div>
+            </div>
+          </div>
+          <div class="df"><span style="flex:1"></span><button class="btn">Close</button><button class="btn sug">{{i:action-start}}Sync now</button></div>
         </div>
       </div>
     </div>
@@ -680,38 +688,32 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 <section class="shot" id="transfers">
   <header>
     <h2>5 · Active Transfers</h2>
-    <p>Each job has its own card with progress, speed, time left, file counts and the current file. A speed graph covers the last 60 seconds. Pause stops the process and Resume continues it. Cancel asks first. The live log can be expanded.</p>
-    <div class="covers"><span class="b">B3</span><span class="b">B4</span><span>#11</span><span>#18</span></div>
+    <p>Each job has its own card with progress, speed, time left, file counts and the current file. A speed graph covers the last 60 seconds. Pause stops the process and Resume continues it. Cancel asks first. A job waiting on a locked drive offers to unlock it.</p>
+    <div class="covers"><span class="b">B3</span><span class="b">B4</span><span>#10</span><span>#11</span><span>#18</span></div>
   </header>
   <div class="stage"><div class="win">
     <div class="hb">
       <button class="btn">{{i:action-new}}New job</button>
-      <div class="title"><b>LinFileCopy</b><small>Active Transfers · 2 running, 1 queued</small></div>
+      <div class="title"><b>LinFileCopy</b><small>Active Transfers · 2 running, 1 waiting</small></div>
       <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
       <span class="wc">{{i:action-close}}</span>
     </div>
     <div class="layout">
-      <nav class="sb">
-        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
-        <div class="nav">{{i:nav-designer}}Job Designer</div>
-        <div class="nav on">{{i:nav-transfers-active}}Active Transfers<span class="count">2</span></div>
-        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
-        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
-        <div class="nav">{{i:nav-settings}}Settings</div>
-      </nav>
+      {{sidebar:transfers}}
       <main class="main">
         <div class="prog">
           <div class="top">
-            <span style="color:var(--accent)">{{i:status-running|spin}}</span><b>Documents backup</b>
+            <span style="color:var(--accent)">{{i:status-running|spin}}</span><b>Documents to USB stick</b>
             <span class="badge info">Running</span>
-            <div class="route">{{i:ep-local}}<span>/home/sam/Documents</span>{{i:mode-copy}}{{i:ep-ssh}}<span>backup.lan:/srv/backups/sam</span></div>
+            <span class="badge">{{i:action-eject}}Ejects when done</span>
+            <div class="route">{{i:ep-internal}}<span>~/Documents</span>{{i:mode-copy}}{{i:ep-removable}}<span>62 GB Volume › Documents</span></div>
             <span style="flex:1"></span>
             <button class="btn">{{i:action-pause}}Pause</button>
             <button class="btn">{{i:action-cancel}}Cancel</button>
           </div>
           <div class="bar"><span style="width:62%"></span></div>
           <div class="metrics">
-            <div><small>Transferred</small><b>2.41 GB of 3.88 GB</b></div>
+            <div><small>Copied</small><b>2.41 GB of 3.88 GB</b></div>
             <div><small>Speed</small><b>38.4 MB/s</b></div>
             <div><small>Time left</small><b>3 min 12 s</b></div>
             <div><small>Files</small><b>1,284 of 2,050</b></div>
@@ -733,25 +735,25 @@ Projects/linfilecopy/tools/icons.manifest
 
         <div class="prog">
           <div class="top">
-            <span style="color:var(--dim)">{{i:status-paused}}</span><b>Website mirror</b>
+            <span style="color:var(--dim)">{{i:status-paused}}</span><b>Video projects → T7 Shield</b>
             <span class="badge">Paused</span>
-            <div class="route">{{i:ep-local}}<span>~/Sites/site</span>{{i:mode-mirror}}{{i:ep-ssh}}<span>web01:/var/www/site</span></div>
+            <div class="route">{{i:ep-internal}}<span>~/Videos/Projects</span>{{i:mode-mirror}}{{i:ep-removable}}<span>T7 Shield › Projects</span></div>
             <span style="flex:1"></span>
             <button class="btn sug">{{i:action-start}}Resume</button>
             <button class="btn">{{i:action-cancel}}Cancel</button>
           </div>
           <div class="bar paused"><span style="width:18%"></span></div>
           <div class="metrics">
-            <div><small>Transferred</small><b>560 MB of 3.1 GB</b></div>
+            <div><small>Copied</small><b>21.6 GB of 118 GB</b></div>
             <div><small>Speed</small><b>—</b></div>
             <div><small>Paused for</small><b>4 min</b></div>
             <div><small>Files</small><b>29 of 160</b></div>
           </div>
-          <div class="infobar">{{i:misc-info}}<div class="t"><small>SSH connections can drop during long pauses. If this happens, the job restarts and continues from the partial files.</small></div></div>
+          <div class="infobar">{{i:misc-info}}<div class="t"><small>If T7 Shield is unplugged while paused, the job stops. Run it again later and it continues from the partial files.</small></div></div>
         </div>
 
         <div class="list">
-          <div class="row"><span style="color:var(--dim)">{{i:status-queued}}</span><div class="t"><b>Photos → NAS</b><small>Queued · starts when Documents backup finishes (same destination disk)</small></div><button class="btn flat">{{i:action-start}}Start now</button><button class="btn flat ico" title="Remove from queue">{{i:action-close}}</button></div>
+          <div class="row"><span style="color:var(--dim)">{{i:ep-encrypted}}</span><div class="t"><b>Photos → Archive</b><small>Waiting · Archive is locked. Unlock it to start.</small></div><button class="btn">{{i:ep-unlock}}Unlock…</button><button class="btn flat ico" title="Remove from queue">{{i:action-close}}</button></div>
         </div>
       </main>
     </div>
@@ -773,29 +775,23 @@ Projects/linfilecopy/tools/icons.manifest
       <span class="wc">{{i:action-close}}</span>
     </div>
     <div class="layout">
-      <nav class="sb">
-        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
-        <div class="nav">{{i:nav-designer}}Job Designer</div>
-        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
-        <div class="nav on">{{i:nav-history-active}}History &amp; Logs</div>
-        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
-        <div class="nav">{{i:nav-settings}}Settings</div>
-      </nav>
+      {{sidebar:history}}
       <main class="main">
         <div class="pagehead">
           <div class="entry" style="max-width:320px">{{i:action-search}}<span class="ph">Search jobs, paths, errors</span></div>
           <button class="btn">All results{{i:action-collapse|caret}}</button>
+          <button class="btn">All drives{{i:action-collapse|caret}}</button>
           <button class="btn">Last 30 days{{i:action-collapse|caret}}</button>
         </div>
         <div class="list" style="overflow-x:auto">
           <table class="tbl">
-            <thead><tr><th></th><th>Job</th><th>Started</th><th class="r">Duration</th><th class="r">Transferred</th><th class="r">Files</th><th>Result</th><th></th></tr></thead>
+            <thead><tr><th></th><th>Job</th><th>Started</th><th class="r">Duration</th><th class="r">Copied</th><th class="r">Files</th><th>Result</th><th></th></tr></thead>
             <tbody>
-              <tr><td class="c-new">{{i:status-success}}</td><td><span class="jn">Music to NAS</span></td><td>Today 08:14</td><td class="r">1 min 03 s</td><td class="r">1.2 GB</td><td class="r">214</td><td><span class="badge ok">Completed</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
-              <tr class="sel"><td class="c-del">{{i:status-failed}}</td><td><span class="jn">Photos → NAS</span></td><td>Today 02:00</td><td class="r">6 min 41 s</td><td class="r">8.7 GB</td><td class="r">3,112</td><td><span class="badge err">Code 23</span></td><td><button class="btn flat">{{i:action-retry}}Retry</button></td></tr>
-              <tr><td style="color:var(--accent-fg)">{{i:status-dryrun}}</td><td><span class="jn">Cloud sync</span></td><td>Yesterday 17:40</td><td class="r">12 s</td><td class="r">—</td><td class="r">160</td><td><span class="badge info">Preview</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
+              <tr><td class="c-new">{{i:status-success}}</td><td><span class="jn">Music → T7 Shield</span></td><td>Today 08:14</td><td class="r">1 min 03 s</td><td class="r">1.2 GB</td><td class="r">214</td><td><span class="badge ok">Completed</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
+              <tr class="sel"><td class="c-del">{{i:status-failed}}</td><td><span class="jn">Photos → Archive</span></td><td>Today 02:00</td><td class="r">6 min 41 s</td><td class="r">8.7 GB</td><td class="r">3,112</td><td><span class="badge err">Code 23</span></td><td><button class="btn flat">{{i:action-retry}}Retry</button></td></tr>
+              <tr><td style="color:var(--accent-fg)">{{i:status-dryrun}}</td><td><span class="jn">Notes two-way</span></td><td>Yesterday 17:40</td><td class="r">3 s</td><td class="r">—</td><td class="r">18</td><td><span class="badge info">Preview</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
               <tr><td style="color:var(--warn)">{{i:status-warning}}</td><td><span class="jn">Home snapshot</span></td><td>Yesterday 03:00</td><td class="r">14 min 20 s</td><td class="r">2.3 GB</td><td class="r">9,870</td><td><span class="badge warn">Code 24</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
-              <tr><td style="color:var(--dim)">{{i:status-cancelled}}</td><td><span class="jn">Website mirror</span></td><td>Mon 16:02</td><td class="r">48 s</td><td class="r">120 MB</td><td class="r">12</td><td><span class="badge">Cancelled</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
+              <tr><td class="c-del">{{i:status-drive-missing}}</td><td><span class="jn">Video projects → T7 Shield</span></td><td>Mon 16:02</td><td class="r">48 s</td><td class="r">1.9 GB</td><td class="r">12</td><td><span class="badge err">Drive removed</span></td><td><button class="btn flat">{{i:action-retry}}Retry</button></td></tr>
             </tbody>
           </table>
         </div>
@@ -810,9 +806,10 @@ Projects/linfilecopy/tools/icons.manifest
             <div class="ph">{{i:feat-stats}}Run statistics</div>
             <dl class="kv">
               <dt>Files checked</dt><dd>41,208</dd>
-              <dt>Files transferred</dt><dd>3,112 (3 failed)</dd>
-              <dt>Data sent</dt><dd>8.7 GB (8.9 GB before delta)</dd>
+              <dt>Files copied</dt><dd>3,112 (3 failed)</dd>
+              <dt>Data copied</dt><dd>8.7 GB</dd>
               <dt>Average speed</dt><dd>21.7 MB/s</dd>
+              <dt>Destination</dt><dd>Archive (RAID 1, ext4) · unlocked and locked again</dd>
               <dt>Exit code</dt><dd>23 · partial transfer</dd>
               <dt>Triggered by</dt><dd>systemd timer</dd>
             </dl>
@@ -833,8 +830,8 @@ Projects/linfilecopy/tools/icons.manifest
 <section class="shot" id="scheduler">
   <header>
     <h2>7 · Scheduler</h2>
-    <p>All schedules are listed in one place, each with an on/off switch. The editor shows the systemd timer (or cron line) it will install, so nothing is hidden. Scheduled runs use the same engine through <code>linfilecopy run &lt;job&gt;</code>, and their results appear in History.</p>
-    <div class="covers"><span>#14</span><span>#19</span></div>
+    <p>All schedules and triggers are listed in one place, each with an on/off switch. Jobs can run on a timer, when files change, or when a particular drive is plugged in. The editor shows the systemd timer it will install, so nothing is hidden. Timed runs use <code>linfilecopy run &lt;job&gt;</code> and their results appear in History.</p>
+    <div class="covers"><span>#14</span><span>#19</span><span>#20</span></div>
   </header>
   <div class="stage"><div class="win">
     <div class="hb">
@@ -844,29 +841,24 @@ Projects/linfilecopy/tools/icons.manifest
       <span class="wc">{{i:action-close}}</span>
     </div>
     <div class="layout">
-      <nav class="sb">
-        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
-        <div class="nav">{{i:nav-designer}}Job Designer</div>
-        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
-        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
-        <div class="nav on">{{i:nav-scheduler-active}}Scheduler</div>
-        <div class="nav">{{i:nav-settings}}Settings</div>
-      </nav>
+      {{sidebar:scheduler}}
       <main class="main">
         <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)">
           <div class="group">
-            <div class="gh">{{i:feat-schedule}}Schedules<span class="note">3 of 7 jobs</span></div>
+            <div class="gh">{{i:feat-schedule}}Schedules and triggers<span class="note">5 of 7 jobs</span></div>
             <div class="list">
-              <div class="row hl">{{i:status-scheduled}}<div class="t"><b>Home snapshot</b><small>Daily 03:00 · next: tomorrow 03:00</small></div><span class="badge">systemd</span><span class="switch on"></span></div>
-              <div class="row">{{i:status-scheduled}}<div class="t"><b>Photos → NAS</b><small>Daily 02:00 · next: tomorrow 02:00</small></div><span class="badge">systemd</span><span class="switch on"></span></div>
-              <div class="row">{{i:feat-cron}}<div class="t"><b>Website mirror</b><small>Custom: */30 9-18 * * 1-5 · paused</small></div><span class="badge">cron</span><span class="switch"></span></div>
-              <div class="row">{{i:feat-realtime}}<div class="t"><b>Notes folder</b><small>On change · 2 s delay · while LinFileCopy is running</small></div><span class="badge">watch</span><span class="switch on"></span></div>
+              <div class="row hl">{{i:status-scheduled}}<div class="t"><b>Home snapshot</b><small>Daily 03:00 · next: tomorrow 03:00</small></div><span class="badge">timer</span><span class="switch on"></span></div>
+              <div class="row">{{i:status-scheduled}}<div class="t"><b>Photos → Archive</b><small>Daily 02:00 · next: tomorrow 02:00</small></div><span class="badge">timer</span><span class="switch on"></span></div>
+              <div class="row">{{i:trigger-drive}}<div class="t"><b>Notes two-way</b><small>When 62 GB Volume is plugged in</small></div><span class="badge">drive</span><span class="switch on"></span></div>
+              <div class="row">{{i:feat-realtime}}<div class="t"><b>Code → T7 Shield</b><small>When ~/Code changes · 2 s delay</small></div><span class="badge">watch</span><span class="switch on"></span></div>
+              <div class="row">{{i:feat-cron}}<div class="t"><b>Video projects → T7 Shield</b><small>Custom: 0 20 * * 1-5 · paused</small></div><span class="badge">cron</span><span class="switch"></span></div>
             </div>
+            <small style="color:var(--dim)">Drive and folder triggers work while LinFileCopy is open or in the tray.</small>
             <button class="btn" style="justify-self:start">{{i:action-new}}Schedule a job…</button>
           </div>
           <div class="panel">
             <div class="ph">{{i:feat-schedule}}Home snapshot</div>
-            <div class="linked"><button class="btn">Once</button><button class="btn">Hourly</button><button class="btn on">Daily</button><button class="btn">Weekly</button><button class="btn">{{i:feat-cron}}Custom</button></div>
+            <div class="linked"><button class="btn">Once</button><button class="btn">Hourly</button><button class="btn on">Daily</button><button class="btn">Weekly</button><button class="btn">{{i:feat-cron}}Custom</button><button class="btn">{{i:trigger-drive}}Drive connected</button></div>
             <div class="pathline"><span style="width:90px;color:var(--dim)">At</span><div class="entry sm"><span>03</span></div>:<div class="entry sm"><span>00</span></div></div>
             <div class="pathline"><span style="width:90px;color:var(--dim)">On</span><div class="days"><span class="day on">Mo</span><span class="day on">Tu</span><span class="day on">We</span><span class="day on">Th</span><span class="day on">Fr</span><span class="day on">Sa</span><span class="day on">Su</span></div></div>
             <div class="pathline"><span style="width:90px;color:var(--dim)">Using</span><button class="btn">Automatic · systemd user timer{{i:action-collapse|caret}}</button></div>
@@ -874,6 +866,7 @@ Projects/linfilecopy/tools/icons.manifest
               <div class="row"><div class="t"><b>Catch up after the computer was off</b><small>Runs at next start if 03:00 was missed</small></div><span class="switch on"></span></div>
               <div class="row"><div class="t"><b>Only on AC power</b></div><span class="switch"></span></div>
             </div>
+            <div class="infobar" style="background:var(--ok-bg);color:var(--ok)">{{i:ep-encrypted}}<div class="t"><small>Archive's passphrase is in your keyring, so this job can unlock it on its own.</small></div></div>
 <pre class="cmd"><span class="c"># ~/.config/systemd/user/linfilecopy-home-snapshot.timer</span>
 [Timer]
 OnCalendar=*-*-* 03:00:00
@@ -892,9 +885,9 @@ ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
 <!-- ============================ 8. SETTINGS ============================ -->
 <section class="shot" id="settings">
   <header>
-    <h2>8 · Settings and missing tools</h2>
-    <p>Tool detection lives here. When rclone is missing, its features stay visible but disabled, and this page shows the install command for each distribution along with the list of features it unlocks.</p>
-    <div class="covers"><span class="b">B10</span><span>#18</span><span>#20</span></div>
+    <h2>8 · Settings, drives and system tools</h2>
+    <p>This page lists every detected drive with its type, filesystem and what the filesystem can store, plus the system tools the app depends on. If a tool were missing, its row would show the install command for each distribution.</p>
+    <div class="covers"><span class="b">B10</span><span>#10</span><span>#18</span><span>#20</span></div>
   </header>
   <div class="stage"><div class="win">
     <div class="hb">
@@ -904,22 +897,15 @@ ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
       <span class="wc">{{i:action-close}}</span>
     </div>
     <div class="layout">
-      <nav class="sb">
-        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
-        <div class="nav">{{i:nav-designer}}Job Designer</div>
-        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
-        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
-        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
-        <div class="nav on">{{i:nav-settings-active}}Settings</div>
-      </nav>
+      {{sidebar:settings}}
       <main class="main">
-        <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+        <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)">
           <div class="stack">
             <div class="group">
               <div class="gh">{{i:misc-theme}}Appearance</div>
               <div class="list">
                 <div class="row"><div class="t"><b>Style</b></div><div class="linked"><button class="btn on">System</button><button class="btn">Light</button><button class="btn">Dark</button></div></div>
-                <div class="row"><div class="t"><b>Keep running in the tray</b><small>Needed for schedules that watch folders</small></div><span class="switch on"></span></div>
+                <div class="row"><div class="t"><b>Keep running in the tray</b><small>Needed for drive and folder triggers</small></div><span class="switch on"></span></div>
               </div>
             </div>
             <div class="group">
@@ -927,6 +913,7 @@ ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
               <div class="list">
                 <div class="row"><div class="t"><b>Preview new jobs first</b><small>Recommended while you are learning the app</small></div><span class="switch on"></span></div>
                 <div class="row"><div class="t"><b>Confirm before deleting files</b><small>Mirror and two-way jobs</small></div><span class="switch on"></span></div>
+                <div class="row"><div class="t"><b>Stop two-way sync if more than</b><small>of files would be deleted on one side</small></div><div class="entry sm"><span>50 %</span></div></div>
               </div>
             </div>
             <div class="group">
@@ -937,24 +924,29 @@ ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
                 <div class="row"><div class="t"><b>Keep history for</b></div><div class="entry sm"><span>90</span></div><span style="color:var(--dim)">days</span></div>
               </div>
             </div>
-            <button class="btn" style="justify-self:start">{{i:misc-shortcuts}}Keyboard shortcuts</button>
           </div>
-          <div class="group">
-            <div class="gh">{{i:feat-backends}}Transfer tools</div>
-            <div class="list">
-              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>rsync 3.2.7</b><small>/usr/bin/rsync · local and SSH jobs</small></div></div>
-              <div class="row"><span style="color:var(--warn)">{{i:status-missing-tool}}</span><div class="t"><b>rclone</b><small>Not installed</small></div><button class="btn">{{i:action-install}}How to install</button></div>
-              <div class="row sub" style="display:grid;gap:8px;align-items:start">
-                <small style="color:var(--dim)">Installing rclone turns on cloud storage (S3, Google Drive, Dropbox and 60 more), encrypted remotes and two-way sync. Run the command for your system, then press Check again.</small>
-                <div class="pathline"><pre class="cmd" style="flex:1;padding:6px 10px">sudo apt install rclone</pre><button class="btn ico" title="Copy">{{i:action-copy-command}}</button></div>
-                <div class="pathline"><pre class="cmd" style="flex:1;padding:6px 10px">sudo dnf install rclone</pre><button class="btn ico" title="Copy">{{i:action-copy-command}}</button></div>
-                <div class="pathline"><pre class="cmd" style="flex:1;padding:6px 10px">sudo pacman -S rclone</pre><button class="btn ico" title="Copy">{{i:action-copy-command}}</button></div>
-                <button class="btn" style="justify-self:start">{{i:action-rerun}}Check again</button>
+          <div class="stack">
+            <div class="group">
+              <div class="gh">{{i:feat-drives}}Drives<span class="note">system partitions hidden</span></div>
+              <div class="list">
+                <div class="row">{{i:ep-internal}}<div class="t"><b>Home</b><small>Internal NVMe · ext4 · 1.8 TB · everything supported</small></div></div>
+                <div class="row">{{i:ep-internal}}<div class="t"><b>System</b><small>Internal NVMe · ext4 · 200 GB · everything supported</small></div></div>
+                <div class="row">{{i:ep-removable}}<div class="t"><b>62 GB Volume</b><small>USB · exFAT · 41.3 GB free · no permissions, links or snapshots</small></div><button class="btn">{{i:action-eject}}Eject</button></div>
+                <div class="row">{{i:ep-removable}}<div class="t"><b>T7 Shield</b><small>USB SSD · ext4 · 612 GB free · everything supported</small></div><button class="btn">{{i:action-eject}}Eject</button></div>
+                <div class="row">{{i:ep-array}}<div class="t"><b>Archive</b><small>RAID 1 · LUKS · ext4 · passphrase in keyring</small></div><button class="btn">{{i:ep-unlock}}Unlock</button></div>
               </div>
-              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Tray icon</b><small>Ayatana AppIndicator available</small></div></div>
-              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Password storage</b><small>System keyring (libsecret)</small></div></div>
-              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Scheduling</b><small>systemd user session · crontab as fallback</small></div></div>
             </div>
+            <div class="group">
+              <div class="gh">{{i:misc-command}}System tools</div>
+              <div class="list">
+                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>rsync 3.2.7</b><small>/usr/bin/rsync · copy engine</small></div></div>
+                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>UDisks2</b><small>mount, unlock and eject drives</small></div></div>
+                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>ionice</b><small>background priority</small></div></div>
+                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Tray and keyring</b><small>Ayatana AppIndicator · libsecret</small></div></div>
+                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Scheduling</b><small>systemd user session · crontab as fallback</small></div></div>
+              </div>
+            </div>
+            <button class="btn" style="justify-self:start">{{i:misc-shortcuts}}Keyboard shortcuts</button>
           </div>
         </div>
       </main>
@@ -966,8 +958,8 @@ ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
 <section class="shot" id="narrow">
   <header>
     <h2>9 · Narrow window and desktop notifications</h2>
-    <p>Below 640 px the sidebar becomes a menu button and cards stack in one column. Notifications use the desktop's own system (GNOME, KDE, XFCE and Cinnamon all show them) and include a button that opens the result.</p>
-    <div class="covers"><span class="b">B3</span><span class="b">B4</span><span class="b">B10</span><span>#18</span></div>
+    <p>Below 640 px the sidebar becomes a menu button and cards stack in one column. Notifications use the desktop's own system and offer the next useful action, such as opening the log or unlocking a drive.</p>
+    <div class="covers"><span class="b">B3</span><span class="b">B4</span><span class="b">B10</span><span>#10</span><span>#18</span></div>
   </header>
   <div class="stage"><div class="pair">
     <div class="win narrow">
@@ -978,8 +970,8 @@ ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
       </div>
       <main class="main" style="padding:14px">
         <div class="prog">
-          <div class="top"><span style="color:var(--accent)">{{i:status-running|spin}}</span><b>Documents backup</b></div>
-          <div class="route">{{i:ep-local}}<span>~/Documents</span>{{i:mode-copy}}{{i:ep-ssh}}<span>backup.lan</span></div>
+          <div class="top"><span style="color:var(--accent)">{{i:status-running|spin}}</span><b>Documents to USB stick</b></div>
+          <div class="route">{{i:ep-internal}}<span>~/Documents</span>{{i:mode-copy}}{{i:ep-removable}}<span>62 GB Volume</span></div>
           <div class="bar"><span style="width:62%"></span></div>
           <div class="metrics" style="grid-template-columns:1fr 1fr">
             <div><small>Speed</small><b>38.4 MB/s</b></div>
@@ -989,29 +981,36 @@ ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
           <div class="actions" style="justify-content:stretch"><button class="btn" style="flex:1">{{i:action-pause}}Pause</button><button class="btn" style="flex:1">{{i:action-cancel}}Cancel</button></div>
         </div>
         <div class="list">
-          <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Music to NAS</b><small>Today 08:14</small></div><button class="btn flat ico" title="Run again">{{i:action-rerun}}</button></div>
+          <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Music → T7 Shield</b><small>Today 08:14</small></div><button class="btn flat ico" title="Run again">{{i:action-rerun}}</button></div>
         </div>
       </main>
     </div>
     <div class="notifs">
       <div class="notif">
         <svg class="ai" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#3584e4"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#fff"><use href="#i-action-duplicate"/></svg></svg>
-        <b>Documents backup finished</b>
-        <span>3.88 GB, 2,050 files in 4 min 51 s</span>
+        <b>Documents to USB stick finished</b>
+        <span>3.88 GB, 2,050 files in 4 min 51 s. 62 GB Volume was ejected and can be unplugged.</span>
         <small>LinFileCopy · now</small>
         <div class="na"><button class="btn">Show details</button></div>
       </div>
       <div class="notif">
         <svg class="ai" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#c01c28"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#fff"><use href="#i-status-failed"/></svg></svg>
-        <b>Photos → NAS failed</b>
+        <b>Photos → Archive failed</b>
         <span>3 files could not be read (permission denied)</span>
         <small>LinFileCopy · 02:06</small>
         <div class="na"><button class="btn">Retry</button><button class="btn">Open log</button></div>
       </div>
       <div class="notif">
+        <svg class="ai" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#9c6c00"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#fff"><use href="#i-ep-encrypted"/></svg></svg>
+        <b>Home snapshot is waiting</b>
+        <span>Archive is locked and its passphrase is not saved.</span>
+        <small>LinFileCopy · 03:00</small>
+        <div class="na"><button class="btn">Unlock Archive…</button><button class="btn">Skip tonight</button></div>
+      </div>
+      <div class="notif">
         <svg class="ai" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#3584e4"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#fff"><use href="#i-action-duplicate"/></svg></svg>
         <b>Tray menu</b>
-        <span>Show LinFileCopy · 1 running (62%) · Pause all · Quit</span>
+        <span>Show LinFileCopy · 1 running (62%) · Pause all · Eject 62 GB Volume · Quit</span>
         <small>AppIndicator menu, when available</small>
       </div>
     </div>

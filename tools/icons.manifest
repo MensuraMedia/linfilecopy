@@ -38,7 +38,7 @@ action-copy-command      clipboard-text           regular  Copy command to clipb
 action-browse            folder-open              regular  Browse for folder
 action-drop              hand-grabbing            regular  Drag-and-drop hint
 action-swap              arrows-down-up           regular  Swap source and destination
-action-test              flask                    regular  Test connection / filters
+action-test              flask                    regular  Test filters
 action-search            magnifying-glass         regular  Search
 action-open-log          scroll                   regular  Open run log
 action-move-up           caret-up                 regular  Move filter rule up
@@ -54,16 +54,19 @@ misc-shortcuts           keyboard                 regular  Keyboard shortcuts
 misc-theme               circle-half              regular  Theme selector
 misc-command             terminal-window          regular  Command preview pane
 
-# --- endpoints (#10, #20, B1) ---------------------------------------------
-ep-local                 hard-drives              regular  Local folder
-ep-ssh                   terminal                 regular  SSH host
-ep-cloud                 cloud                    regular  rclone remote
-ep-crypt                 lock-key                 regular  rclone crypt remote
-ep-key                   key                      regular  SSH key file
-ep-password              password                 regular  Password field
+# --- drives & endpoints (B1, #10, #20) -----------------------------------
+ep-internal              hard-drive               regular  Internal disk
+ep-removable             usb                      regular  Removable drive (USB stick, external disk)
+ep-array                 hard-drives              regular  Storage array / multi-disk volume
+ep-folder                folder-simple            regular  Folder in lists
 ep-source                upload-simple            regular  Source side caption
 ep-destination           download-simple          regular  Destination side caption
-ep-folder                folder-simple            regular  Folder in lists
+ep-encrypted             lock-key                 regular  Encrypted (LUKS) drive
+ep-unlock                lock-simple-open         regular  Unlock encrypted drive
+ep-password              password                 regular  Passphrase field
+action-eject             eject                    regular  Eject / safely remove drive
+trigger-drive            plug                     regular  Run when drive is connected
+status-drive-missing     plugs                    regular  Drive not connected
 
 # --- modes & policies (B2, B9, #13) ---------------------------------------
 mode-copy                arrow-right              regular  One-way copy
@@ -80,14 +83,15 @@ feat-incremental         list-checks              regular  #2 Incremental / comp
 feat-metadata            tag                      regular  #3 Metadata preservation
 feat-dryrun              eye                      regular  #4 Dry run
 feat-filters             funnel                   regular  #5 Filters
-feat-bandwidth           gauge                    regular  #6 Bandwidth limit
+feat-bandwidth           gauge                    regular  #6 Speed limit
+feat-priority            feather                  regular  #6 Background I/O priority
 feat-resume              play-pause               regular  #7 Resume partial transfers
 feat-checksum            fingerprint              regular  #8 Checksum verification
-feat-compress            file-zip                 regular  #9 Compression
-feat-security            lock-key                 regular  #10 Secure transport
+feat-encrypted           lock-key                 regular  #10 Encrypted drives
 feat-stats               chart-line-up            regular  #11 Progress & statistics
 feat-parallel            rows                     regular  #12 Parallel transfers
-feat-bidirectional       arrows-left-right        regular  #13 Bidirectional sync
+feat-bidirectional       arrows-left-right        regular  #13 Two-way sync (native)
+feat-trash               trash-simple             regular  #13 Recoverable .lfc-trash folder
 feat-realtime            lightning                regular  #14 Real-time sync
 feat-sparse              file-dashed              regular  #15 Sparse files
 feat-atomic              atom                     regular  #16 Atomic replace
@@ -97,7 +101,7 @@ feat-logging             scroll                   regular  #18 Logging
 feat-notify              bell                     regular  #18 / B10 Notifications
 feat-schedule            calendar-check           regular  #19 Scheduling
 feat-cron                clock                    regular  #19 Custom cron
-feat-backends            plugs-connected          regular  #20 Multi-backend
+feat-drives              hard-drives              regular  #20 Drive-aware endpoints
 
 # --- exclude presets (B6) -------------------------------------------------
 preset-hidden            eye-slash                regular  Skip hidden files
@@ -115,7 +119,7 @@ status-failed            x-circle                 fill     Failed
 status-cancelled         prohibit                 bold     Cancelled
 status-scheduled         clock                    fill     Scheduled
 status-queued            hourglass                fill     Queued
-status-missing-tool      warning                  fill     Required tool missing
+status-missing-tool      warning                  fill     Required tool missing / caution
 status-dryrun            eye                      fill     Dry-run badge
 
 # --- stats / empty states -------------------------------------------------
