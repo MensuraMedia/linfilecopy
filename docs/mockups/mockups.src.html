@@ -1,0 +1,1043 @@
+<title>LinFileCopy Mockups</title>
+<style>
+/* ---------- tokens: page chrome + Adwaita-inspired app palette ---------- */
+:root{
+  --page:#e6e9ee; --page-fg:#1d2126; --page-dim:#5a626c; --page-rule:#cfd5dd;
+  --win:#fafafa; --view:#ffffff; --hb:#ebebeb; --hb-border:#d4d4d4; --sb:#f2f2f2;
+  --fg:#2b2f33; --dim:#6b7177; --border:#dadada; --btn:#ececec; --btn-edge:#d2d2d2;
+  --sel:#e1e6ec; --code:#f4f5f7; --trough:#e1e1e1; --sw-off:#cfcfcf; --wc:#dadada;
+  --accent:#3584e4; --accent-fg:#1c5fb4; --accent-soft:#dbe8fa; --accent-ring:rgba(53,132,228,.35);
+  --src:#3584e4; --dst:#26a269; --dst-soft:#dcf3e5;
+  --ok:#26a269; --ok-bg:#dcf3e5; --warn:#9c6c00; --warn-bg:#fcefc7; --err:#c01c28; --err-bg:#fbe0e2;
+  --scrim:rgba(0,0,0,.32); --shadow:0 1px 0 rgba(0,0,0,.04),0 14px 40px rgba(20,30,50,.18);
+  --font:Cantarell,"Noto Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"Source Code Pro","DejaVu Sans Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --page:#15171b; --page-fg:#e7e9ec; --page-dim:#9aa1aa; --page-rule:#2b3038;
+  --win:#242424; --view:#1e1e1e; --hb:#303030; --hb-border:#1b1b1b; --sb:#2a2a2a;
+  --fg:#eeeeee; --dim:#a2a2a2; --border:#3a3a3a; --btn:#3a3a3a; --btn-edge:#2c2c2c;
+  --sel:#3b3f45; --code:#191919; --trough:#3d3d3d; --sw-off:#545454; --wc:#454545;
+  --accent:#3584e4; --accent-fg:#99c1f1; --accent-soft:#233a57; --accent-ring:rgba(120,174,237,.45);
+  --src:#62a0ea; --dst:#33d17a; --dst-soft:#1f3a2b;
+  --ok:#57e389; --ok-bg:#1f3a2b; --warn:#f6d32d; --warn-bg:#3d3418; --err:#ff7b7b; --err-bg:#46211f;
+  --scrim:rgba(0,0,0,.5); --shadow:0 0 0 1px #000,0 14px 40px rgba(0,0,0,.5);}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --page:#15171b; --page-fg:#e7e9ec; --page-dim:#9aa1aa; --page-rule:#2b3038;
+  --win:#242424; --view:#1e1e1e; --hb:#303030; --hb-border:#1b1b1b; --sb:#2a2a2a;
+  --fg:#eeeeee; --dim:#a2a2a2; --border:#3a3a3a; --btn:#3a3a3a; --btn-edge:#2c2c2c;
+  --sel:#3b3f45; --code:#191919; --trough:#3d3d3d; --sw-off:#545454; --wc:#454545;
+  --accent:#3584e4; --accent-fg:#99c1f1; --accent-soft:#233a57; --accent-ring:rgba(120,174,237,.45);
+  --src:#62a0ea; --dst:#33d17a; --dst-soft:#1f3a2b;
+  --ok:#57e389; --ok-bg:#1f3a2b; --warn:#f6d32d; --warn-bg:#3d3418; --err:#ff7b7b; --err-bg:#46211f;
+  --scrim:rgba(0,0,0,.5); --shadow:0 0 0 1px #000,0 14px 40px rgba(0,0,0,.5);}
+
+/* ---------- page chrome ---------- */
+body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-size:15px;line-height:1.5}
+.page{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:40px 80px;display:flex;flex-direction:column;gap:56px}
+.intro{display:grid;gap:18px;max-width:78ch}
+.intro h1{font-size:34px;line-height:1.15;margin:0;text-wrap:balance;display:flex;align-items:center;gap:14px}
+.intro h1 .appicon{width:48px;height:48px;flex:none}
+.intro p{margin:0;color:var(--page-dim)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--page-dim)}
+.seg{display:inline-flex;border:1px solid var(--page-rule);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;background:transparent;color:var(--page-fg);border:0;padding:5px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--page-fg);color:var(--page)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 24px;padding:0;margin:0;list-style:none;counter-reset:s}
+.toc a{color:var(--page-fg);text-decoration:none;display:flex;gap:10px;padding:4px 0;border-bottom:1px solid var(--page-rule)}
+.toc a:hover{color:var(--accent)}
+.toc a::before{counter-increment:s;content:counter(s,decimal-leading-zero);color:var(--page-dim);font-variant-numeric:tabular-nums;font-size:13px;padding-top:1px}
+.phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.phases li{border-top:3px solid var(--page-rule);padding-top:8px;font-size:13px;color:var(--page-dim)}
+.phases li b{display:block;color:var(--page-fg);font-size:14px}
+.phases li.mvp{border-color:var(--accent)}
+.shot{display:grid;gap:14px;scroll-margin-top:16px}
+.shot header{display:grid;gap:6px;max-width:80ch}
+.shot h2{margin:0;font-size:22px;text-wrap:balance}
+.shot header p{margin:0;color:var(--page-dim)}
+.covers{display:flex;flex-wrap:wrap;gap:6px}
+.covers span{font-size:12px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:10px;border:1px solid var(--page-rule);color:var(--page-dim);font-variant-numeric:tabular-nums}
+.covers span.b{border-color:var(--accent);color:var(--accent-fg)}
+.checks{margin:0;padding-left:20px;color:var(--page-dim);font-size:14px;display:grid;gap:2px}
+.stage{overflow-x:auto;padding:6px 6px 18px}
+.pair{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+
+/* ---------- app mockup components ---------- */
+.i{width:16px;height:16px;flex:none;fill:currentColor;vertical-align:middle}
+.win{position:relative;background:var(--win);color:var(--fg);border-radius:12px 12px 8px 8px;box-shadow:var(--shadow);overflow:hidden;min-width:1060px;font-size:14px;line-height:1.4}
+.win.narrow{min-width:0;width:380px}
+.hb{display:flex;align-items:center;gap:6px;height:46px;padding:0 8px;background:var(--hb);border-bottom:1px solid var(--hb-border)}
+.hb .title{flex:1;text-align:center;line-height:1.15;min-width:0}
+.hb .title b{display:block}.hb .title small{color:var(--dim);font-size:12px}
+.wc{width:24px;height:24px;border-radius:50%;background:var(--wc);display:grid;place-items:center;margin-left:6px}
+.wc .i{width:12px;height:12px}
+.layout{display:grid;grid-template-columns:212px minmax(0,1fr)}
+.sb{background:var(--sb);border-right:1px solid var(--border);padding:8px;display:flex;flex-direction:column;gap:2px}
+.nav{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:6px}
+.nav .i{width:20px;height:20px}
+.nav.on{background:var(--sel);font-weight:700}
+.nav .count{margin-left:auto;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:9px;padding:0 7px;line-height:18px}
+.sb .spacer{flex:1}
+.sb .tools{border-top:1px solid var(--border);padding:10px 6px 4px;display:grid;gap:6px;font-size:12px;color:var(--dim)}
+.sb .tools div{display:flex;align-items:center;gap:8px}
+.main{padding:22px 26px 26px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.pagehead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pagehead h3{margin:0;font-size:20px;flex:1;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:32px;padding:0 12px;border-radius:6px;background:var(--btn);border:1px solid var(--btn-edge);color:inherit;font:inherit;font-weight:700;white-space:nowrap}
+.btn.flat{background:transparent;border-color:transparent}
+.btn.sug{background:var(--accent);border-color:transparent;color:#fff}
+.btn.des{background:var(--err);border-color:transparent;color:#fff}
+:root[data-theme="dark"] .btn.des{color:#2a0000}
+.btn.big{height:40px;padding:0 20px;font-size:15px}
+.btn.ico{width:32px;padding:0}
+.btn.dis{opacity:.45}
+.btn .caret{margin-left:2px;opacity:.7;width:12px;height:12px}
+.linked{display:inline-flex}
+.linked .btn{border-radius:0;margin-left:-1px}
+.linked .btn:first-child{border-radius:6px 0 0 6px;margin-left:0}
+.linked .btn:last-child{border-radius:0 6px 6px 0}
+.linked .btn.on{background:var(--accent-soft);color:var(--accent-fg);border-color:var(--accent);position:relative;z-index:1}
+.switch{width:42px;height:24px;border-radius:12px;background:var(--sw-off);position:relative;flex:none}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.switch.on{background:var(--accent)}.switch.on::after{left:21px}
+.switch.dis{opacity:.4}
+.check{width:18px;height:18px;border-radius:4px;border:1px solid var(--btn-edge);background:var(--view);flex:none;display:grid;place-items:center}
+.check.on{background:var(--accent);border-color:var(--accent)}
+.check.on::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+.list{background:var(--view);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:10px 14px;min-height:50px}
+.row+.row{border-top:1px solid var(--border)}
+.row>.i{color:var(--dim)}
+.t{flex:1;min-width:0}
+.t b{display:block;font-weight:400}
+.t small{display:block;color:var(--dim);font-size:12.5px}
+.row.sub{padding-left:44px;background:color-mix(in srgb,var(--view) 92%,var(--fg) 3%)}
+.row.dis .t{opacity:.55}
+.group{display:grid;gap:8px}
+.gh{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+.gh .i{color:var(--dim)}
+.gh .note{margin-left:auto;font-weight:400;font-size:12.5px;color:var(--dim)}
+.entry{height:32px;border:1px solid var(--border);border-radius:6px;background:var(--view);padding:0 10px;display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.entry span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry.focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-ring)}
+.entry.sm{flex:none;width:90px}
+.entry .ph{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:15px;border:1px solid var(--border);background:var(--view)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-fg);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.pathcard{--edge:var(--src);background:var(--view);border:1px solid var(--border);border-left:4px solid var(--edge);border-radius:10px;padding:12px 14px;display:grid;gap:10px}
+.pathcard.dst{--edge:var(--dst)}
+.cap{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--edge)}
+.cap .muted{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim);font-size:12px}
+.pathline{display:flex;gap:8px;align-items:center}
+.drop{border:1.5px dashed color-mix(in srgb,var(--edge) 60%,transparent);border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:8px;color:var(--dim);font-size:12.5px}
+.drop.hot{background:color-mix(in srgb,var(--edge) 12%,transparent);color:var(--edge);border-style:solid}
+.swaprow{display:flex;justify-content:center;margin:-6px 0}
+.cmd{font-family:var(--mono);font-size:12.3px;line-height:1.55;background:var(--code);border:1px solid var(--border);border-radius:8px;padding:12px;margin:0;white-space:pre-wrap;word-break:break-word;color:var(--fg)}
+.cmd .k{font-weight:700}.cmd .f{color:var(--accent-fg)}.cmd .s{color:var(--src)}.cmd .d{color:var(--dst)}.cmd .c{color:var(--dim)}
+.bar{height:8px;border-radius:4px;background:var(--trough);overflow:hidden}
+.bar>span{display:block;height:100%;background:var(--accent);border-radius:4px}
+.bar.paused>span{background:var(--dim)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:2px 9px 2px 7px;border-radius:11px;background:var(--sel);color:var(--fg);white-space:nowrap}
+.badge.ok{background:var(--ok-bg);color:var(--ok)}.badge.warn{background:var(--warn-bg);color:var(--warn)}
+.badge.err{background:var(--err-bg);color:var(--err)}.badge.info{background:var(--accent-soft);color:var(--accent-fg)}
+.infobar{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:8px;background:var(--warn-bg);color:var(--warn)}
+.infobar .t b{font-weight:700}
+.infobar.err{background:var(--err-bg);color:var(--err)}
+.infobar .t small{color:inherit;opacity:.85}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tile{background:var(--view);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start}
+.tile .i{width:32px;height:32px;color:var(--accent)}
+.tile.bad .i{color:var(--err)}
+.num{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.tile small{color:var(--dim);font-size:12.5px;display:block}
+.cols{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.designer{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:22px;align-items:start}
+.side{display:grid;gap:12px;position:sticky;top:0}
+.panel{background:var(--view);border:1px solid var(--border);border-radius:10px;padding:14px;display:grid;gap:12px}
+.panel .ph{display:flex;align-items:center;gap:8px;font-weight:700}
+.panel .ph .badge{margin-left:auto}
+.actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.stack{display:grid;gap:14px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.kv dt{color:var(--dim)}.kv dd{margin:0;font-variant-numeric:tabular-nums}
+.prog{display:grid;gap:10px;background:var(--view);border:1px solid var(--border);border-radius:10px;padding:16px}
+.prog .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.prog .top b{font-size:15px}
+.route{display:flex;align-items:center;gap:6px;color:var(--dim);font-size:12.5px;min-width:0}
+.route span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metrics div{display:grid}
+.metrics small{color:var(--dim);font-size:12px}
+.metrics b{font-size:17px;font-variant-numeric:tabular-nums}
+.current{font-family:var(--mono);font-size:12px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spark{width:100%;height:48px;display:block}
+.spark .area{fill:var(--accent);opacity:.14}.spark .line{fill:none;stroke:var(--accent);stroke-width:1.6}
+.spark .grid{stroke:var(--border);stroke-width:1}.spark .end{fill:var(--accent)}
+.spin{animation:spin 1.1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-size:12px;color:var(--dim);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--border)}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;font-variant-numeric:tabular-nums}
+.tbl tr.sel td{background:var(--accent-soft)}
+.tbl td.r,.tbl th.r{text-align:right}
+.tbl .jn{display:flex;align-items:center;gap:8px;font-weight:700}
+.scrim{position:absolute;inset:46px 0 0 0;background:var(--scrim);display:grid;place-items:center;padding:24px}
+.dlg{width:640px;max-width:100%;background:var(--win);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.35);display:grid;overflow:hidden}
+.dlg.small{width:470px}
+.dlg .dh{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.dlg .dh b{flex:1;font-size:15px}
+.dlg .db{padding:16px;display:grid;gap:12px}
+.dlg .df{display:flex;gap:8px;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--border)}
+.dlg.alert .db{justify-items:center;text-align:center;padding:24px 24px 16px}
+.dlg.alert .big-i{width:48px;height:48px;color:var(--warn)}
+.dlg.alert h4{margin:0;font-size:18px}
+.dlg.alert p{margin:0;color:var(--dim)}
+.files{max-height:220px;overflow:auto;border:1px solid var(--border);border-radius:8px;background:var(--view)}
+.file{display:flex;align-items:center;gap:10px;padding:6px 10px;font-family:var(--mono);font-size:12.3px}
+.file+.file{border-top:1px solid var(--border)}
+.file span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file small{color:var(--dim);font-family:var(--font)}
+.c-new{color:var(--ok)}.c-upd{color:var(--accent-fg)}.c-del{color:var(--err)}
+.days{display:flex;gap:6px}
+.day{width:34px;height:32px;border-radius:6px;display:grid;place-items:center;border:1px solid var(--border);background:var(--view);font-size:12.5px;font-weight:700}
+.day.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.notif{width:360px;background:var(--win);color:var(--fg);border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px}
+.notif .ai{width:32px;height:32px;grid-row:span 3}
+.notif b{font-size:14px}
+.notif small{color:var(--dim)}
+.notif .na{grid-column:2;display:flex;gap:6px;margin-top:6px}
+.notifs{display:grid;gap:14px}
+.metagrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 14px;padding:12px 14px}
+.metagrid label{display:flex;align-items:center;gap:8px}
+.rules .row{min-height:40px;padding:6px 14px;font-family:var(--mono);font-size:12.5px}
+.rules .row .badge{font-family:var(--font)}
+.hl{outline:2px solid var(--accent);outline-offset:-2px}
+.legend-note{color:var(--page-dim);max-width:78ch;margin:0}
+.lg-group h3{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--page-dim);margin:18px 0 8px}
+.lg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.lg-item{display:flex;gap:12px;align-items:flex-start;background:var(--win);color:var(--fg);border:1px solid var(--border);border-radius:8px;padding:10px}
+.lg-item .lg-ico{width:24px;height:24px}
+.lg-item code{font-family:var(--mono);font-size:12.5px;font-weight:700;display:block}
+.lg-item small{display:block;color:var(--dim);font-size:12px}
+.lg-item span{display:block;font-size:12.5px}
+@media (max-width:640px){.intro h1{font-size:26px}}
+</style>
+
+{{SPRITE}}
+
+<div class="page">
+
+<header class="intro">
+  <h1><svg class="appicon" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#3584e4"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#ffffff"><use href="#i-action-duplicate"/></svg></svg>LinFileCopy mockups</h1>
+  <p>Ten screens that show how the GTK 3 app will look and behave before any UI code is written. Every icon on this page is a Phosphor SVG read from the local asset folder and inlined here, using the same icon IDs the app will ship with. Fonts are the system's own (Cantarell on GNOME); nothing is fetched from the network.</p>
+  <p>The windows follow your light or dark theme, the same way the app follows the desktop setting. Tags under each heading show which features the screen covers: <b>B1–B10</b> are the basic features and <b>#1–#20</b> are the advanced ones.</p>
+  <div class="toolbar">
+    <span>Preview theme</span>
+    <div class="seg" role="group" aria-label="Mockup theme">
+      <button type="button" id="th-system" data-t="" aria-pressed="true">System</button>
+      <button type="button" id="th-light" data-t="light" aria-pressed="false">Light</button>
+      <button type="button" id="th-dark" data-t="dark" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+  <ol class="toc">
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#designer-simple">Job Designer · Simple</a></li>
+    <li><a href="#designer-advanced">Job Designer · Advanced</a></li>
+    <li><a href="#preview">Preview and delete confirmation</a></li>
+    <li><a href="#transfers">Active Transfers</a></li>
+    <li><a href="#history">History &amp; Logs</a></li>
+    <li><a href="#scheduler">Scheduler</a></li>
+    <li><a href="#settings">Settings and missing tools</a></li>
+    <li><a href="#narrow">Narrow window and notifications</a></li>
+    <li><a href="#icons">Icon legend</a></li>
+  </ol>
+  <ol class="phases" aria-label="Build phases">
+    <li><b>P0 Foundation</b>shell, icons, CSS</li>
+    <li><b>P1 Model</b>SyncJob, store</li>
+    <li><b>P2 Builders</b>rsync / rclone argv</li>
+    <li><b>P3 Runner</b>progress, pause, exit codes</li>
+    <li class="mvp"><b>P4 MVP UI</b>B1–B10 usable</li>
+    <li><b>P5 Advanced</b>designer, preview pane</li>
+    <li><b>P6 Strategies</b>atomic, snapshots, bisync</li>
+    <li><b>P7 Scheduling</b>timers, headless run</li>
+    <li><b>P8–P9</b>polish, packaging</li>
+  </ol>
+</header>
+
+<!-- ============================ 1. DASHBOARD ============================ -->
+<section class="shot" id="dashboard">
+  <header>
+    <h2>1 · Dashboard</h2>
+    <p>The landing page. It shows totals first, then what is running now, what ran recently (with one-click re-run), and what is coming up.</p>
+    <div class="covers"><span class="b">B3</span><span class="b">B8</span><span>#11</span><span>#18</span><span>#19</span></div>
+  </header>
+  <div class="stage"><div class="win">
+    <div class="hb">
+      <button class="btn">{{i:action-new}}New job</button>
+      <button class="btn flat">{{i:action-templates}}Templates{{i:action-collapse|caret}}</button>
+      <div class="title"><b>LinFileCopy</b><small>Dashboard</small></div>
+      <button class="btn flat">{{i:action-preview}}Preview mode</button>
+      <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
+      <span class="wc">{{i:action-close}}</span>
+    </div>
+    <div class="layout">
+      <nav class="sb">
+        <div class="nav on">{{i:nav-dashboard-active}}Dashboard</div>
+        <div class="nav">{{i:nav-designer}}Job Designer</div>
+        <div class="nav">{{i:nav-transfers}}Active Transfers<span class="count">2</span></div>
+        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
+        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
+        <div class="nav">{{i:nav-settings}}Settings</div>
+        <div class="spacer"></div>
+        <div class="tools">
+          <div><span class="c-new">{{i:status-success}}</span>rsync 3.2.7</div>
+          <div><span style="color:var(--warn)">{{i:status-missing-tool}}</span>rclone not installed</div>
+        </div>
+      </nav>
+      <main class="main">
+        <div class="tiles">
+          <div class="tile">{{i:stat-data}}<div><div class="num">48.2 GB</div><small>copied in the last 7 days</small></div></div>
+          <div class="tile">{{i:stat-files}}<div><div class="num">18,406</div><small>files transferred</small></div></div>
+          <div class="tile">{{i:stat-jobs}}<div><div class="num">7</div><small>saved jobs · 3 scheduled</small></div></div>
+          <div class="tile bad">{{i:status-failed}}<div><div class="num">1</div><small>failed run needs attention</small></div></div>
+        </div>
+        <div class="cols">
+          <div class="stack">
+            <div class="group">
+              <div class="gh">{{i:nav-transfers}}Running now<span class="note">2 jobs</span></div>
+              <div class="list">
+                <div class="row">
+                  <span style="color:var(--accent)">{{i:status-running|spin}}</span>
+                  <div class="t"><b>Documents backup</b><div class="bar" style="margin:6px 0 4px"><span style="width:62%"></span></div><small>62% · 38.4 MB/s · 3 min 12 s left</small></div>
+                  <button class="btn ico" title="Pause">{{i:action-pause}}</button>
+                </div>
+                <div class="row">
+                  <span style="color:var(--dim)">{{i:status-paused}}</span>
+                  <div class="t"><b>Website mirror</b><div class="bar paused" style="margin:6px 0 4px"><span style="width:18%"></span></div><small>Paused at 18% · 4 min ago</small></div>
+                  <button class="btn ico" title="Resume">{{i:action-start}}</button>
+                </div>
+              </div>
+            </div>
+            <div class="group">
+              <div class="gh">{{i:nav-history}}Recent activity</div>
+              <div class="list">
+                <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Music to NAS</b><small>Today 08:14 · 1.2 GB, 214 files in 1 min 03 s</small></div><button class="btn flat">{{i:action-rerun}}Run again</button></div>
+                <div class="row"><span class="c-del">{{i:status-failed}}</span><div class="t"><b>Photos → NAS</b><small>Today 02:00 · rsync code 23: 3 files could not be read</small></div><button class="btn flat">{{i:action-retry}}Retry</button></div>
+                <div class="row"><span style="color:var(--accent-fg)">{{i:status-dryrun}}</span><div class="t"><b>Cloud sync · preview</b><small>Yesterday 17:40 · 42 new, 118 updated, 0 deleted</small></div><button class="btn flat">{{i:action-rerun}}Run again</button></div>
+                <div class="row"><span style="color:var(--warn)">{{i:status-warning}}</span><div class="t"><b>Home snapshot</b><small>Yesterday 03:00 · finished; 12 files vanished during copy (code 24)</small></div><button class="btn flat">{{i:action-open-log}}Log</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="group">
+              <div class="gh">{{i:action-templates}}Start from a template</div>
+              <div class="list">
+                <div class="row">{{i:ep-local}}<div class="t"><b>Backup Documents</b><small>Copy · keep dates &amp; permissions · skip caches</small></div>{{i:action-expand}}</div>
+                <div class="row">{{i:mode-mirror}}<div class="t"><b>Mirror Website</b><small>Mirror over SSH · compress · checksum</small></div>{{i:action-expand}}</div>
+                <div class="row">{{i:ep-cloud}}<div class="t"><b>Cloud Sync</b><small>rclone · two-way · needs rclone</small></div><span class="badge warn">{{i:status-missing-tool}}rclone</span></div>
+                <div class="row">{{i:feat-snapshots}}<div class="t"><b>Snapshot Backup</b><small>Hard-linked daily snapshots · keep 14</small></div>{{i:action-expand}}</div>
+              </div>
+            </div>
+            <div class="group">
+              <div class="gh">{{i:nav-scheduler}}Coming up</div>
+              <div class="list">
+                <div class="row">{{i:status-scheduled}}<div class="t"><b>Photos → NAS</b><small>Tomorrow 02:00 · systemd timer</small></div></div>
+                <div class="row">{{i:status-scheduled}}<div class="t"><b>Home snapshot</b><small>Tomorrow 03:00 · systemd timer</small></div></div>
+                <div class="row">{{i:feat-realtime}}<div class="t"><b>Notes folder</b><small>Runs on change · watching 1 folder</small></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 2. DESIGNER SIMPLE ============================ -->
+<section class="shot" id="designer-simple">
+  <header>
+    <h2>2 · Job Designer · Simple view</h2>
+    <p>New jobs open here. It holds only the ten basic features. The command preview on the right updates on every change, and Start stays disabled until validation passes. A folder is being dragged onto the destination field.</p>
+    <div class="covers"><span class="b">B1</span><span class="b">B2</span><span class="b">B4</span><span class="b">B5</span><span class="b">B6</span><span class="b">B7</span><span class="b">B9</span><span class="b">B10</span><span>#4</span><span>#20</span></div>
+  </header>
+  <ul class="checks">
+    <li>Source is marked blue with FROM and destination green with TO. The swap button sits between them.</li>
+    <li>Two-way is visible but disabled, with the reason given (rclone missing).</li>
+  </ul>
+  <div class="stage"><div class="win">
+    <div class="hb">
+      <button class="btn">{{i:action-new}}New job</button>
+      <button class="btn flat">{{i:action-templates}}Templates{{i:action-collapse|caret}}</button>
+      <div class="title"><b>Documents backup</b><small>Job Designer · unsaved changes</small></div>
+      <button class="btn flat">{{i:action-save}}Save</button>
+      <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
+      <span class="wc">{{i:action-close}}</span>
+    </div>
+    <div class="layout">
+      <nav class="sb">
+        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
+        <div class="nav on">{{i:nav-designer-active}}Job Designer</div>
+        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
+        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
+        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
+        <div class="nav">{{i:nav-settings}}Settings</div>
+      </nav>
+      <main class="main">
+        <div class="pagehead">
+          <div class="entry" style="max-width:340px"><span>Documents backup</span></div>
+          <div class="linked" style="margin-left:auto"><button class="btn on">Simple</button><button class="btn">Advanced</button></div>
+        </div>
+        <div class="designer">
+          <div class="stack">
+            <div class="pathcard">
+              <div class="cap">{{i:ep-source}}From · source<span class="muted">Drop a folder or browse</span></div>
+              <div class="pathline">
+                <button class="btn">{{i:ep-local}}Local folder{{i:action-collapse|caret}}</button>
+                <div class="entry"><span>/home/sam/Documents</span></div>
+                <button class="btn ico" title="Browse">{{i:action-browse}}</button>
+              </div>
+              <div class="linked"><button class="btn">Copy the folder itself</button><button class="btn on">Copy what is inside it</button></div>
+            </div>
+            <div class="swaprow"><button class="btn ico" title="Swap source and destination">{{i:action-swap}}</button></div>
+            <div class="pathcard dst">
+              <div class="cap">{{i:ep-destination}}To · destination<span class="muted">1 folder being dropped</span></div>
+              <div class="pathline">
+                <button class="btn">{{i:ep-local}}Local folder{{i:action-collapse|caret}}</button>
+                <div class="entry focus"><span>/media/sam/Backup/Documents</span></div>
+                <button class="btn ico" title="Browse">{{i:action-browse}}</button>
+              </div>
+              <div class="drop hot">{{i:action-drop}}Release to use <b>/media/sam/Backup/Documents</b></div>
+            </div>
+
+            <div class="group">
+              <div class="gh">What should happen?</div>
+              <div class="linked">
+                <button class="btn on">{{i:mode-copy}}Copy</button>
+                <button class="btn">{{i:mode-mirror}}Mirror</button>
+                <button class="btn dis">{{i:mode-twoway}}Two-way</button>
+              </div>
+              <small style="color:var(--dim)">Copy adds new files and updates changed ones. Nothing at the destination is deleted. Two-way needs rclone.</small>
+            </div>
+
+            <div class="group">
+              <div class="gh">When a file already exists</div>
+              <div class="linked">
+                <button class="btn">{{i:policy-overwrite}}Overwrite</button>
+                <button class="btn">{{i:policy-skip}}Skip</button>
+                <button class="btn on">{{i:policy-newer}}Overwrite if newer</button>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="gh">Skip these</div>
+              <div class="chips">
+                <span class="chip on">{{i:preset-hidden}}Hidden files</span>
+                <span class="chip on">{{i:preset-cache}}Cache folders</span>
+                <span class="chip on">{{i:preset-temp}}Temp files</span>
+                <span class="chip">{{i:preset-system}}System folders</span>
+                <span class="chip">{{i:action-new}}Custom…</span>
+              </div>
+            </div>
+
+            <div class="list">
+              <div class="row">{{i:feat-metadata}}<div class="t"><b>Keep dates and permissions</b><small>Files keep their modification time and access rights</small></div><span class="switch on"></span></div>
+              <div class="row">{{i:action-preview}}<div class="t"><b>Always preview first</b><small>Show the list of changes before copying</small></div><span class="switch on"></span></div>
+              <div class="row">{{i:feat-notify}}<div class="t"><b>Notify me when it finishes</b><small>Desktop notification on success or failure</small></div><span class="switch on"></span></div>
+            </div>
+          </div>
+
+          <aside class="side">
+            <div class="panel">
+              <div class="ph">{{i:misc-command}}Command<span class="badge info">Engine: rsync 3.2.7</span></div>
+<pre class="cmd"><span class="k">rsync</span> <span class="f">-rlptD</span> <span class="f">--update</span>
+  <span class="f">--info=progress2,name1,stats2</span> <span class="f">--outbuf=L</span>
+  <span class="f">--exclude=</span>'.*'
+  <span class="f">--exclude=</span>'.cache/' <span class="f">--exclude=</span>'__pycache__/'
+  <span class="f">--exclude=</span>'node_modules/'
+  <span class="f">--exclude=</span>'*.tmp' <span class="f">--exclude=</span>'*~'
+  <span class="f">--exclude=</span>'.~lock*'
+  <span class="s">/home/sam/Documents/</span>
+  <span class="d">/media/sam/Backup/Documents/</span></pre>
+              <div class="actions" style="justify-content:flex-start"><button class="btn">{{i:action-copy-command}}Copy command</button></div>
+            </div>
+            <div class="panel">
+              <div class="ph"><span class="c-new">{{i:status-success}}</span>Ready to run</div>
+              <small style="color:var(--dim)">4.1 GB free space needed · 212 GB available on Backup</small>
+            </div>
+            <div class="actions">
+              <button class="btn big">{{i:action-preview}}Preview</button>
+              <button class="btn big sug">{{i:action-start}}Start</button>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 3. DESIGNER ADVANCED ============================ -->
+<section class="shot" id="designer-advanced">
+  <header>
+    <h2>3 · Job Designer · Advanced view</h2>
+    <p>This view has every advanced control, grouped into sections with the icons from the legend. Collapsed sections show a one-line summary. The example job backs up to an SSH host using daily hard-linked snapshots. Validation explains why some options are unavailable for this job instead of hiding them.</p>
+    <div class="covers"><span>#1</span><span>#2</span><span>#3</span><span>#5</span><span>#6</span><span>#7</span><span>#8</span><span>#9</span><span>#10</span><span>#12</span><span>#13</span><span>#14</span><span>#15</span><span>#16</span><span>#17</span><span>#18</span><span>#19</span><span>#20</span></div>
+  </header>
+  <div class="stage"><div class="win">
+    <div class="hb">
+      <button class="btn">{{i:action-new}}New job</button>
+      <button class="btn flat">{{i:action-templates}}Templates{{i:action-collapse|caret}}</button>
+      <div class="title"><b>Home snapshot</b><small>Job Designer</small></div>
+      <button class="btn flat">{{i:action-save}}Save</button>
+      <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
+      <span class="wc">{{i:action-close}}</span>
+    </div>
+    <div class="layout">
+      <nav class="sb">
+        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
+        <div class="nav on">{{i:nav-designer-active}}Job Designer</div>
+        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
+        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
+        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
+        <div class="nav">{{i:nav-settings}}Settings</div>
+      </nav>
+      <main class="main">
+        <div class="pagehead">
+          <div class="entry" style="max-width:340px"><span>Home snapshot</span></div>
+          <div class="linked" style="margin-left:auto"><button class="btn">Simple</button><button class="btn on">Advanced</button></div>
+        </div>
+        <div class="designer">
+          <div class="stack">
+            <div class="group">
+              <div class="gh">{{i:feat-backends}}Where · source and destination<span class="note">#10 #20</span></div>
+              <div class="list">
+                <div class="row">{{i:ep-source}}<div class="t"><b>Source</b><small>Local folder · /home/sam</small></div><button class="btn">{{i:ep-local}}Local{{i:action-collapse|caret}}</button></div>
+                <div class="row">{{i:ep-destination}}<div class="t"><b>Destination</b><small>Snapshots are created inside this folder</small></div><button class="btn">{{i:ep-ssh}}SSH{{i:action-collapse|caret}}</button></div>
+                <div class="row sub"><div class="t"><b>Host and path</b></div><div class="entry" style="flex:0 1 330px"><span>sam@backup.lan:/srv/backups/sam</span></div><div class="entry sm"><span class="ph">Port</span>&nbsp;22</div></div>
+                <div class="row sub">{{i:ep-key}}<div class="t"><b>Key file</b><small>Passwords are never saved in the job</small></div><div class="entry" style="flex:0 1 250px"><span>~/.ssh/id_ed25519</span></div><button class="btn">{{i:action-test}}Test connection</button></div>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="gh">{{i:feat-delta}}Transfer<span class="note">#1 #2 #7 #8 #9 #15</span></div>
+              <div class="list">
+                <div class="row">{{i:feat-delta}}<div class="t"><b>Delta transfer</b><small>Send only the changed blocks of large files</small></div><span class="switch on"></span></div>
+                <div class="row sub"><div class="t"><b>Update files in place</b><small>Saves space; unsafe with snapshots, so it is off here</small></div><span class="switch dis"></span></div>
+                <div class="row">{{i:feat-incremental}}<div class="t"><b>Decide what changed by</b></div><button class="btn">Size and modification time{{i:action-collapse|caret}}</button></div>
+                <div class="row">{{i:feat-resume}}<div class="t"><b>Resume interrupted files</b><small>Partial files are kept in .lfc-partial</small></div><span class="switch on"></span></div>
+                <div class="row">{{i:feat-checksum}}<div class="t"><b>Verify with checksums</b><small>Slower; reads every file on both sides</small></div><span class="switch"></span></div>
+                <div class="row">{{i:feat-compress}}<div class="t"><b>Compress during transfer</b><small>Helps on slow networks</small></div><div class="entry sm"><span class="ph">Level</span>&nbsp;6</div><span class="switch on"></span></div>
+                <div class="row">{{i:feat-sparse}}<div class="t"><b>Handle sparse files</b><small>Virtual-machine disks and databases</small></div><span class="switch"></span></div>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="gh">{{i:feat-metadata}}Keep file details<span class="note">#3</span></div>
+              <div class="list"><div class="metagrid">
+                <label><span class="check on"></span>Permissions</label><label><span class="check on"></span>Modification times</label><label><span class="check on"></span>Owner</label><label><span class="check on"></span>Group</label>
+                <label><span class="check on"></span>ACLs</label><label><span class="check on"></span>Extended attributes</label><label><span class="check on"></span>Hard links</label><label><span class="check"></span>Devices &amp; specials</label>
+              </div></div>
+            </div>
+
+            <div class="group">
+              <div class="gh">{{i:feat-filters}}Filters<span class="note">#5 · rules apply top to bottom</span></div>
+              <div class="list rules">
+                <div class="row"><span class="badge err">Exclude</span><span class="t">.cache/</span>{{i:action-more}}</div>
+                <div class="row hl"><span class="badge ok">Include</span><span class="t">Projects/**</span><button class="btn flat ico" title="Move up">{{i:action-move-up}}</button><button class="btn flat ico" title="Move down">{{i:action-move-down}}</button></div>
+                <div class="row"><span class="badge err">Exclude</span><span class="t">*.iso</span>{{i:action-more}}</div>
+                <div class="row"><span class="badge err">Exclude</span><span class="t">Downloads/</span>{{i:action-more}}</div>
+              </div>
+              <div class="actions" style="justify-content:flex-start">
+                <div class="linked"><button class="btn ico" title="Add rule">{{i:action-new}}</button><button class="btn ico" title="Remove rule">{{i:action-remove}}</button></div>
+                <button class="btn">{{i:action-browse}}Exclude list from file…</button>
+                <button class="btn">{{i:action-browse}}Only files listed in…</button>
+                <button class="btn">{{i:action-test}}Test filters</button>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="gh">{{i:feat-bandwidth}}Speed<span class="note">#6 #12</span></div>
+              <div class="list">
+                <div class="row">{{i:feat-bandwidth}}<div class="t"><b>Limit bandwidth</b></div><div class="entry sm"><span>20</span></div><button class="btn">MB/s{{i:action-collapse|caret}}</button><span class="switch on"></span></div>
+                <div class="row dis">{{i:feat-parallel}}<div class="t"><b>Parallel streams</b><small>Not available with snapshots yet. Turn snapshots off to use it.</small></div><div class="entry sm" style="opacity:.5"><span>4</span></div></div>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="gh">{{i:feat-snapshots}}Safety<span class="note">#16 #17</span></div>
+              <div class="list">
+                <div class="row dis">{{i:feat-atomic}}<div class="t"><b>Atomic replace</b><small>Only for local destinations</small></div><span class="switch dis"></span></div>
+                <div class="row">{{i:feat-snapshots}}<div class="t"><b>Keep hard-linked snapshots</b><small>Unchanged files take no extra space</small></div><span class="switch on"></span></div>
+                <div class="row sub">{{i:feat-linkdest}}<div class="t"><b>Link against</b></div><button class="btn">Latest snapshot (automatic){{i:action-collapse|caret}}</button></div>
+                <div class="row sub"><div class="t"><b>Keep</b></div><div class="entry sm"><span>14</span></div><span style="color:var(--dim)">daily</span><div class="entry sm"><span>8</span></div><span style="color:var(--dim)">weekly</span></div>
+              </div>
+            </div>
+
+            <div class="list">
+              <div class="row">{{i:action-expand}}{{i:feat-bidirectional}}<div class="t"><b>Two-way sync</b><small>Conflict policy, first-run resync</small></div><span class="badge warn">{{i:status-missing-tool}}Needs rclone</span></div>
+              <div class="row">{{i:action-expand}}{{i:feat-realtime}}<div class="t"><b>Run when files change</b><small>Off</small></div></div>
+              <div class="row">{{i:action-collapse}}{{i:feat-logging}}<div class="t"><b>Logging and alerts</b></div></div>
+              <div class="row sub"><div class="t"><b>Log detail</b></div><button class="btn">Normal{{i:action-collapse|caret}}</button></div>
+              <div class="row sub">{{i:feat-notify}}<div class="t"><b>Notify on failure</b></div><span class="switch on"></span></div>
+              <div class="row sub">{{i:action-retry}}<div class="t"><b>Retry after network errors</b><small>Waits 30 s, then 60 s, then 120 s</small></div><div class="entry sm"><span>3</span></div></div>
+              <div class="row">{{i:action-expand}}{{i:feat-schedule}}<div class="t"><b>Schedule</b><small>Daily at 03:00 · systemd timer</small></div></div>
+            </div>
+          </div>
+
+          <aside class="side">
+            <div class="panel">
+              <div class="ph">{{i:misc-command}}Plan · 3 steps<span class="badge info">Engine: rsync</span></div>
+<pre class="cmd"><span class="c"># 1. copy into a new snapshot</span>
+<span class="k">rsync</span> <span class="f">-rlptgoAXH</span>
+  <span class="f">--info=progress2,name1,stats2</span>
+  <span class="f">--partial --partial-dir=</span>.lfc-partial
+  <span class="f">-z --compress-level=</span>6 <span class="f">--bwlimit=</span>20480
+  <span class="f">-e</span> "ssh -p 22 -i ~/.ssh/id_ed25519
+      -o BatchMode=yes -o ServerAliveInterval=15"
+  <span class="f">--exclude=</span>'.cache/' <span class="f">--include=</span>'Projects/**'
+  <span class="f">--exclude=</span>'*.iso' <span class="f">--exclude=</span>'Downloads/'
+  <span class="f">--link-dest=</span>../latest
+  <span class="s">/home/sam/</span>
+  <span class="d">sam@backup.lan:/srv/backups/sam/2026-09-28T030000/</span>
+<span class="c"># 2. point "latest" at it</span>
+<span class="k">ssh</span> … ln -sfn 2026-09-28T030000 latest
+<span class="c"># 3. rotate: keep 14 daily, 8 weekly</span></pre>
+              <div class="actions" style="justify-content:flex-start"><button class="btn">{{i:action-copy-command}}Copy command</button></div>
+            </div>
+            <div class="panel">
+              <div class="ph"><span style="color:var(--warn)">{{i:status-warning}}</span>1 warning</div>
+              <small>Keeping owner and group needs root on backup.lan. Files are otherwise saved as user sam.</small>
+            </div>
+            <div class="actions">
+              <button class="btn big">{{i:action-preview}}Preview</button>
+              <button class="btn big sug">{{i:action-start}}Start</button>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 4. PREVIEW + CONFIRM ============================ -->
+<section class="shot" id="preview">
+  <header>
+    <h2>4 · Preview results and delete confirmation</h2>
+    <p>Preview runs the job as a dry run and lists every planned change. Running a mirror job that will delete files always asks first and gives the exact count, even when the user skipped the preview.</p>
+    <div class="covers"><span class="b">B2</span><span class="b">B7</span><span>#4</span></div>
+  </header>
+  <div class="stage"><div class="pair">
+    <div class="win" style="min-width:720px;width:720px;height:560px">
+      <div class="hb"><div class="title"><b>Website mirror</b><small>Job Designer</small></div><span class="wc">{{i:action-close}}</span></div>
+      <div class="scrim">
+        <div class="dlg">
+          <div class="dh">{{i:action-preview}}<b>Preview: Website mirror</b><button class="btn flat ico" title="Close">{{i:action-close}}</button></div>
+          <div class="db">
+            <div class="chips">
+              <span class="badge ok">{{i:delta-create}}42 new</span>
+              <span class="badge info">{{i:delta-update}}118 updated</span>
+              <span class="badge err">{{i:delta-delete}}7 deleted</span>
+              <span class="badge">3.1 GB to transfer</span>
+            </div>
+            <div class="pathline"><div class="linked"><button class="btn on">All</button><button class="btn">New</button><button class="btn">Updated</button><button class="btn">Deleted</button></div><div class="entry">{{i:action-search}}<span class="ph">Filter paths</span></div></div>
+            <div class="files">
+              <div class="file"><span class="c-new">{{i:delta-create}}</span><span>assets/img/hero-2026.webp</span><small>412 KB</small></div>
+              <div class="file"><span class="c-upd">{{i:delta-update}}</span><span>index.html</span><small>18 KB</small></div>
+              <div class="file"><span class="c-upd">{{i:delta-update}}</span><span>assets/css/site.css</span><small>44 KB</small></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/landing-2024.html</span><small>deleted</small></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/assets/promo.mp4</span><small>deleted</small></div>
+              <div class="file"><span class="c-new">{{i:delta-create}}</span><span>blog/2026/09/release-notes.html</span><small>9 KB</small></div>
+            </div>
+          </div>
+          <div class="df"><button class="btn">{{i:action-copy-command}}Copy list</button><span style="flex:1"></span><button class="btn">Close</button><button class="btn sug">{{i:action-start}}Run for real</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="win" style="min-width:560px;width:560px;height:560px">
+      <div class="hb"><div class="title"><b>Website mirror</b><small>Job Designer</small></div><span class="wc">{{i:action-close}}</span></div>
+      <div class="scrim">
+        <div class="dlg small alert">
+          <div class="db">
+            <svg class="i big-i" aria-hidden="true"><use href="#i-status-missing-tool"/></svg>
+            <h4>Delete 7 files from the destination?</h4>
+            <p>Mirror makes <b>sam@web01:/var/www/site</b> match your source. These 7 files exist only there and will be removed. This cannot be undone.</p>
+            <div class="files" style="width:100%;text-align:left">
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/landing-2024.html</span></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>old/assets/promo.mp4</span></div>
+              <div class="file"><span class="c-del">{{i:delta-delete}}</span><span>… and 5 more</span></div>
+            </div>
+          </div>
+          <div class="df"><button class="btn">{{i:action-preview}}Show all changes</button><span style="flex:1"></span><button class="btn">Cancel</button><button class="btn des">{{i:action-delete}}Delete and mirror</button></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 5. TRANSFERS ============================ -->
+<section class="shot" id="transfers">
+  <header>
+    <h2>5 · Active Transfers</h2>
+    <p>Each job has its own card with progress, speed, time left, file counts and the current file. A speed graph covers the last 60 seconds. Pause stops the process and Resume continues it. Cancel asks first. The live log can be expanded.</p>
+    <div class="covers"><span class="b">B3</span><span class="b">B4</span><span>#11</span><span>#18</span></div>
+  </header>
+  <div class="stage"><div class="win">
+    <div class="hb">
+      <button class="btn">{{i:action-new}}New job</button>
+      <div class="title"><b>LinFileCopy</b><small>Active Transfers · 2 running, 1 queued</small></div>
+      <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
+      <span class="wc">{{i:action-close}}</span>
+    </div>
+    <div class="layout">
+      <nav class="sb">
+        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
+        <div class="nav">{{i:nav-designer}}Job Designer</div>
+        <div class="nav on">{{i:nav-transfers-active}}Active Transfers<span class="count">2</span></div>
+        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
+        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
+        <div class="nav">{{i:nav-settings}}Settings</div>
+      </nav>
+      <main class="main">
+        <div class="prog">
+          <div class="top">
+            <span style="color:var(--accent)">{{i:status-running|spin}}</span><b>Documents backup</b>
+            <span class="badge info">Running</span>
+            <div class="route">{{i:ep-local}}<span>/home/sam/Documents</span>{{i:mode-copy}}{{i:ep-ssh}}<span>backup.lan:/srv/backups/sam</span></div>
+            <span style="flex:1"></span>
+            <button class="btn">{{i:action-pause}}Pause</button>
+            <button class="btn">{{i:action-cancel}}Cancel</button>
+          </div>
+          <div class="bar"><span style="width:62%"></span></div>
+          <div class="metrics">
+            <div><small>Transferred</small><b>2.41 GB of 3.88 GB</b></div>
+            <div><small>Speed</small><b>38.4 MB/s</b></div>
+            <div><small>Time left</small><b>3 min 12 s</b></div>
+            <div><small>Files</small><b>1,284 of 2,050</b></div>
+          </div>
+          <svg class="spark" viewBox="0 0 600 48" preserveAspectRatio="none" aria-label="Speed over the last 60 seconds, between 31 and 42 MB/s">
+            <line class="grid" x1="0" y1="12" x2="600" y2="12"/><line class="grid" x1="0" y1="30" x2="600" y2="30"/>
+            <path class="area" d="M0,26 L40,22 L80,24 L120,18 L160,20 L200,14 L240,16 L280,22 L320,28 L360,24 L400,18 L440,16 L480,20 L520,17 L560,19 L600,17 L600,48 L0,48 Z"/>
+            <path class="line" d="M0,26 L40,22 L80,24 L120,18 L160,20 L200,14 L240,16 L280,22 L320,28 L360,24 L400,18 L440,16 L480,20 L520,17 L560,19 L600,17"/>
+            <circle class="end" cx="597" cy="17" r="3"/>
+          </svg>
+          <div class="current">{{i:ep-folder}} Projects/linfilecopy/docs/CONCEPT.md</div>
+          <details>
+            <summary style="cursor:pointer;color:var(--dim);font-size:13px">Live log</summary>
+<pre class="cmd" style="margin-top:8px">Projects/linfilecopy/docs/CONCEPT.md
+Projects/linfilecopy/tools/icons.manifest
+  2,528,190,464  62%   38.40MB/s    0:03:12 (xfr#1284, to-chk=766/2050)</pre>
+          </details>
+        </div>
+
+        <div class="prog">
+          <div class="top">
+            <span style="color:var(--dim)">{{i:status-paused}}</span><b>Website mirror</b>
+            <span class="badge">Paused</span>
+            <div class="route">{{i:ep-local}}<span>~/Sites/site</span>{{i:mode-mirror}}{{i:ep-ssh}}<span>web01:/var/www/site</span></div>
+            <span style="flex:1"></span>
+            <button class="btn sug">{{i:action-start}}Resume</button>
+            <button class="btn">{{i:action-cancel}}Cancel</button>
+          </div>
+          <div class="bar paused"><span style="width:18%"></span></div>
+          <div class="metrics">
+            <div><small>Transferred</small><b>560 MB of 3.1 GB</b></div>
+            <div><small>Speed</small><b>—</b></div>
+            <div><small>Paused for</small><b>4 min</b></div>
+            <div><small>Files</small><b>29 of 160</b></div>
+          </div>
+          <div class="infobar">{{i:misc-info}}<div class="t"><small>SSH connections can drop during long pauses. If this happens, the job restarts and continues from the partial files.</small></div></div>
+        </div>
+
+        <div class="list">
+          <div class="row"><span style="color:var(--dim)">{{i:status-queued}}</span><div class="t"><b>Photos → NAS</b><small>Queued · starts when Documents backup finishes (same destination disk)</small></div><button class="btn flat">{{i:action-start}}Start now</button><button class="btn flat ico" title="Remove from queue">{{i:action-close}}</button></div>
+        </div>
+      </main>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 6. HISTORY ============================ -->
+<section class="shot" id="history">
+  <header>
+    <h2>6 · History &amp; Logs</h2>
+    <p>Every run is recorded with its full job settings, the exact command, statistics and the log. Selecting a failed run explains the exit code, suggests a fix, and offers Retry.</p>
+    <div class="covers"><span class="b">B8</span><span>#11</span><span>#18</span></div>
+  </header>
+  <div class="stage"><div class="win">
+    <div class="hb">
+      <button class="btn">{{i:action-new}}New job</button>
+      <div class="title"><b>LinFileCopy</b><small>History &amp; Logs</small></div>
+      <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
+      <span class="wc">{{i:action-close}}</span>
+    </div>
+    <div class="layout">
+      <nav class="sb">
+        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
+        <div class="nav">{{i:nav-designer}}Job Designer</div>
+        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
+        <div class="nav on">{{i:nav-history-active}}History &amp; Logs</div>
+        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
+        <div class="nav">{{i:nav-settings}}Settings</div>
+      </nav>
+      <main class="main">
+        <div class="pagehead">
+          <div class="entry" style="max-width:320px">{{i:action-search}}<span class="ph">Search jobs, paths, errors</span></div>
+          <button class="btn">All results{{i:action-collapse|caret}}</button>
+          <button class="btn">Last 30 days{{i:action-collapse|caret}}</button>
+        </div>
+        <div class="list" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th></th><th>Job</th><th>Started</th><th class="r">Duration</th><th class="r">Transferred</th><th class="r">Files</th><th>Result</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="c-new">{{i:status-success}}</td><td><span class="jn">Music to NAS</span></td><td>Today 08:14</td><td class="r">1 min 03 s</td><td class="r">1.2 GB</td><td class="r">214</td><td><span class="badge ok">Completed</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
+              <tr class="sel"><td class="c-del">{{i:status-failed}}</td><td><span class="jn">Photos → NAS</span></td><td>Today 02:00</td><td class="r">6 min 41 s</td><td class="r">8.7 GB</td><td class="r">3,112</td><td><span class="badge err">Code 23</span></td><td><button class="btn flat">{{i:action-retry}}Retry</button></td></tr>
+              <tr><td style="color:var(--accent-fg)">{{i:status-dryrun}}</td><td><span class="jn">Cloud sync</span></td><td>Yesterday 17:40</td><td class="r">12 s</td><td class="r">—</td><td class="r">160</td><td><span class="badge info">Preview</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
+              <tr><td style="color:var(--warn)">{{i:status-warning}}</td><td><span class="jn">Home snapshot</span></td><td>Yesterday 03:00</td><td class="r">14 min 20 s</td><td class="r">2.3 GB</td><td class="r">9,870</td><td><span class="badge warn">Code 24</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
+              <tr><td style="color:var(--dim)">{{i:status-cancelled}}</td><td><span class="jn">Website mirror</span></td><td>Mon 16:02</td><td class="r">48 s</td><td class="r">120 MB</td><td class="r">12</td><td><span class="badge">Cancelled</span></td><td><button class="btn flat">{{i:action-rerun}}Run again</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cols">
+          <div class="stack">
+            <div class="infobar err">{{i:status-failed}}<div class="t"><b>Some files could not be copied (rsync code 23)</b><small>3 files in /home/sam/Pictures/.private could not be read: permission denied. Fix: give your user read access to that folder, or add it to the job's exclude list.</small></div></div>
+<pre class="cmd"><span class="c">2026-09-27 02:06:39</span> rsync: [sender] send_files failed to open "/home/sam/Pictures/.private/raw-0113.cr3": Permission denied (13)
+<span class="c">2026-09-27 02:06:39</span> rsync: [sender] send_files failed to open "/home/sam/Pictures/.private/raw-0114.cr3": Permission denied (13)
+<span class="c">2026-09-27 02:06:41</span> rsync error: some files/attrs were not transferred (code 23) at main.c(1338) [sender=3.2.7]</pre>
+          </div>
+          <div class="panel">
+            <div class="ph">{{i:feat-stats}}Run statistics</div>
+            <dl class="kv">
+              <dt>Files checked</dt><dd>41,208</dd>
+              <dt>Files transferred</dt><dd>3,112 (3 failed)</dd>
+              <dt>Data sent</dt><dd>8.7 GB (8.9 GB before delta)</dd>
+              <dt>Average speed</dt><dd>21.7 MB/s</dd>
+              <dt>Exit code</dt><dd>23 · partial transfer</dd>
+              <dt>Triggered by</dt><dd>systemd timer</dd>
+            </dl>
+            <div class="actions" style="justify-content:flex-start">
+              <button class="btn sug">{{i:action-retry}}Retry</button>
+              <button class="btn">{{i:action-open-log}}Open full log</button>
+              <button class="btn">{{i:action-copy-command}}Copy command</button>
+              <button class="btn">{{i:action-edit}}Edit job</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 7. SCHEDULER ============================ -->
+<section class="shot" id="scheduler">
+  <header>
+    <h2>7 · Scheduler</h2>
+    <p>All schedules are listed in one place, each with an on/off switch. The editor shows the systemd timer (or cron line) it will install, so nothing is hidden. Scheduled runs use the same engine through <code>linfilecopy run &lt;job&gt;</code>, and their results appear in History.</p>
+    <div class="covers"><span>#14</span><span>#19</span></div>
+  </header>
+  <div class="stage"><div class="win">
+    <div class="hb">
+      <button class="btn">{{i:action-new}}New job</button>
+      <div class="title"><b>LinFileCopy</b><small>Scheduler</small></div>
+      <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
+      <span class="wc">{{i:action-close}}</span>
+    </div>
+    <div class="layout">
+      <nav class="sb">
+        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
+        <div class="nav">{{i:nav-designer}}Job Designer</div>
+        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
+        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
+        <div class="nav on">{{i:nav-scheduler-active}}Scheduler</div>
+        <div class="nav">{{i:nav-settings}}Settings</div>
+      </nav>
+      <main class="main">
+        <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)">
+          <div class="group">
+            <div class="gh">{{i:feat-schedule}}Schedules<span class="note">3 of 7 jobs</span></div>
+            <div class="list">
+              <div class="row hl">{{i:status-scheduled}}<div class="t"><b>Home snapshot</b><small>Daily 03:00 · next: tomorrow 03:00</small></div><span class="badge">systemd</span><span class="switch on"></span></div>
+              <div class="row">{{i:status-scheduled}}<div class="t"><b>Photos → NAS</b><small>Daily 02:00 · next: tomorrow 02:00</small></div><span class="badge">systemd</span><span class="switch on"></span></div>
+              <div class="row">{{i:feat-cron}}<div class="t"><b>Website mirror</b><small>Custom: */30 9-18 * * 1-5 · paused</small></div><span class="badge">cron</span><span class="switch"></span></div>
+              <div class="row">{{i:feat-realtime}}<div class="t"><b>Notes folder</b><small>On change · 2 s delay · while LinFileCopy is running</small></div><span class="badge">watch</span><span class="switch on"></span></div>
+            </div>
+            <button class="btn" style="justify-self:start">{{i:action-new}}Schedule a job…</button>
+          </div>
+          <div class="panel">
+            <div class="ph">{{i:feat-schedule}}Home snapshot</div>
+            <div class="linked"><button class="btn">Once</button><button class="btn">Hourly</button><button class="btn on">Daily</button><button class="btn">Weekly</button><button class="btn">{{i:feat-cron}}Custom</button></div>
+            <div class="pathline"><span style="width:90px;color:var(--dim)">At</span><div class="entry sm"><span>03</span></div>:<div class="entry sm"><span>00</span></div></div>
+            <div class="pathline"><span style="width:90px;color:var(--dim)">On</span><div class="days"><span class="day on">Mo</span><span class="day on">Tu</span><span class="day on">We</span><span class="day on">Th</span><span class="day on">Fr</span><span class="day on">Sa</span><span class="day on">Su</span></div></div>
+            <div class="pathline"><span style="width:90px;color:var(--dim)">Using</span><button class="btn">Automatic · systemd user timer{{i:action-collapse|caret}}</button></div>
+            <div class="list">
+              <div class="row"><div class="t"><b>Catch up after the computer was off</b><small>Runs at next start if 03:00 was missed</small></div><span class="switch on"></span></div>
+              <div class="row"><div class="t"><b>Only on AC power</b></div><span class="switch"></span></div>
+            </div>
+<pre class="cmd"><span class="c"># ~/.config/systemd/user/linfilecopy-home-snapshot.timer</span>
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+<span class="c"># ~/.config/systemd/user/linfilecopy-home-snapshot.service</span>
+[Service]
+ExecStart=/usr/bin/linfilecopy run home-snapshot</pre>
+            <div class="actions"><button class="btn">{{i:action-delete}}Remove schedule</button><button class="btn">{{i:action-start}}Run now</button><button class="btn sug">{{i:action-save}}Save schedule</button></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 8. SETTINGS ============================ -->
+<section class="shot" id="settings">
+  <header>
+    <h2>8 · Settings and missing tools</h2>
+    <p>Tool detection lives here. When rclone is missing, its features stay visible but disabled, and this page shows the install command for each distribution along with the list of features it unlocks.</p>
+    <div class="covers"><span class="b">B10</span><span>#18</span><span>#20</span></div>
+  </header>
+  <div class="stage"><div class="win">
+    <div class="hb">
+      <button class="btn">{{i:action-new}}New job</button>
+      <div class="title"><b>LinFileCopy</b><small>Settings</small></div>
+      <button class="btn flat ico" title="Main menu">{{i:app-menu}}</button>
+      <span class="wc">{{i:action-close}}</span>
+    </div>
+    <div class="layout">
+      <nav class="sb">
+        <div class="nav">{{i:nav-dashboard}}Dashboard</div>
+        <div class="nav">{{i:nav-designer}}Job Designer</div>
+        <div class="nav">{{i:nav-transfers}}Active Transfers</div>
+        <div class="nav">{{i:nav-history}}History &amp; Logs</div>
+        <div class="nav">{{i:nav-scheduler}}Scheduler</div>
+        <div class="nav on">{{i:nav-settings-active}}Settings</div>
+      </nav>
+      <main class="main">
+        <div class="cols" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+          <div class="stack">
+            <div class="group">
+              <div class="gh">{{i:misc-theme}}Appearance</div>
+              <div class="list">
+                <div class="row"><div class="t"><b>Style</b></div><div class="linked"><button class="btn on">System</button><button class="btn">Light</button><button class="btn">Dark</button></div></div>
+                <div class="row"><div class="t"><b>Keep running in the tray</b><small>Needed for schedules that watch folders</small></div><span class="switch on"></span></div>
+              </div>
+            </div>
+            <div class="group">
+              <div class="gh">{{i:action-preview}}Safety</div>
+              <div class="list">
+                <div class="row"><div class="t"><b>Preview new jobs first</b><small>Recommended while you are learning the app</small></div><span class="switch on"></span></div>
+                <div class="row"><div class="t"><b>Confirm before deleting files</b><small>Mirror and two-way jobs</small></div><span class="switch on"></span></div>
+              </div>
+            </div>
+            <div class="group">
+              <div class="gh">{{i:feat-notify}}Notifications</div>
+              <div class="list">
+                <div class="row"><div class="t"><b>When a job finishes</b></div><span class="switch on"></span></div>
+                <div class="row"><div class="t"><b>When a job fails</b></div><span class="switch on"></span></div>
+                <div class="row"><div class="t"><b>Keep history for</b></div><div class="entry sm"><span>90</span></div><span style="color:var(--dim)">days</span></div>
+              </div>
+            </div>
+            <button class="btn" style="justify-self:start">{{i:misc-shortcuts}}Keyboard shortcuts</button>
+          </div>
+          <div class="group">
+            <div class="gh">{{i:feat-backends}}Transfer tools</div>
+            <div class="list">
+              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>rsync 3.2.7</b><small>/usr/bin/rsync · local and SSH jobs</small></div></div>
+              <div class="row"><span style="color:var(--warn)">{{i:status-missing-tool}}</span><div class="t"><b>rclone</b><small>Not installed</small></div><button class="btn">{{i:action-install}}How to install</button></div>
+              <div class="row sub" style="display:grid;gap:8px;align-items:start">
+                <small style="color:var(--dim)">Installing rclone turns on cloud storage (S3, Google Drive, Dropbox and 60 more), encrypted remotes and two-way sync. Run the command for your system, then press Check again.</small>
+                <div class="pathline"><pre class="cmd" style="flex:1;padding:6px 10px">sudo apt install rclone</pre><button class="btn ico" title="Copy">{{i:action-copy-command}}</button></div>
+                <div class="pathline"><pre class="cmd" style="flex:1;padding:6px 10px">sudo dnf install rclone</pre><button class="btn ico" title="Copy">{{i:action-copy-command}}</button></div>
+                <div class="pathline"><pre class="cmd" style="flex:1;padding:6px 10px">sudo pacman -S rclone</pre><button class="btn ico" title="Copy">{{i:action-copy-command}}</button></div>
+                <button class="btn" style="justify-self:start">{{i:action-rerun}}Check again</button>
+              </div>
+              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Tray icon</b><small>Ayatana AppIndicator available</small></div></div>
+              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Password storage</b><small>System keyring (libsecret)</small></div></div>
+              <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Scheduling</b><small>systemd user session · crontab as fallback</small></div></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 9. NARROW + NOTIFICATIONS ============================ -->
+<section class="shot" id="narrow">
+  <header>
+    <h2>9 · Narrow window and desktop notifications</h2>
+    <p>Below 640 px the sidebar becomes a menu button and cards stack in one column. Notifications use the desktop's own system (GNOME, KDE, XFCE and Cinnamon all show them) and include a button that opens the result.</p>
+    <div class="covers"><span class="b">B3</span><span class="b">B4</span><span class="b">B10</span><span>#18</span></div>
+  </header>
+  <div class="stage"><div class="pair">
+    <div class="win narrow">
+      <div class="hb">
+        <button class="btn flat ico" title="Pages">{{i:sidebar-toggle}}</button>
+        <div class="title"><b>Active Transfers</b><small>1 running</small></div>
+        <span class="wc">{{i:action-close}}</span>
+      </div>
+      <main class="main" style="padding:14px">
+        <div class="prog">
+          <div class="top"><span style="color:var(--accent)">{{i:status-running|spin}}</span><b>Documents backup</b></div>
+          <div class="route">{{i:ep-local}}<span>~/Documents</span>{{i:mode-copy}}{{i:ep-ssh}}<span>backup.lan</span></div>
+          <div class="bar"><span style="width:62%"></span></div>
+          <div class="metrics" style="grid-template-columns:1fr 1fr">
+            <div><small>Speed</small><b>38.4 MB/s</b></div>
+            <div><small>Time left</small><b>3 min 12 s</b></div>
+          </div>
+          <div class="current">Projects/linfilecopy/docs/CONCEPT.md</div>
+          <div class="actions" style="justify-content:stretch"><button class="btn" style="flex:1">{{i:action-pause}}Pause</button><button class="btn" style="flex:1">{{i:action-cancel}}Cancel</button></div>
+        </div>
+        <div class="list">
+          <div class="row"><span class="c-new">{{i:status-success}}</span><div class="t"><b>Music to NAS</b><small>Today 08:14</small></div><button class="btn flat ico" title="Run again">{{i:action-rerun}}</button></div>
+        </div>
+      </main>
+    </div>
+    <div class="notifs">
+      <div class="notif">
+        <svg class="ai" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#3584e4"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#fff"><use href="#i-action-duplicate"/></svg></svg>
+        <b>Documents backup finished</b>
+        <span>3.88 GB, 2,050 files in 4 min 51 s</span>
+        <small>LinFileCopy · now</small>
+        <div class="na"><button class="btn">Show details</button></div>
+      </div>
+      <div class="notif">
+        <svg class="ai" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#c01c28"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#fff"><use href="#i-status-failed"/></svg></svg>
+        <b>Photos → NAS failed</b>
+        <span>3 files could not be read (permission denied)</span>
+        <small>LinFileCopy · 02:06</small>
+        <div class="na"><button class="btn">Retry</button><button class="btn">Open log</button></div>
+      </div>
+      <div class="notif">
+        <svg class="ai" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#3584e4"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#fff"><use href="#i-action-duplicate"/></svg></svg>
+        <b>Tray menu</b>
+        <span>Show LinFileCopy · 1 running (62%) · Pause all · Quit</span>
+        <small>AppIndicator menu, when available</small>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============================ 10. ICON LEGEND ============================ -->
+<section class="shot" id="icons">
+  <header>
+    <h2>10 · Icon legend</h2>
+    <p class="legend-note">This legend is generated from <code>tools/icons.manifest</code>. Each ID becomes <code>lfc-&lt;id&gt;-symbolic.svg</code> in the app's GResource bundle, and GTK recolours it to match the theme. The mockup build fails if a screen uses an icon that is not in the manifest.</p>
+  </header>
+  {{LEGEND}}
+</section>
+
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, btns=document.querySelectorAll('.seg button');
+  function set(t){
+    if(t){root.setAttribute('data-theme',t);}else{root.removeAttribute('data-theme');}
+    btns.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.t===t));});
+    try{localStorage.setItem('lfc-mock-theme',t);}catch(e){}
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.t);});});
+  try{var s=localStorage.getItem('lfc-mock-theme');if(s!==null&&s!=='')set(s);}catch(e){}
+})();
+</script>
