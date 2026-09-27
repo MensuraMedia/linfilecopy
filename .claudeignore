@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+*.log
+coverage/
+.env*
+**/.git/
+__pycache__/
+*.pyc
+.venv/
+vendor/
+*.gresource
+.flatpak-builder/
+debian/.debhelper/
+docs/mockups/index.html

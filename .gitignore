@@ -6,3 +6,4 @@ dist/
 .venv/
 *.gresource
 .flatpak-builder/
+.claude/settings.local.json
