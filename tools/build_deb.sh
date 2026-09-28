@@ -21,5 +21,5 @@ fi
 mkdir -p "$ROOT/releases"
 cp "$WORK"/linfilecopy_*_all.deb "$ROOT/releases/"
 cd "$ROOT/releases"
-sha256sum linfilecopy_*_all.deb > SHA256SUMS
+sha256sum linfilecopy_*_all.deb $(ls linfilecopy-*.tar.gz 2>/dev/null) > SHA256SUMS
 echo "built: $(ls "$ROOT"/releases/*.deb)"

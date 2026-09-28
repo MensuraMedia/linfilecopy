@@ -72,7 +72,25 @@ Arch: `sudo pacman -S python-gobject gtk3 rsync udisks2 libayatana-appindicator 
 
 ## Install
 
-Debian, Ubuntu and derivatives: the repository includes a ready-made package.
+One line, straight from GitHub (downloads the release, verifies it against
+`releases/SHA256SUMS`, then installs it):
+
+```sh
+# Debian, Ubuntu, Linux Mint and derivatives: installs the .deb with apt (asks for sudo)
+curl -fsSL https://raw.githubusercontent.com/MensuraMedia/linfilecopy/main/get.sh | sh
+
+# Any distribution, for your user only, no root (~/.local)
+curl -fsSL https://raw.githubusercontent.com/MensuraMedia/linfilecopy/main/get.sh | sh -s -- --user
+
+# Remove a --user install (jobs and history are kept); for the package: sudo apt remove linfilecopy
+curl -fsSL https://raw.githubusercontent.com/MensuraMedia/linfilecopy/main/get.sh | sh -s -- --uninstall
+```
+
+`wget -qO- … | sh` works too. Prefer to read the script first? Download `get.sh`, look at it,
+then run `sh get.sh`. The system packages listed above must be present; `--user` checks them
+and prints the command for your distribution when something is missing.
+
+From a clone, Debian, Ubuntu and derivatives: the repository includes a ready-made package.
 
 ```sh
 git clone https://github.com/MensuraMedia/linfilecopy.git
@@ -91,7 +109,8 @@ Any distribution, without root (installs into `~/.local`):
 
 To run straight from the checkout without installing: `python3 -m linfilecopy`.
 
-Rebuild the package with `tools/build_deb.sh`. Debian source packaging is in
+Rebuild every release file (the .deb, the universal tarball and `SHA256SUMS`) with
+`tools/build_release.sh`; `tools/build_deb.sh` builds only the package. Debian source packaging is in
 [`packaging/debian`](packaging/debian), and a Flatpak manifest is in [`packaging/flatpak`](packaging/flatpak).
 
 ## Usage
