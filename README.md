@@ -149,6 +149,8 @@ Example job files are in [`docs/examples/`](docs/examples/). Import them from th
 - [Developer guide](docs/DEVELOPER.md)
 - [Mockups](docs/mockups/index.html): the design-stage record (open in a browser; self-contained)
 - [Releases](releases/README.md): the Debian package and its checksum
+- [GTK dashboard template](https://github.com/MensuraMedia/gtk4-dashboard-template): this app's dashboard shell as a
+  reusable template, with full documentation and an AI instruction set
 
 ## Licence
 
