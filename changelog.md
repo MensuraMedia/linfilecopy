@@ -30,3 +30,4 @@
 | 2026-09-28T14:45 | Drive trigger now fires on physical plug-in only (drive/LUKS container newly present), not when a present drive is mounted/unmounted — found live: a run's own mount step re-triggered the two-way job; mount step tolerates the desktop auto-mounting at the same moment; regression test |
 | 2026-09-28T15:10 | Breathing live-activity dot, right-aligned on the Active Transfers nav row (CSS @keyframes; breathes while running, steady dim when paused/queued, hidden when idle; tooltip + accessible description) |
 | 2026-09-28T16:30 | Dashboard template extracted into its own repository github.com/MensuraMedia/gtk4-dashboard-template (/home/user/projects/gtk4-dashboard-template): runnable GTK 3 skeleton, 12 doc chapters, AI-INSTRUCTIONS.md, screenshots, universal-instruction-set submodule (v2026.04); README links it |
+| 2026-09-28T16:50 | Sidebar drive list: 10 px more bottom margin (8→18), larger left inset and row padding, 8 px top padding |

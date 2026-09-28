@@ -30,8 +30,8 @@
 .lfc-sidebar row.lfc-nav:hover:not(:selected) { background-color: alpha(@lfc_selected, 0.6); }
 .lfc-count { background-color: @lfc_accent; color: #ffffff; border-radius: 9px; padding: 0 7px; font-size: 0.8em; font-weight: bold; }
 .lfc-sidebar-heading { font-size: 0.75em; font-weight: bold; letter-spacing: 1px; color: @lfc_dim; margin: 10px 16px 4px 16px; }
-.lfc-drive-row { padding: 4px 6px 4px 12px; margin: 0 8px; border-radius: 6px; }
-.lfc-drives { border-top: 1px solid @lfc_border; padding-top: 6px; }
+.lfc-drive-row { padding: 5px 6px 5px 14px; margin: 0 8px 2px 10px; border-radius: 6px; }
+.lfc-drives { border-top: 1px solid @lfc_border; padding-top: 8px; }
 
 /* ---------- page content ---------- */
 .lfc-page { padding: 22px 26px 26px 26px; }

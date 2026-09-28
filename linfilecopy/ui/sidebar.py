@@ -81,7 +81,7 @@ class Sidebar(Gtk.Box):
         self.drives_heading = label(_("DRIVES"), "lfc-sidebar-heading")
         self.drives_box.pack_start(self.drives_heading, False, False, 0)
         self.drives_list = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        self.drives_list.set_margin_bottom(8)
+        self.drives_list.set_margin_bottom(18)   # lift the drive list clear of the window edge
         self.drives_box.pack_start(self.drives_list, False, False, 0)
         self.pack_end(self.drives_box, False, False, 0)
 
