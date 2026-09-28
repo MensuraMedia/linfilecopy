@@ -78,6 +78,8 @@ class TransfersPage(BasePage):
         win = self.ctx.window
         if win is not None:
             win.sidebar.set_count("transfers", len(active))
+            running = any(c.run.status is RunStatus.RUNNING for c in self.cards.values())
+            win.sidebar.set_activity("transfers", "running" if running else "idle" if active else "none")
             if win.nav.current == self.page_id:
                 win.refresh_subtitle()
 

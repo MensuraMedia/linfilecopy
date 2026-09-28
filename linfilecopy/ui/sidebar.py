@@ -32,8 +32,14 @@ class _NavRow(Gtk.ListBoxRow):
         self.text = label(text)
         self.count = label("", "lfc-count")
         self.count.set_no_show_all(True)
+        # Live-activity dot, right-aligned: breathes while work is running.
+        self.dot = Gtk.Box()
+        self.dot.set_valign(Gtk.Align.CENTER)
+        add_classes(self.dot, "lfc-live-dot")
+        self.dot.set_no_show_all(True)
         box.pack_start(self.image, False, False, 0)
         box.pack_start(self.text, True, True, 0)
+        box.pack_end(self.dot, False, False, 0)
         box.pack_end(self.count, False, False, 0)
         self.add(box)
         self.set_tooltip_text(f"{text} (Ctrl+{index})")
@@ -88,6 +94,23 @@ class Sidebar(Gtk.Box):
         r = self._rows[page_id]
         r.count.set_text(str(count))
         r.count.set_visible(count > 0 and not self._compact)
+
+    def set_activity(self, page_id: str, state: str) -> None:
+        """Right-aligned dot on a nav row: "running" breathes, "idle" is a steady
+        dimmed dot (paused or waiting work), "none" hides it."""
+        r = self._rows[page_id]
+        ctx = r.dot.get_style_context()
+        ctx.remove_class("running")
+        ctx.remove_class("idle")
+        if state in ("running", "idle"):
+            ctx.add_class(state)
+            r.dot.show()
+            names = {"running": _("a transfer is running"), "idle": _("transfers are paused or waiting")}
+            r.dot.set_tooltip_text(names[state])
+            r.get_accessible().set_description(names[state])
+        else:
+            r.dot.hide()
+            r.get_accessible().set_description("")
 
     def set_compact(self, compact: bool) -> None:
         """Icons only (medium widths)."""

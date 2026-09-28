@@ -124,3 +124,13 @@ levelbar.lfc-capacity block.filled.normal { background-color: @lfc_accent; }
 levelbar.lfc-capacity block.filled.warn { background-color: @lfc_warn; }
 levelbar.lfc-capacity block.filled.crit { background-color: @lfc_err; }
 levelbar.lfc-capacity block.empty { background-color: transparent; }
+
+/* live-activity dot on the Active Transfers nav row */
+@keyframes lfc-breathe {
+  0%   { opacity: 0.25; }
+  50%  { opacity: 1.0; }
+  100% { opacity: 0.25; }
+}
+.lfc-live-dot { min-width: 8px; min-height: 8px; border-radius: 50%; margin: 0 2px 0 6px; background-color: @lfc_ok; }
+.lfc-live-dot.running { animation: lfc-breathe 1.8s ease-in-out infinite; }
+.lfc-live-dot.idle { background-color: @lfc_dim; opacity: 0.8; }
