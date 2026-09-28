@@ -607,6 +607,11 @@ class JobRun:
             where = client.mount(drive)
             self.log(_("mounted {drive} at {path}").format(drive=drive.label, path=where))
         except DriveError as exc:
+            # The desktop may auto-mount a freshly plugged drive at the same moment.
+            fresh = find_by_uuid(self._drives(), drive.uuid)
+            if fresh is not None and fresh.mounted:
+                self.log(_("{drive} was mounted by the desktop at {path}").format(drive=drive.label, path=fresh.mount_point))
+                return
             raise StepFailed(str(exc), _("Mount the drive in your file manager and try again.")) from exc
 
     def _step_unmount(self, step: Step) -> None:

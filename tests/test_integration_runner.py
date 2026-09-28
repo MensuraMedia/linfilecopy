@@ -420,3 +420,48 @@ class ManagerTest(RunnerTestBase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DriveTriggerTest(unittest.TestCase):
+    """The drive trigger fires on plug-in only, not on mount/unmount of a present drive."""
+
+    def test_plug_in_vs_mount(self) -> None:
+        import gi
+
+        gi.require_version("Gtk", "3.0")
+        from linfilecopy.engine.drives import DriveInfo
+        from linfilecopy.model.enums import DriveKind
+        from linfilecopy.model.job import SyncJob
+        from linfilecopy.ui import manager_triggers as mt
+
+        job = SyncJob(name="t", id="t-0001")
+        job.destination.volume_uuid = "STICK"
+        job.triggers.on_drive_connected = True
+        started: list[str] = []
+
+        class Store:
+            def list(self):
+                return [job]
+
+        class Ctx:
+            jobs = Store()
+
+            def subscribe(self, *_a):
+                pass
+
+        mgr = mt.TriggerManager.__new__(mt.TriggerManager)
+        mgr.ctx, mgr.watchers, mgr._mounted = Ctx(), {}, None
+        orig = mt.GLib.timeout_add
+        mt.GLib.timeout_add = lambda _ms, fn, j: started.append(j.id)
+        try:
+            unmounted = DriveInfo("/b/sdb1", "/dev/sdb1", "STICK", "Stick", "exfat", 1, (), DriveKind.REMOVABLE)
+            mounted = DriveInfo("/b/sdb1", "/dev/sdb1", "STICK", "Stick", "exfat", 1, ("/media/x",), DriveKind.REMOVABLE)
+            mgr._on_drives([mounted])           # start-up: present
+            mgr._on_drives([unmounted])         # our run unmounted it
+            mgr._on_drives([mounted])           # our run mounted it again
+            self.assertEqual(started, [])
+            mgr._on_drives([])                  # unplugged
+            mgr._on_drives([unmounted])         # plugged in (not yet mounted)
+            self.assertEqual(started, ["t-0001"])
+        finally:
+            mt.GLib.timeout_add = orig

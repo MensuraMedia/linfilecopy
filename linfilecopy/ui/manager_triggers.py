@@ -73,16 +73,21 @@ class TriggerManager:
 
     # ----- drive connected ------------------------------------------------------------------------
     def _on_drives(self, drives: list[DriveInfo]) -> None:
-        mounted = {d.uuid for d in drives if d.mounted and d.uuid}
+        """Fire when a drive is plugged in: its filesystem (or LUKS container) was not
+        present before. Mounting or unmounting a drive that stays plugged in (which
+        LinFileCopy's own runs do) is not a plug-in and triggers nothing."""
+        present = {u for d in drives for u in (d.uuid, d.container_uuid) if u}
         if self._mounted is None:        # first list after start-up: nothing is "new"
-            self._mounted = mounted
+            self._mounted = present
             return
-        new = mounted - self._mounted
-        self._mounted = mounted
+        new = present - self._mounted
+        self._mounted = present
         if not new or self.ctx.jobs is None:
             return
         for job in self.ctx.jobs.list():
-            if job.triggers.on_drive_connected and {job.source.volume_uuid, job.destination.volume_uuid} & new:
+            ids = {job.source.volume_uuid, job.destination.volume_uuid,
+                   job.source.container_uuid, job.destination.container_uuid} - {None}
+            if job.triggers.on_drive_connected and ids & new:
                 GLib.timeout_add(DRIVE_SETTLE_MS, self._start_for_drive, job)
 
     def _start_for_drive(self, job: SyncJob) -> bool:
