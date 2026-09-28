@@ -36,9 +36,9 @@ modules:
     sources:
       - type: archive
         url: https://download.samba.org/pub/rsync/src/rsync-3.3.0.tar.gz
-        # Fill in after verifying the tarball's signature (rsync-3.3.0.tar.gz.asc).
-        # flatpak-builder refuses to build until this is a real checksum.
-        sha256: FILL-IN-VERIFIED-SHA256
+        # Verified 2026-09-28: rsync-3.3.0.tar.gz.asc is a good signature from the rsync
+        # release key (Wayne Davison, 0048C8B026D4C96F0E589C2F6C859FB14B96A8C5).
+        sha256: 7399e9a6708c32d678a72a63219e96f23be0be2336e50fd1348498d07041df90
   - name: linfilecopy
     buildsystem: simple
     build-commands:

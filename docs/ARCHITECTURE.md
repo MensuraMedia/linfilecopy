@@ -66,7 +66,7 @@ callbacks from worker threads are marshalled with `GLib.idle_add`.
 | Parallel mirror | Extra delete-only rsync pass | `--delete` inside a `--files-from` run cannot see top-level extras |
 | Two-way preview shows argv | Shows a plan description | The file lists are decided at run time from the scan |
 | Files counter "N of M" | "N copied · X of Y checked" | rsync's total counts folders as well as files |
-| Flatpak rsync checksum | Placeholder `FILL-IN-VERIFIED-SHA256` | Must be taken from a verified download, not guessed |
+| Flatpak rsync checksum | Taken from a download whose GPG signature was verified | Never ship an unverified checksum |
 
 ## Tests
 
