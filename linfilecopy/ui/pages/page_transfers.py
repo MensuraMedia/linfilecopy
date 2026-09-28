@@ -63,8 +63,10 @@ class TransfersPage(BasePage):
 
     def _retry(self, run: JobRun) -> None:
         if self.ctx.runs is not None:
+            from linfilecopy.ui.manager_launch import start_interactive
+
             fresh = self.ctx.jobs.get(run.job.id) if self.ctx.jobs else None
-            self.ctx.runs.start(fresh or run.job, Trigger.RETRY)
+            start_interactive(self.ctx, fresh or run.job, Trigger.RETRY)
 
     def _start_now(self, run: JobRun) -> None:
         if self.ctx.runs is not None:

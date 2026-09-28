@@ -141,8 +141,16 @@ def _execute(args: argparse.Namespace, preview: bool) -> int:
     if job.schedule.kind.value == "once" and trigger is Trigger.SCHEDULE and not preview:
         try:
             from linfilecopy.engine import scheduler
+            from linfilecopy.model.enums import ScheduleKind
+            from linfilecopy.model.store import JobStore
 
             scheduler.remove(job.id)
+            store = JobStore()
+            stored = store.get(job.id)
+            if stored is not None:         # a one-time schedule is used up: show it as such
+                stored.schedule.kind = ScheduleKind.NONE
+                stored.schedule.enabled = False
+                store.save(stored)
         except Exception:  # noqa: BLE001
             pass
     return EXIT.get(run.status.value, 1)

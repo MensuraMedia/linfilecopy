@@ -113,7 +113,10 @@ class LinFileCopyApp(Gtk.Application):
                 self.ctx.notifier.simple("tray", _("LinFileCopy is still running"),
                                          _("Transfers and triggers continue. Open it again from the tray icon."), "misc-info")
             return True
-        return not self._confirm_quit()
+        # Closing for real: always go through _quit so a tray hold and the
+        # watchers are released (the app must not linger without a window).
+        self._quit()
+        return True
 
     def _confirm_quit(self) -> bool:
         """Ask before quitting with runs in progress. True = quit."""
@@ -252,9 +255,10 @@ class LinFileCopyApp(Gtk.Application):
             import json
 
             job = SyncJob.from_dict(json.loads(rec.job_json))
-        self.ctx.runs.start(job, Trigger.RETRY)
         self.activate()
-        self.window.show_page("transfers")
+        from linfilecopy.ui.manager_launch import start_interactive
+
+        start_interactive(self.ctx, job, Trigger.RETRY)
 
     def _on_open_log(self, _action: Gio.SimpleAction, param: GLib.Variant) -> None:
         assert self.ctx is not None

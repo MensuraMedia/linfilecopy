@@ -194,8 +194,9 @@ class DashboardPage(BasePage):
         if self.ctx.runs is None:
             return
         job = (self.ctx.jobs.get(rec.job_id) if self.ctx.jobs else None) or SyncJob.from_dict(json.loads(rec.job_json))
-        self.ctx.runs.start(job, Trigger.RETRY if rec.status is RunStatus.FAILED else Trigger.MANUAL)
-        self.ctx.window.show_page("transfers")
+        from linfilecopy.ui.manager_launch import start_interactive
+
+        start_interactive(self.ctx, job, Trigger.RETRY if rec.status is RunStatus.FAILED else Trigger.MANUAL)
 
     # ----- running ------------------------------------------------------------------------
     def _on_run(self, run: JobRun) -> None:

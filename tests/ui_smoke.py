@@ -111,6 +111,71 @@ class UiSmokeTest(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(sorted(set(problems)), [])
 
+    def test_regressions_from_ui_review(self) -> None:
+        import gi
+
+        gi.require_version("Gtk", "3.0")
+        from gi.repository import GLib, Gtk
+
+        from linfilecopy.app import LinFileCopyApp
+        from linfilecopy.model.enums import Mode, ScheduleKind
+        from tools.demo_data import seed
+
+        jobs = seed()
+        app = LinFileCopyApp()
+        results: dict[str, object] = {}
+        errors: list[str] = []
+
+        def pump() -> None:
+            while Gtk.events_pending():
+                Gtk.main_iteration()
+
+        def run() -> bool:
+            try:
+                ctx, win = app.ctx, app.window
+                job = jobs["docs"]
+                designer = win.page("designer")
+                ctx.publish("edit-job", ctx.jobs.get(job.id))
+                pump()
+                # 1. a schedule saved in the Scheduler survives a Designer save
+                stored = ctx.jobs.get(job.id)
+                stored.schedule.kind, stored.schedule.enabled = ScheduleKind.DAILY, True
+                ctx.jobs.save(stored)
+                ctx.publish("schedules-changed")
+                designer.name_entry.set_text("Renamed")
+                ctx.publish("action", "save-job")
+                results["schedule_kind"] = ctx.jobs.get(job.id).schedule.kind
+                # 2. a typed path is used by Ctrl+S without leaving the field
+                new_dst = job.destination.path + "-typed"
+                designer.dst_card.entry.set_text(new_dst)
+                ctx.publish("action", "save-job")
+                results["dst"] = ctx.jobs.get(job.id).destination.path == new_dst
+                # 3. re-running a Mirror job from outside the designer does not start the real run
+                mirror = ctx.jobs.get(job.id)
+                mirror.mode, mirror.preview_first = Mode.MIRROR, False
+                ctx.jobs.save(mirror)
+                from linfilecopy.ui.manager_launch import start_interactive
+
+                start_interactive(ctx, mirror)
+                pump()
+                results["real_runs"] = [r for r in ctx.runs.active() if not r.preview]
+                for r in ctx.runs.active():
+                    r.cancel()
+                for w in Gtk.Window.list_toplevels():
+                    if isinstance(w, Gtk.Dialog):
+                        w.destroy()
+            except Exception as exc:  # noqa: BLE001
+                errors.append(repr(exc))
+            app.quit()
+            return False
+
+        app.connect("activate", lambda *_a: GLib.timeout_add(1500, run))
+        app.run([sys.argv[0]])
+        self.assertEqual(errors, [])
+        self.assertEqual(results["schedule_kind"], ScheduleKind.DAILY)
+        self.assertTrue(results["dst"])
+        self.assertEqual(results["real_runs"], [])
+
 
 if __name__ == "__main__":
     unittest.main()

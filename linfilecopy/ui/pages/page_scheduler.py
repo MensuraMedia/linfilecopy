@@ -35,6 +35,7 @@ class SchedulerPage(BasePage):
         self.jobs: list[SyncJob] = []
         self.current: SyncJob | None = None
         self._loading = False
+        self._dirty = False
         self.sched: sc.Scheduler | None = None
         cols = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=22)
         left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -170,6 +171,9 @@ class SchedulerPage(BasePage):
         self.jobs = self.ctx.jobs.list() if self.ctx.jobs else []
         installed = self.sched.installed() if self.sched else {}
         keep = self.current.id if self.current else self._pending
+        edited = self.current if self.current is not None and self._dirty else None
+        if edited is not None:   # keep unsaved edits across reloads
+            self.jobs = [edited if j.id == edited.id else j for j in self.jobs]
         clear(self.list)
         for job in self.jobs:
             kind_icon = "status-scheduled" if job.schedule.kind is not ScheduleKind.NONE else "feat-schedule"
@@ -225,6 +229,16 @@ class SchedulerPage(BasePage):
 
     # ----- editor -----------------------------------------------------------------------
     def _edit(self, job: SyncJob) -> None:
+        if job is self.current:
+            self._refresh_editor()
+            return
+        if self._dirty and self.current is not None and self.current.id != job.id:
+            from linfilecopy.ui.components.component_dialogs import confirm
+
+            if confirm(self.ctx.window, _("Save the schedule for \"{job}\"?").format(job=self.current.name),
+                       _("You changed it but did not press Save schedule."), _("Save")):
+                self._save()
+        self._dirty = False
         self._loading = True
         self.current = job
         sch = job.schedule
@@ -247,11 +261,13 @@ class SchedulerPage(BasePage):
         if self._loading or self.current is None:
             return
         setattr(self.current.schedule, attr, value)
+        self._dirty = True
         self._refresh_editor()
 
     def _on_kind(self, value: str) -> None:
         if self.current is not None and not self._loading:
             self.current.schedule.kind = ScheduleKind(value)
+            self._dirty = True
             if self.current.schedule.kind is not ScheduleKind.NONE:
                 self.current.schedule.enabled = True
                 self._loading = True
@@ -322,7 +338,12 @@ class SchedulerPage(BasePage):
         except (sc.ScheduleError, cron.CronError) as exc:
             self.message.show_message(_("The schedule could not be saved"), str(exc), "err", "status-failed")
             return
+        stored = self.ctx.jobs.get(job.id)
+        if stored is not None:        # keep the Designer's other settings; only the schedule is ours
+            stored.schedule = job.schedule
+            job = stored
         self.ctx.jobs.save(job)
+        self._dirty = False
         self.message.show_message(_("Schedule saved"), _("Installed as a {how}.").format(
             how=_("systemd user timer") if backend is ScheduleBackend.SYSTEMD else _("cron entry")) if backend else _("The schedule was removed."),
             "ok", "status-success")
@@ -333,5 +354,6 @@ class SchedulerPage(BasePage):
         if self.current is not None and self.ctx.runs is not None:
             from linfilecopy.model.enums import Trigger
 
-            self.ctx.runs.start(self.ctx.jobs.get(self.current.id) or self.current, Trigger.MANUAL)
-            self.ctx.window.show_page("transfers")
+            from linfilecopy.ui.manager_launch import start_interactive
+
+            start_interactive(self.ctx, self.ctx.jobs.get(self.current.id) or self.current, Trigger.MANUAL)

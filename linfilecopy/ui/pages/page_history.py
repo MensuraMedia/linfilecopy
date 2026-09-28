@@ -285,9 +285,10 @@ class HistoryPage(BasePage):
         rec = self._selected()
         if rec is None or self.ctx.runs is None:
             return
+        from linfilecopy.ui.manager_launch import start_interactive
+
         trigger = Trigger.RETRY if rec.status is RunStatus.FAILED else Trigger.MANUAL
-        self.ctx.runs.start(self._job_for(rec), trigger)
-        self.ctx.window.show_page("transfers")
+        start_interactive(self.ctx, self._job_for(rec), trigger)
 
     def _open_log(self) -> None:
         rec = self._selected()

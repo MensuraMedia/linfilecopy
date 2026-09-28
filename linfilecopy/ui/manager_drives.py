@@ -99,15 +99,21 @@ class DriveManager:
                 func()
             except DriveError as exc:
                 error = str(exc)
-            GLib.idle_add(self._action_done, label, error, on_done)
+            try:   # read the new state here so on_done sees the fresh mount points
+                drives = self.client.list_drives() if self.client else []
+            except DriveError:
+                drives = self.drives
+            GLib.idle_add(self._action_done, label, error, on_done, drives)
 
         threading.Thread(target=worker, name="lfc-drive-action", daemon=True).start()
 
-    def _action_done(self, label: str, error: str | None, on_done) -> bool:  # type: ignore[no-untyped-def]
-        self.refresh()
-        self.ctx.publish("drive-action", label, error)
+    def _action_done(self, label: str, error: str | None, on_done, drives: list[DriveInfo]) -> bool:  # type: ignore[no-untyped-def]
+        self._refreshing = False
+        self._publish(drives)
         if on_done:
-            on_done(error)
+            on_done(error)          # the caller reports its own errors
+        else:
+            self.ctx.publish("drive-action", label, error)
         return GLib.SOURCE_REMOVE
 
     def eject(self, drive: DriveInfo) -> None:

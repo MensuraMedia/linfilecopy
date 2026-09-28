@@ -30,8 +30,8 @@ from linfilecopy.model.validation import INFO  # noqa: E402
 from linfilecopy.ui.components.component_common import (MessageBar, Segmented, activate_rows, add_classes,  # noqa: E402
                                                         boxed_list, combo, format_bytes, group, label, row, spin,
                                                         switch, switch_row)
-from linfilecopy.ui.components.component_dialogs import (PreviewDialog, confirm, confirm_delete, deletions,  # noqa: E402
-                                                         info)
+from linfilecopy.ui import manager_launch as launch  # noqa: E402
+from linfilecopy.ui.components.component_dialogs import confirm, info  # noqa: E402
 from linfilecopy.ui.components.component_filter_editor import FilterEditorWidget  # noqa: E402
 from linfilecopy.ui.components.component_panels import CommandPreviewWidget, IssuesWidget, Section  # noqa: E402
 from linfilecopy.ui.components.component_path_card import PathCardWidget  # noqa: E402
@@ -77,6 +77,7 @@ class DesignerPage(BasePage):
         ctx.subscribe("new-from-template", self._new_from_template)
         ctx.subscribe("preview-mode", lambda on: self._update_start_label())
         ctx.subscribe("jobs-changed", lambda: self._rebuild_job_menu())
+        ctx.subscribe("schedules-changed", self._sync_schedule_from_store)
         self._load_initial_job()
 
     # =====================================================================
@@ -581,6 +582,7 @@ class DesignerPage(BasePage):
             win.show_page("designer")
 
     def _confirm_discard(self) -> bool:
+        self._commit_paths()
         if not self.dirty or self.ctx.window is None:
             return True
         dlg = Gtk.MessageDialog(transient_for=self.ctx.window, modal=True, message_type=Gtk.MessageType.QUESTION,
@@ -880,6 +882,11 @@ class DesignerPage(BasePage):
     def save_job(self) -> bool:
         if self.ctx.jobs is None:
             return False
+        self._commit_paths()
+        # The Scheduler owns the schedule: never overwrite one saved there.
+        stored = self.ctx.jobs.get(self.job.id) if self.job.id else None
+        if stored is not None:
+            self.job.schedule = stored.schedule
         if not self.job.name.strip():
             self.job.name = _("Untitled job")
             self.name_entry.set_text(self.job.name)
@@ -940,6 +947,16 @@ class DesignerPage(BasePage):
                 info(self.ctx.window, _("Could not import the job"), str(exc), True)
         dlg.destroy()
 
+    def _sync_schedule_from_store(self) -> None:
+        """Take over a schedule saved in the Scheduler without marking the job changed."""
+        stored = self.ctx.jobs.get(self.job.id) if self.ctx.jobs and self.job.id else None
+        if stored is None or stored.schedule == self.job.schedule:
+            return
+        self.job.schedule = stored.schedule
+        if self.saved_snapshot is not None:
+            self.saved_snapshot["schedule"] = stored.to_dict()["schedule"]
+        self._update_summaries()
+
     def _open_scheduler(self) -> None:
         if self.dirty:
             self.save_job()
@@ -956,71 +973,24 @@ class DesignerPage(BasePage):
                 return
 
     # ----- preview / start ---------------------------------------------------------------------
-    def preview(self, on_run_for_real: Callable[[], None] | None = None, allow_run: bool = True) -> None:
-        if self.plan is None or not self.plan.runnable or self.ctx.runs is None:
-            return
-        run = self.ctx.runs.start(copy.deepcopy(self.job), preview=True)
-        dest = self.job.destination.volume_label or self.job.destination.path
-        callback = on_run_for_real or (lambda: self._confirm_and_run(run))
-        PreviewDialog(self.ctx.window, run, callback if allow_run and not self.ctx.preview_mode else None, dest)
+    def _commit_paths(self) -> None:
+        """Apply paths typed into the cards (keyboard shortcuts don't move focus)."""
+        self.src_card._commit_entry()
+        self.dst_card._commit_entry()
 
-    def start(self) -> None:
-        if self.plan is None or not self.plan.runnable or self.ctx.runs is None:
-            return
+    def _ready_to_run(self) -> bool:
+        self._commit_paths()
         if self.dirty:
             self.save_job()
-        if self.ctx.preview_mode:
-            self.preview(allow_run=False)
-            return
-        if self.job.preview_first:
-            self.preview()
-            return
-        self._confirm_and_run(None)
+        return self.plan is not None and self.plan.runnable and self.ctx.runs is not None
 
-    def _confirm_and_run(self, preview_run) -> None:  # type: ignore[no-untyped-def]
-        job = copy.deepcopy(self.job)
-        needs_confirm = self.ctx.settings.confirm_deletes and (
-            job.mode is Mode.MIRROR or (job.mode is Mode.TWO_WAY and not job.twoway.use_trash))
-        if needs_confirm:
-            if preview_run is None:
-                self._preview_then(job, self._confirm_and_run)
-                return
-            dels = deletions(preview_run.changes)
-            if dels:
-                src_label = job.source.path
-                dest_label = job.destination.volume_label or job.destination.path
-                if not confirm_delete(self.ctx.window, dels, job.name, dest_label, src_label):
-                    return
-        self.ctx.runs.start(job, Trigger.MANUAL)
-        self.ctx.window.show_page("transfers")
+    def preview(self) -> None:
+        if self._ready_to_run():
+            launch.open_preview(self.ctx, self.job)
 
-    def _preview_then(self, job: SyncJob, then: Callable) -> None:  # type: ignore[type-arg]
-        """Run a silent preview (to count deletions), with a small wait dialog."""
-        run = self.ctx.runs.start(job, preview=True)
-        dlg = Gtk.Dialog(transient_for=self.ctx.window, modal=True, title=_("Checking"))
-        box = dlg.get_content_area()
-        for side in ("top", "bottom", "start", "end"):
-            getattr(box, f"set_margin_{side}")(20)
-        row_ = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        row_.pack_start(Gtk.Spinner(active=True), False, False, 0)
-        row_.pack_start(label(_("Checking what would be deleted…")), False, False, 0)
-        box.pack_start(row_, False, False, 0)
-        dlg.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
-        dlg.connect("response", lambda d, _r: (run.cancel(), d.destroy()))
-        dlg.show_all()
-
-        def poll() -> bool:
-            if run.active:
-                return GLib.SOURCE_CONTINUE
-            if dlg.get_visible():
-                dlg.destroy()
-                if run.status.value == "success":
-                    then(run)
-                else:
-                    info(self.ctx.window, _("The check failed"), f"{run.message}\n{run.fix}", True)
-            return GLib.SOURCE_REMOVE
-
-        GLib.timeout_add(250, poll)
+    def start(self) -> None:
+        if self._ready_to_run():
+            launch.start_interactive(self.ctx, self.job)
 
     # ----- filter test ---------------------------------------------------------------------------
     def _test_filters(self) -> None:
