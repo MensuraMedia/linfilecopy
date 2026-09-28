@@ -161,6 +161,7 @@ class UiSmokeTest(unittest.TestCase):
                 results["real_runs"] = [r for r in ctx.runs.active() if not r.preview]
                 for r in ctx.runs.active():
                     r.cancel()
+                    r.join(10)       # finish before the temporary home is removed
                 for w in Gtk.Window.list_toplevels():
                     if isinstance(w, Gtk.Dialog):
                         w.destroy()

@@ -11,7 +11,8 @@ import gi
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
-from gi.repository import Gdk, Gio, GLib, Gtk  # noqa: E402
+gi.require_version("GdkPixbuf", "2.0")
+from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk  # noqa: E402
 
 from linfilecopy.formatting import format_bytes, format_duration  # noqa: E402
 from linfilecopy.i18n import _  # noqa: E402
@@ -20,7 +21,7 @@ from linfilecopy.model.history import RunRecord  # noqa: E402
 from linfilecopy.model.job import SyncJob  # noqa: E402
 from linfilecopy.ui.components.component_common import MessageBar, add_classes, clear, combo, label  # noqa: E402
 from linfilecopy.ui.components.component_dialogs import empty_state  # noqa: E402
-from linfilecopy.ui.icons import button, icon, icon_name  # noqa: E402
+from linfilecopy.ui.icons import button, coloured_pixbuf, icon  # noqa: E402
 from linfilecopy.ui.pages.page_base import BasePage  # noqa: E402
 
 STATUS = {
@@ -33,6 +34,9 @@ STATUS = {
     RunStatus.QUEUED: ("status-queued", _("Queued")),
     RunStatus.WAITING: ("status-drive-missing", _("Waiting")),
 }
+STATUS_COLOUR = {RunStatus.SUCCESS: "lfc_ok", RunStatus.WARNING: "lfc_warn", RunStatus.FAILED: "lfc_err",
+                 RunStatus.RUNNING: "lfc_accent", RunStatus.PAUSED: "lfc_dim", RunStatus.CANCELLED: "lfc_dim",
+                 RunStatus.QUEUED: "lfc_dim", RunStatus.WAITING: "lfc_warn"}
 TRIGGER_TEXT = {Trigger.MANUAL: _("you"), Trigger.SCHEDULE: _("schedule"), Trigger.FILE_CHANGE: _("file change"),
                 Trigger.DRIVE_CONNECTED: _("drive connected"), Trigger.RETRY: _("retry")}
 LOG_TAIL_LINES = 40
@@ -73,12 +77,12 @@ class HistoryPage(BasePage):
         self.content.pack_start(bar, False, False, 0)
 
         # status icon, job, started, duration, copied, files, result, run id, sort key
-        self.store = Gtk.ListStore(str, str, str, str, str, str, str, str, float)
+        self.store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str, str, str, str, str, str, float)
         self.tree = Gtk.TreeView(model=self.store)
         self.tree.get_accessible().set_name(_("Runs"))
         self.tree.set_search_column(1)
         pix = Gtk.CellRendererPixbuf()
-        c = Gtk.TreeViewColumn("", pix, icon_name=0)
+        c = Gtk.TreeViewColumn("", pix, pixbuf=0)
         self.tree.append_column(c)
         for i, (title, xalign, expand) in enumerate([(_("Job"), 0.0, True), (_("Started"), 0.0, False), (_("Duration"), 1.0, False),
                                                      (_("Copied"), 1.0, False), (_("Files"), 1.0, False), (_("Result"), 0.0, False)], start=1):
@@ -149,6 +153,7 @@ class HistoryPage(BasePage):
         self.details.set_no_show_all(True)
 
         self.ctx.subscribe("history-changed", self.reload)
+        self.ctx.subscribe("settings-changed", lambda _s: self.reload())   # recolour after a theme change
         self.ctx.subscribe("select-run", self.select_run)
         self._pending_select: str | None = None
         self.reload()
@@ -194,7 +199,8 @@ class HistoryPage(BasePage):
                 text = _("Code {n}").format(n=r.exit_code)
             copied = "—" if r.dry_run else format_bytes(r.bytes)
             files = f"{r.stats.get('changes', 0):,} " + _("changes") if r.dry_run else f"{r.files:,}"
-            self.store.append([icon_name(icon_id), r.job_name, when_text(r.started), format_duration(r.duration),
+            colour = STATUS_COLOUR.get(r.status, "lfc_dim") if not r.dry_run else "lfc_accent"
+            self.store.append([coloured_pixbuf(icon_id, colour, self.tree), r.job_name, when_text(r.started), format_duration(r.duration),
                                copied, files, text, r.id, r.started])
         self.empty.set_visible(not recs)
         if selected:

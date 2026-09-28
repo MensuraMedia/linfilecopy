@@ -36,6 +36,7 @@ def main() -> int:
     ap.add_argument("--open-demo", help="with --demo: open this demo job in the designer")
     ap.add_argument("--advanced", action="store_true", help="show the designer's Advanced view")
     ap.add_argument("--root", action="store_true", help="capture the whole screen (includes dialogs)")
+    ap.add_argument("--demo-drives", action="store_true", help="show example drives instead of this machine's")
     args = ap.parse_args()
 
     if not args.real_home:
@@ -50,6 +51,10 @@ def main() -> int:
     gi.require_version("Gdk", "3.0")
     from gi.repository import Gdk, GLib, Gtk
 
+    if args.demo_drives:
+        from tools.demo_drives import install
+
+        install()
     from linfilecopy.app import LinFileCopyApp
     from linfilecopy.model.settings import AppSettings
 

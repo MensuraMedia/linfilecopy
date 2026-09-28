@@ -39,6 +39,8 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
 .intro h1{font-size:34px;line-height:1.15;margin:0;text-wrap:balance;display:flex;align-items:center;gap:14px}
 .intro h1 .appicon{width:48px;height:48px;flex:none}
 .intro p{margin:0;color:var(--page-dim)}
+.status-note{border-left:3px solid var(--accent);padding:10px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--page));color:var(--page-fg);font-size:14px;border-radius:0 8px 8px 0}
+.status-note ul{margin:6px 0;padding-left:20px}
 .toolbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13px;color:var(--page-dim)}
 .seg{display:inline-flex;border:1px solid var(--page-rule);border-radius:8px;overflow:hidden}
 .seg button{font:inherit;font-size:13px;background:transparent;color:var(--page-fg);border:0;padding:5px 12px;cursor:pointer}
@@ -240,6 +242,16 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--font);font-si
   <h1><svg class="appicon" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#3584e4"/><svg x="12" y="12" width="40" height="40" viewBox="0 0 256 256" fill="#ffffff"><use href="#i-action-duplicate"/></svg></svg>LinFileCopy mockups</h1>
   <p>Ten screens that show how the GTK 3 app will look and behave before any UI code is written. The app works with local storage only: internal disks, removable drives and local storage arrays, with rsync as its only copy engine. Every icon on this page is a Phosphor SVG read from the local asset folder and inlined here, using the same icon IDs the app will ship with. Fonts are the system's own (Cantarell on GNOME); nothing is fetched from the network.</p>
   <p>The windows follow your light or dark theme, the same way the app follows the desktop setting. Tags under each heading show which features the screen covers: <b>B1–B10</b> are the basic features and <b>#1–#20</b> are the advanced ones.</p>
+  <aside class="status-note" role="note">
+    <b>Design-stage record (2026-09-27).</b> These mockups were drawn before the app was built and are kept as the agreed design. The finished app (v0.1.0) follows them closely. The main differences:
+    <ul>
+      <li>The Job Designer has a <em>Jobs</em> menu for opening saved jobs.</li>
+      <li>The Designer's advanced options appear under the basic form instead of replacing it.</li>
+      <li>Two-way previews show direction and conflict notes in one list.</li>
+      <li>History status icons are drawn in the list itself, not as badges.</li>
+    </ul>
+    Screenshots of the real app are in <code>docs/screenshots/</code> in the repository.
+  </aside>
   <div class="toolbar">
     <span>Preview theme</span>
     <div class="seg" role="group" aria-label="Mockup theme">

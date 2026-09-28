@@ -12,7 +12,7 @@ Package: linfilecopy
 Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends}, python3-gi, gir1.2-gtk-3.0, gir1.2-glib-2.0, rsync (>= 3.1.0),
  udisks2, util-linux
-Recommends: gir1.2-ayatanaappindicator3-0.1, gir1.2-secret-1, libnotify-bin
+Recommends: gir1.2-ayatanaappindicator3-0.1, gir1.2-secret-1
 Description: copy and sync folders between local disks and external drives
  LinFileCopy is a GTK dashboard for rsync-based copy, mirror and two-way sync
  jobs between internal disks, removable drives and local storage arrays. It

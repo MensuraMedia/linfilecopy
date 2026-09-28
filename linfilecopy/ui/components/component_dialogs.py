@@ -7,7 +7,8 @@ import gi
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
-from gi.repository import Gdk, GLib, Gtk  # noqa: E402
+gi.require_version("GdkPixbuf", "2.0")
+from gi.repository import Gdk, GdkPixbuf, GLib, Gtk  # noqa: E402
 
 from linfilecopy.engine.progress import Change, ChangeKind  # noqa: E402
 from linfilecopy.engine.runner import JobRun  # noqa: E402
@@ -16,7 +17,7 @@ from linfilecopy.formatting import format_bytes  # noqa: E402
 from linfilecopy.i18n import _, ngettext  # noqa: E402
 from linfilecopy.model.enums import Mode, RunStatus  # noqa: E402
 from linfilecopy.ui.components.component_common import MessageBar, Segmented, add_classes, badge, esc, label  # noqa: E402
-from linfilecopy.ui.icons import SIZE_EMPTY, button, icon, icon_name  # noqa: E402
+from linfilecopy.ui.icons import SIZE_EMPTY, button, coloured_pixbuf, icon  # noqa: E402
 
 KIND_ICON = {
     ChangeKind.NEW: ("delta-create", "lfc-ok"),
@@ -96,7 +97,7 @@ class PreviewDialog(Gtk.Dialog):
         area.pack_start(tools, False, False, 0)
 
         # icon name, path, detail, kind
-        self.store = Gtk.ListStore(str, str, str, str)
+        self.store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str, str)
         self.filtered = self.store.filter_new()
         self.filtered.set_visible_func(self._visible)
         self.tree = Gtk.TreeView(model=self.filtered, headers_visible=False, enable_search=False)
@@ -104,7 +105,7 @@ class PreviewDialog(Gtk.Dialog):
         col = Gtk.TreeViewColumn()
         pix = Gtk.CellRendererPixbuf()
         col.pack_start(pix, False)
-        col.add_attribute(pix, "icon-name", 0)
+        col.add_attribute(pix, "pixbuf", 0)
         text = Gtk.CellRendererText(ellipsize=2)
         col.pack_start(text, True)
         col.add_attribute(text, "text", 1)
@@ -170,10 +171,11 @@ class PreviewDialog(Gtk.Dialog):
             self.badges.add(badge(_("{size} to copy").format(size=format_bytes(total_bytes))))
         self.badges.show_all()
         for c in changes[:MAX_ROWS]:
-            self.store.append([icon_name(KIND_ICON[c.kind][0]), c.path + ("/" if c.is_dir else ""),
+            icon_id, cls = KIND_ICON[c.kind]
+            self.store.append([coloured_pixbuf(icon_id, cls.replace("-", "_"), self.tree), c.path + ("/" if c.is_dir else ""),
                                self._detail(c), c.kind.value])
         if len(changes) > MAX_ROWS:
-            self.store.append([icon_name("misc-info"), _("… and {n} more").format(n=len(changes) - MAX_ROWS), "", "all"])
+            self.store.append([coloured_pixbuf("misc-info", "lfc_dim", self.tree), _("… and {n} more").format(n=len(changes) - MAX_ROWS), "", "all"])
         self.run_button.set_sensitive(self.on_run_for_real is not None and not
                                       (counts.get(ChangeKind.CONFLICT) and any(c.note == _("changed on both sides") for c in changes)))
 
