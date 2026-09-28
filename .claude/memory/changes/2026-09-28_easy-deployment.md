@@ -13,6 +13,9 @@ files_changed: [get.sh, tools/build_release.sh, tools/build_deb.sh, releases/lin
 - No GitHub Releases: `gh` is not authenticated here, so release files live in `releases/` on main.
 ## Notes
 - The .deb is chmod 644 in a 755 temp dir so apt's `_apt` sandbox user can read it.
+- raw.githubusercontent caches each file separately (~5 min): right after a push the branch URL
+  served a new .deb beside the old SHA256SUMS (checksum mismatch, install refused). get.sh now
+  resolves the ref to a commit via the GitHub API and downloads from the immutable commit URL.
 - SHA256SUMS comes from the same host, so it protects against corrupt/partial downloads, not a
   compromised repository.
 ## Testing

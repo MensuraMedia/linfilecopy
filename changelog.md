@@ -33,3 +33,4 @@
 | 2026-09-28T16:50 | Sidebar drive list: 10 px more bottom margin (8→18), larger left inset and row padding, 8 px top padding |
 | 2026-09-28T14:55 | Real hardware: drive-connected trigger verified on physical re-plug (14:33 no-op 'in step'; 14:52 propagated one new file each way: from-computer.md → stick with exFAT flags -dt --modify-window=1, from-stick.md → computer with -dlpt); all planned real-desktop tests passed |
 | 2026-09-28T16:10 | Easy deployment: get.sh web installer (curl/wget one-liner; picks .deb via apt or --user tarball; verifies SHA256SUMS; --uninstall; LFC_REF/LFC_BASE_URL), tools/build_release.sh (deb + reproducible universal tarball releases/linfilecopy-0.1.0.tar.gz + SHA256SUMS for both); README and releases/README install instructions |
+| 2026-09-28T16:30 | get.sh: resolve the branch/tag to a commit (GitHub API) and download from the commit URL; fixes checksum mismatch from the raw CDN caching SHA256SUMS separately after a release |

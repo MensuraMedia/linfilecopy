@@ -14,8 +14,8 @@
 # Nothing is installed unless the download matches releases/SHA256SUMS.
 set -eu
 
+REPO=MensuraMedia/linfilecopy
 REF=${LFC_REF:-main}
-BASE=${LFC_BASE_URL:-https://raw.githubusercontent.com/MensuraMedia/linfilecopy/$REF/releases}
 
 say() { printf '%s\n' "$*"; }
 die() { printf 'Error: %s\n' "$*" >&2; exit 1; }
@@ -29,6 +29,28 @@ fetch() {   # fetch URL FILE
         die "curl or wget is needed to download LinFileCopy"
     fi
 }
+
+# The raw file CDN caches each file separately for a few minutes, so right after a release a
+# branch URL can serve a new file next to an old SHA256SUMS. A commit URL never changes: resolve
+# the branch or tag to its commit once and download everything from that one snapshot.
+resolve_commit() {
+    url="https://api.github.com/repos/$REPO/commits/$REF"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL -H 'Accept: application/vnd.github.sha' "$url" 2>/dev/null
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q -O - --header='Accept: application/vnd.github.sha' "$url" 2>/dev/null
+    fi
+}
+
+if [ -n "${LFC_BASE_URL:-}" ]; then
+    BASE=$LFC_BASE_URL
+else
+    commit=$(resolve_commit || true)
+    case "$commit" in
+        *[!0-9a-f]*|"") commit=$REF ;;   # API unreachable or rate-limited: use the ref itself
+    esac
+    BASE=https://raw.githubusercontent.com/$REPO/$commit/releases
+fi
 
 sha256() {
     if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | cut -d' ' -f1
