@@ -72,17 +72,26 @@ Arch: `sudo pacman -S python-gobject gtk3 rsync udisks2 libayatana-appindicator 
 
 ## Install
 
-From a checkout:
+Debian, Ubuntu and derivatives: the repository includes a ready-made package.
 
 ```sh
-tools/build_resources.sh                 # bundle icons and CSS (optional; source files work too)
-pip install --user --no-deps .           # installs the 'linfilecopy' command
-packaging/install-data.sh ~/.local       # desktop entry, icons, metainfo
+git clone https://github.com/MensuraMedia/linfilecopy.git
+cd linfilecopy
+./install.sh            # checks releases/SHA256SUMS, then: sudo apt install ./releases/linfilecopy_*_all.deb
 ```
 
-To run without installing: `python3 -m linfilecopy`.
+Any distribution, without root (installs into `~/.local`):
 
-The Debian and Flatpak packaging is in [`packaging/`](packaging/).
+```sh
+./install.sh --check    # lists missing system packages and how to install them
+./install.sh --user     # app in ~/.local/share/linfilecopy, launcher in ~/.local/bin, menu entry and icons
+./install.sh --uninstall   # removes the --user install; your jobs and history are kept
+```
+
+To run straight from the checkout without installing: `python3 -m linfilecopy`.
+
+Rebuild the package with `tools/build_deb.sh`. Debian source packaging is in
+[`packaging/debian`](packaging/debian), and a Flatpak manifest is in [`packaging/flatpak`](packaging/flatpak).
 
 ## Usage
 
@@ -135,7 +144,8 @@ Example job files are in [`docs/examples/`](docs/examples/). Import them from th
 - [Technical concept](docs/CONCEPT.md): design, build order, feature → flag mapping
 - [Architecture (as built)](docs/ARCHITECTURE.md)
 - [Developer guide](docs/DEVELOPER.md)
-- [Mockups](docs/mockups/index.html)
+- [Mockups](docs/mockups/index.html): the design-stage record (open in a browser; self-contained)
+- [Releases](releases/README.md): the Debian package and its checksum
 
 ## Licence
 

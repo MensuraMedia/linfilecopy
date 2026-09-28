@@ -31,6 +31,10 @@ python3 -m linfilecopy run <job>  # headless
 
 # Rebuild mockups
 python3 tools/build_mockups.py
+
+# Debian package into releases/ (commit it), install
+tools/build_deb.sh
+./install.sh            # apt on Debian/Ubuntu; ./install.sh --user elsewhere
 ```
 
 ## Project Conventions
