@@ -8,4 +8,5 @@
 - [x] Coloured status icons in History and Preview
 - [ ] Translations beyond the .pot template
 - [x] Real desktop verified 2026-09-28: copy to exFAT stick, eject, Quick View progress, tray, close-to-tray
-- [ ] Drive-connected trigger: needs a physical re-plug; LUKS unlock: no encrypted drive available
+- [x] Drive-connected trigger verified on physical re-plug (2026-09-28), two-way propagated both directions
+- [ ] LUKS unlock/lock: not tested (no encrypted drive available)

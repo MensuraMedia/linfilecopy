@@ -31,3 +31,4 @@
 | 2026-09-28T15:10 | Breathing live-activity dot, right-aligned on the Active Transfers nav row (CSS @keyframes; breathes while running, steady dim when paused/queued, hidden when idle; tooltip + accessible description) |
 | 2026-09-28T16:30 | Dashboard template extracted into its own repository github.com/MensuraMedia/gtk4-dashboard-template (/home/user/projects/gtk4-dashboard-template): runnable GTK 3 skeleton, 12 doc chapters, AI-INSTRUCTIONS.md, screenshots, universal-instruction-set submodule (v2026.04); README links it |
 | 2026-09-28T16:50 | Sidebar drive list: 10 px more bottom margin (8→18), larger left inset and row padding, 8 px top padding |
+| 2026-09-28T14:55 | Real hardware: drive-connected trigger verified on physical re-plug (14:33 no-op 'in step'; 14:52 propagated one new file each way: from-computer.md → stick with exFAT flags -dt --modify-window=1, from-stick.md → computer with -dlpt); all planned real-desktop tests passed |
