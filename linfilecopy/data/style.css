@@ -115,3 +115,11 @@ button.lfc-day:checked { background-image: none; background-color: @lfc_accent; 
 
 /* primary action */
 button.lfc-big { padding: 8px 20px; font-size: 1.05em; }
+
+/* drive capacity bars */
+levelbar.lfc-capacity trough { min-height: 4px; padding: 0; border: none; border-radius: 2px; background-color: @lfc_trough; }
+levelbar.lfc-capacity block { min-height: 4px; border: none; border-radius: 2px; }
+levelbar.lfc-capacity block.filled.normal { background-color: @lfc_accent; }
+levelbar.lfc-capacity block.filled.warn { background-color: @lfc_warn; }
+levelbar.lfc-capacity block.filled.crit { background-color: @lfc_err; }
+levelbar.lfc-capacity block.empty { background-color: transparent; }

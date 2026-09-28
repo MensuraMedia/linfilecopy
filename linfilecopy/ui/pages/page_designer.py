@@ -141,7 +141,8 @@ class DesignerPage(BasePage):
 
         self.form_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         self.form_scroll.add(self.form)
-        self.side_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        # The side panel keeps its full width; only the form may shrink (and re-flow).
+        self.side_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
         self.side_scroll.add(self.side)
         self.body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=22)
         self.body.pack_start(self.form_scroll, True, True, 0)

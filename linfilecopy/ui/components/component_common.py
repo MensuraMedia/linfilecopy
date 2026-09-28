@@ -14,6 +14,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import GLib, Gtk, Pango  # noqa: E402
 
 from linfilecopy.formatting import format_bytes, format_duration  # noqa: E402,F401
+from linfilecopy.i18n import _  # noqa: E402
 from linfilecopy.ui.icons import SIZE_TILE, icon  # noqa: E402
 
 
@@ -251,6 +252,35 @@ class MessageBar(Gtk.Box):
     def hide_message(self) -> None:
         self.hide()
         self.set_no_show_all(True)
+
+
+CAPACITY_WARN = 0.90
+CAPACITY_CRIT = 0.97
+
+
+def capacity_bar(used: float, name: str = "") -> Gtk.LevelBar:
+    """Thin used-space bar: accent normally, amber above 90 %, red above 97 %."""
+    bar = Gtk.LevelBar(min_value=0.0, max_value=1.0, mode=Gtk.LevelBarMode.CONTINUOUS)
+    for offset in ("low", "high", "full"):
+        bar.remove_offset_value(offset)
+    bar.add_offset_value("normal", CAPACITY_WARN)
+    bar.add_offset_value("warn", CAPACITY_CRIT)
+    bar.add_offset_value("crit", 1.0)
+    bar.set_value(used)
+    bar.set_valign(Gtk.Align.CENTER)
+    add_classes(bar, "lfc-capacity")
+    bar.get_accessible().set_name(name or _("{p}% used").format(p=round(used * 100)))
+    bar.set_tooltip_text(_("{p}% used").format(p=round(used * 100)))
+    return bar
+
+
+def capacity_text(drive) -> str:  # type: ignore[no-untyped-def]
+    """ "39.9 GB free of 62.0 GB" or just the free space when the size is unknown."""
+    if drive.free is None:
+        return ""
+    if drive.capacity:
+        return _("{free} free of {size}").format(free=format_bytes(drive.free), size=format_bytes(drive.capacity))
+    return _("{free} free").format(free=format_bytes(drive.free))
 
 
 def stat_tile(icon_id: str, value: str, caption: str, bad: bool = False) -> tuple[Gtk.Box, Gtk.Label, Gtk.Label]:

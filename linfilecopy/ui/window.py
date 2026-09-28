@@ -169,12 +169,27 @@ class MainWindow(Gtk.ApplicationWindow):
             text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
             name = label(d.label, ellipsize=True)
             name.set_max_width_chars(14)
+            text.set_size_request(1, -1)
             text.pack_start(name, False, False, 0)
-            from linfilecopy.formatting import format_bytes
+            from linfilecopy.ui.components.component_common import capacity_bar, capacity_text
 
-            detail = (_("locked") if d.encrypted and d.locked else
-                      f"{d.fs.label} · {format_bytes(d.free)} " + _("free") if d.free is not None else d.fs.label)
-            text.pack_start(label(detail, "lfc-dim", "lfc-small", ellipsize=True), False, False, 0)
+            if d.encrypted and d.locked:
+                detail = _("locked")
+            elif d.free is not None:
+                # Short text here; the bar shows the proportion, the tooltip the full numbers.
+                from linfilecopy.formatting import format_bytes
+
+                detail = f"{d.fs.label} · " + _("{free} free").format(free=format_bytes(d.free))
+            else:
+                detail = d.fs.label
+            detail_label = label(detail, "lfc-dim", "lfc-small", ellipsize=True)
+            detail_label.set_max_width_chars(18)     # keep the sidebar at its fixed width
+            detail_label.set_tooltip_text(f"{d.fs.label} · {capacity_text(d)}" if d.free is not None else detail)
+            text.pack_start(detail_label, False, False, 0)
+            if d.used_fraction is not None:
+                bar = capacity_bar(d.used_fraction, _("{drive}: {p}% used").format(drive=d.label, p=round(d.used_fraction * 100)))
+                bar.set_margin_top(3)
+                text.pack_start(bar, False, False, 0)
             row.pack_start(text, True, True, 0)
             if d.kind is DriveKind.REMOVABLE and (d.mounted or d.can_power_off):
                 b = button("action-eject", None, _("Eject {drive}").format(drive=d.label), flat=True)

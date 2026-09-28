@@ -12,11 +12,11 @@ GB = 1000**3
 def demo_drives() -> list[DriveInfo]:
     return [
         DriveInfo("/demo/home", "/dev/nvme0n1p3", "demo-home", "Home", "ext4", 1_000 * GB, ("/home",),
-                  DriveKind.INTERNAL, free=612 * GB),
+                  DriveKind.INTERNAL, free=612 * GB, capacity=1_000 * GB),
         DriveInfo("/demo/usb", "/dev/sdb1", "5E1A-90C2", "64 GB Stick", "exfat", 64 * GB, ("/media/sam/5E1A-90C2",),
-                  DriveKind.REMOVABLE, drive_path="/demo/drives/usb", can_power_off=True, ejectable=True, free=41 * GB),
+                  DriveKind.REMOVABLE, drive_path="/demo/drives/usb", can_power_off=True, ejectable=True, free=41 * GB, capacity=64 * GB),
         DriveInfo("/demo/t7", "/dev/sdc1", "demo-t7", "T7 Shield", "ext4", 1_000 * GB, ("/media/sam/T7",),
-                  DriveKind.REMOVABLE, drive_path="/demo/drives/t7", can_power_off=True, free=612 * GB),
+                  DriveKind.REMOVABLE, drive_path="/demo/drives/t7", can_power_off=True, free=60 * GB, capacity=1_000 * GB),
         replace(DriveInfo("/demo/md0", "/dev/md0", "demo-luks", "Archive", "crypto_LUKS", 8_000 * GB, (),
                           DriveKind.ARRAY, encrypted=True, locked=True), array_level="raid1"),
     ]

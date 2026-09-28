@@ -43,6 +43,7 @@ def main() -> int:
         tmp = tempfile.mkdtemp(prefix="lfc-shot-")
         for var in ("XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_STATE_HOME"):
             os.environ[var] = os.path.join(tmp, var.lower())
+    os.environ["LFC_NON_UNIQUE"] = "1"   # never talk to a LinFileCopy the user is running
     os.environ.setdefault("GTK_THEME", "Adwaita:dark" if args.style == "dark" else "Adwaita")
 
     import gi

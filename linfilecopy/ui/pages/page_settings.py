@@ -176,7 +176,16 @@ class SettingsPage(BasePage):
                 buttons.append(b)
             where = d.mount_point or d.device
             summary = d.fs.summary() if not d.encrypted or not d.locked else _("encrypted")
-            self.drives_list.add(row(d.label, f"{d.describe()} · {summary}\n{where}", drive_icon(d), buttons))
+            r = row(d.label, f"{d.describe()} · {summary}\n{where}", drive_icon(d), buttons)
+            if d.used_fraction is not None:
+                from linfilecopy.ui.components.component_common import capacity_bar, capacity_text
+
+                text_box = r.title_label.get_parent()
+                bar = capacity_bar(d.used_fraction, _("{drive}: {p}% used").format(drive=d.label, p=round(d.used_fraction * 100)))
+                bar.set_margin_top(4)
+                text_box.pack_start(bar, False, False, 0)
+                text_box.pack_start(label(capacity_text(d), "lfc-dim", "lfc-small"), False, False, 0)
+            self.drives_list.add(r)
         self.drives_list.show_all()
 
     def _unlock(self, drive: DriveInfo) -> None:

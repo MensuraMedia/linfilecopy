@@ -55,11 +55,19 @@ class DriveInfo:
     ejectable: bool = False
     system: bool = False       # boot/EFI/swap: hidden unless asked
     free: int | None = None    # filled by with_free_space()
+    capacity: int | None = None  # filesystem size in bytes (statvfs), filled with ``free``
     array_level: str = ""
 
     @property
     def mount_point(self) -> str | None:
         return self.mount_points[0] if self.mount_points else None
+
+    @property
+    def used_fraction(self) -> float | None:
+        """Share of the filesystem in use (0..1), or None when not mounted."""
+        if not self.capacity or self.free is None:
+            return None
+        return max(0.0, min(1.0, 1 - self.free / self.capacity))
 
     @property
     def mounted(self) -> bool:
@@ -197,7 +205,7 @@ def with_free_space(drive: DriveInfo) -> DriveInfo:
         return drive
     try:
         st = os.statvfs(drive.mount_point)
-        return replace(drive, free=st.f_bavail * st.f_frsize)
+        return replace(drive, free=st.f_bavail * st.f_frsize, capacity=st.f_blocks * st.f_frsize)
     except OSError:
         return drive
 

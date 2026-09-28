@@ -1,6 +1,7 @@
 """Gtk.Application: startup, actions, keyboard shortcuts and window creation."""
 from __future__ import annotations
 
+import os
 import sys
 import threading
 
@@ -40,7 +41,10 @@ class LinFileCopyApp(Gtk.Application):
     """Single-instance application."""
 
     def __init__(self) -> None:
-        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.FLAGS_NONE)
+        # Tests and screenshots set LFC_NON_UNIQUE so they never hand over to a running copy.
+        flags = Gio.ApplicationFlags.NON_UNIQUE if os.environ.get("LFC_NON_UNIQUE") else Gio.ApplicationFlags.FLAGS_NONE
+        super().__init__(application_id=APP_ID, flags=flags)
+        GLib.set_prgname(APP_ID)          # WM_CLASS: lets the desktop match the window to its menu entry and icon
         GLib.set_application_name(APP_NAME)
         self.ctx: AppContext | None = None
         self.window = None
