@@ -182,6 +182,69 @@ class StrategyTest(RunnerTestBase):
         self.assertFalse((self.dst / "stale").exists())
 
 
+class DesktopTestRegressionTest(RunnerTestBase):
+    """Found testing on a real desktop with a USB stick (2026-09-28)."""
+
+    def test_nested_missing_destination_is_created(self) -> None:
+        write(self.src / "a.txt", "a")
+        j = self.job()
+        j.destination.path = str(self.root / "stick" / "LinFileCopy-test" / "Documents")
+        run = self.run_job(j)
+        self.assertEqual(run.status, RunStatus.SUCCESS, run.message + run.fix)
+        self.assertTrue((self.root / "stick" / "LinFileCopy-test" / "Documents" / "a.txt").exists())
+
+    def test_never_creates_folders_where_a_drive_should_be_mounted(self) -> None:
+        from linfilecopy.engine.runner import ensure_parent
+
+        for dest in ("/media/nobody-lfc-test/USB/x", "/mnt/lfc-missing-drive/x", "/run/media/nobody-lfc-test/USB/x"):
+            self.assertIsNotNone(ensure_parent(dest), dest)
+        self.assertFalse(os.path.exists("/media/nobody-lfc-test"))
+
+    def test_failed_run_does_not_eject_the_drive(self) -> None:
+        from linfilecopy.engine.drives import DriveInfo
+        from linfilecopy.model.enums import DriveKind
+
+        mount = self.root / "usb"
+        mount.mkdir()
+        calls: list[str] = []
+        drive = DriveInfo("/fake/sdb1", "/dev/sdb1", "FAKE-1", "Stick", "ext4", 10**9, (str(mount),),
+                          DriveKind.REMOVABLE, drive_path="/fake/drive", can_power_off=True)
+
+        class FakeUDisks:
+            def list_drives(self):  # noqa: D401
+                return [drive]
+
+            def unmount(self, d):
+                calls.append("unmount")
+
+            def power_off(self, d):
+                calls.append("power_off")
+
+        write(self.src / "ok.txt", "x")
+        secret = self.src / "secret.txt"
+        write(secret, "no")
+        os.chmod(secret, 0)
+        try:
+            j = self.job()
+            j.destination.path = str(mount / "backup")
+            j.destination.volume_uuid, j.destination.relative_path = "FAKE-1", "backup"
+            j.destination.kind, j.destination.volume_label = DriveKind.REMOVABLE, "Stick"
+            j.drive.eject_after = True
+            self.services.udisks = FakeUDisks()
+            run = self.run_job(j)
+        finally:
+            os.chmod(secret, 0o644)
+        if os.geteuid() != 0:
+            self.assertEqual(run.status, RunStatus.FAILED)
+            self.assertEqual(calls, [])
+        # and a successful run does eject
+        os.unlink(secret)
+        calls.clear()
+        run = self.run_job(j)
+        self.assertEqual(run.status, RunStatus.SUCCESS, run.message)
+        self.assertEqual(calls, ["unmount", "power_off"])
+
+
 class SafetyRegressionTest(RunnerTestBase):
     def test_parallel_copy_folder_itself_goes_into_named_subfolder(self) -> None:
         write(self.src / "a" / "x.txt", "x")

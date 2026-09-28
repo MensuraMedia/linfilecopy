@@ -213,8 +213,10 @@ def _drive_steps(job: SyncJob, env: PlanEnv) -> tuple[list[Step], list[Step]]:
             if ep.kind is DriveKind.REMOVABLE and ep.volume_uuid:
                 name = ep.volume_label or _("the drive")
                 if not any(s.kind is StepKind.UNMOUNT and s.params.get("uuid") == ep.volume_uuid for s in after):
-                    after.append(Step(StepKind.UNMOUNT, _("unmount {drive}").format(drive=name), params={"uuid": ep.volume_uuid}))
-                after.append(Step(StepKind.POWER_OFF, _("eject {drive}").format(drive=name), params={"uuid": ep.volume_uuid}))
+                    after.append(Step(StepKind.UNMOUNT, _("unmount {drive}").format(drive=name),
+                                      params={"uuid": ep.volume_uuid, "for_eject": True}))
+                after.append(Step(StepKind.POWER_OFF, _("eject {drive}").format(drive=name),
+                                  params={"uuid": ep.volume_uuid, "for_eject": True}))
                 break
     return before, after
 

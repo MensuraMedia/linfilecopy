@@ -346,9 +346,10 @@ class JobRun:
                 self._run_step(step)
         except Exception as exc:  # noqa: BLE001 - includes RunCancelled: still lock the drive below
             failure = exc
-        # Always lock/unmount afterwards for safety; only eject after success.
+        # Always lock afterwards for safety; only eject (unmount + power off) after success,
+        # so a failed run leaves the drive mounted for a retry.
         for step in post:
-            if failure is not None and step.kind is StepKind.POWER_OFF:
+            if failure is not None and (step.kind is StepKind.POWER_OFF or step.params.get("for_eject")):
                 continue
             try:
                 self._run_step(step)
@@ -385,14 +386,8 @@ class JobRun:
     # rsync --------------------------------------------------------------------------
     def _step_rsync(self, step: Step) -> None:
         assert step.argv is not None
-        target = step.params.get("target")
-        if target and not (self.preview or self.dry_run):
-            # rsync creates only the last folder level. Create the snapshot or
-            # staging parent (the job's destination root), but only when its
-            # own parent exists, so an unmounted drive is never "created".
-            parent = os.path.dirname(target.rstrip("/"))
-            if not os.path.isdir(parent) and os.path.isdir(os.path.dirname(parent)):
-                os.makedirs(parent, exist_ok=True)
+        if not (self.preview or self.dry_run):
+            self.prepare_destination(step.params.get("target") or step.argv[-1])
         retries = 0 if (self.preview or self.dry_run) else self.job.logging.retries
         attempt = 0
         while True:
@@ -412,6 +407,12 @@ class JobRun:
                 self._sleep(delay)
                 continue
             raise StepFailed(info.message, info.fix, code)
+
+    def prepare_destination(self, dest: str) -> None:
+        """rsync creates only the last folder level: create the missing folders above it."""
+        error = ensure_parent(dest)
+        if error:
+            raise StepFailed(error, _("Connect and mount the drive, or choose a destination folder that exists."))
 
     def run_rsync(self, argv: list[str], preview: bool = False, stream: int | None = None) -> int:
         """Run one rsync process to completion, streaming progress. Returns its exit code.
@@ -535,6 +536,8 @@ class JobRun:
         from linfilecopy.engine import atomic, snapshots
 
         try:
+            if step.kind in (StepKind.HARDLINK_CLONE, StepKind.SWAP) and step.params.get("target"):
+                self.prepare_destination(step.params["target"])
             if step.kind is StepKind.HARDLINK_CLONE:
                 atomic.hardlink_clone(step.params["source"], step.params["target"], self._check_cancel)
             elif step.kind is StepKind.SWAP:
@@ -636,6 +639,33 @@ class JobRun:
 
 
 # ---------------------------------------------------------------------------
+
+def _is_mount_parent(path: str) -> bool:
+    """Folders where drives get mounted (/, /mnt, /media, /media/<user>, /run/media/<user>)."""
+    parts = os.path.normpath(path).strip("/").split("/") if path.strip("/") else []
+    return (not parts or parts in (["mnt"], ["media"], ["run"], ["run", "media"])
+            or (parts[0] == "media" and len(parts) == 2) or (parts[:2] == ["run", "media"] and len(parts) == 3))
+
+
+def ensure_parent(dest: str) -> str | None:
+    """Create the folders above ``dest``. Returns an error message instead of
+    creating anything when the nearest existing folder is a place where drives
+    are mounted: that means the drive is missing, and writing there would fill
+    the system disk."""
+    parent = os.path.dirname(os.path.normpath(dest.rstrip("/")))
+    if os.path.isdir(parent):
+        return None
+    existing = parent
+    while existing and not os.path.isdir(existing):
+        existing = os.path.dirname(existing)
+    if _is_mount_parent(existing or "/"):
+        return _("{path} does not exist. The drive may not be connected or mounted.").format(path=parent)
+    try:
+        os.makedirs(parent, exist_ok=True)
+    except OSError as exc:
+        return _("Could not create {path}: {err}").format(path=parent, err=exc.strerror)
+    return None
+
 
 def _overlaps(a: SyncJob, b: SyncJob) -> bool:
     """Two jobs should not run at once when they write to the same drive or folder tree."""

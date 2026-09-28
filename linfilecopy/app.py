@@ -45,6 +45,9 @@ class LinFileCopyApp(Gtk.Application):
         flags = Gio.ApplicationFlags.NON_UNIQUE if os.environ.get("LFC_NON_UNIQUE") else Gio.ApplicationFlags.FLAGS_NONE
         super().__init__(application_id=APP_ID, flags=flags)
         GLib.set_prgname(APP_ID)          # WM_CLASS: lets the desktop match the window to its menu entry and icon
+        from gi.repository import Gdk
+
+        Gdk.set_program_class(APP_ID)     # the class half of WM_CLASS (GTK set it before our code ran)
         GLib.set_application_name(APP_NAME)
         self.ctx: AppContext | None = None
         self.window = None

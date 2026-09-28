@@ -61,6 +61,9 @@ def explain(code: int) -> ExitInfo:
 def refine_with_stderr(info: ExitInfo, stderr_lines: list[str]) -> ExitInfo:
     """Make the fix specific when stderr shows a known cause."""
     text = "\n".join(stderr_lines[-50:]).lower()
+    if "mkdir" in text and "no such file or directory" in text:
+        return ExitInfo(info.code, info.status, _("A folder above the destination does not exist."),
+                        _("Check that the drive is mounted, or choose an existing folder."), False)
     if "no space left on device" in text:
         return ExitInfo(info.code, info.status, _("The destination drive is full."),
                         _("Free up space on the destination or choose a bigger drive."), False)

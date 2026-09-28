@@ -419,6 +419,7 @@ def run_twoway(run: "JobRun", step: "Step") -> None:
                 raise StepFailed(_("The {side} folder {path} is missing or empty, but it was synced before.").format(side=label, path=root),
                                  _("Check that the right drive is connected and mounted. To start over, delete and recreate the job."))
     elif not os.path.isdir(root_b) and not preview:
+        run.prepare_destination(root_b)
         os.makedirs(root_b, exist_ok=True)
     try:
         tree_a = scan(root_a, matcher, run._check_cancel, scanning(_("source")))

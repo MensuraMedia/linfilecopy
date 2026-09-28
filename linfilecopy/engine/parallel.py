@@ -98,6 +98,7 @@ def run_parallel(run: "JobRun", step: "Step") -> None:
     if not run.job.transfer.copy_contents:
         dest = os.path.join(dest, os.path.basename(source.rstrip("/")))
     template[-2:] = [source.rstrip("/") + "/", dest + "/"]
+    run.prepare_destination(dest)
     at = _rsync_index(template)
     template.insert(at + 2, "--from0")
     codes: dict[int, int] = {}
