@@ -33,7 +33,7 @@ ACCELS: dict[str, list[str]] = {
     "app.eject": ["<Control>e"],
     "app.shortcuts": ["<Control>question", "<Control>slash"],
     "app.quit": ["<Control>q"],
-    **{f"app.page({i})": [f"<Control>{i + 1}"] for i in range(6)},
+    **{f"app.page({i})": [f"<Control>{i + 1}"] for i in range(7)},
 }
 
 

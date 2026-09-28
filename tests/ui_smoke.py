@@ -90,7 +90,7 @@ class UiSmokeTest(unittest.TestCase):
                 designer.view_switch.set_value("advanced")
                 for sec in designer.sections.values():
                     sec.set_expanded(True)
-                for page_id in ("dashboard", "designer", "transfers", "history", "scheduler", "settings"):
+                for page_id in ("dashboard", "quickview", "designer", "transfers", "history", "scheduler", "settings"):
                     win.show_page(page_id)
                     while Gtk.events_pending():
                         Gtk.main_iteration()
@@ -108,7 +108,7 @@ class UiSmokeTest(unittest.TestCase):
             app.run([sys.argv[0]])
         finally:
             sys.excepthook = old_hook
-        self.assertEqual(visited, ["dashboard", "designer", "transfers", "history", "scheduler", "settings"])
+        self.assertEqual(visited, ["dashboard", "quickview", "designer", "transfers", "history", "scheduler", "settings"])
         self.assertEqual(errors, [])
         self.assertEqual(sorted(set(problems)), [])
 

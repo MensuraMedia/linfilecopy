@@ -12,6 +12,7 @@ from linfilecopy.ui.icons import SIZE_NAV, icon, icon_name  # noqa: E402
 
 NAV_ITEMS: list[tuple[str, str]] = [
     ("dashboard", _("Dashboard")),
+    ("quickview", _("Quick View")),
     ("designer", _("Job Designer")),
     ("transfers", _("Active Transfers")),
     ("history", _("History & Logs")),

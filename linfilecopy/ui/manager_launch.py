@@ -36,36 +36,42 @@ def needs_delete_confirmation(ctx: AppContext, job: SyncJob) -> bool:
         job.mode is Mode.MIRROR or (job.mode is Mode.TWO_WAY and not job.twoway.use_trash))
 
 
-def start_interactive(ctx: AppContext, job: SyncJob, trigger: Trigger = Trigger.MANUAL) -> None:
-    """Start ``job`` the way a person expects, with every safety prompt."""
+def start_interactive(ctx: AppContext, job: SyncJob, trigger: Trigger = Trigger.MANUAL, stay: bool = False) -> None:
+    """Start ``job`` the way a person expects, with every safety prompt.
+
+    ``stay`` keeps the current page (Quick View shows its own progress bar)
+    instead of switching to Active Transfers.
+    """
     if ctx.runs is None:
         return
     if ctx.preview_mode:
         open_preview(ctx, job, allow_run=False)
     elif job.preview_first:
-        open_preview(ctx, job, allow_run=True, trigger=trigger)
+        open_preview(ctx, job, allow_run=True, trigger=trigger, stay=stay)
     else:
-        confirm_and_run(ctx, job, None, trigger)
+        confirm_and_run(ctx, job, None, trigger, stay)
 
 
-def open_preview(ctx: AppContext, job: SyncJob, allow_run: bool = True, trigger: Trigger = Trigger.MANUAL) -> None:
+def open_preview(ctx: AppContext, job: SyncJob, allow_run: bool = True, trigger: Trigger = Trigger.MANUAL,
+                 stay: bool = False) -> None:
     """Preview dialog; "Run for real" runs exactly the job that was previewed."""
     if ctx.runs is None:
         return
     snapshot = copy.deepcopy(job)
     run = ctx.runs.start(snapshot, preview=True)
     dest = job.destination.volume_label or job.destination.path
-    callback = (lambda: confirm_and_run(ctx, snapshot, run, trigger)) if allow_run and not ctx.preview_mode else None
+    callback = (lambda: confirm_and_run(ctx, snapshot, run, trigger, stay)) if allow_run and not ctx.preview_mode else None
     PreviewDialog(ctx.window, run, callback, dest)
 
 
-def confirm_and_run(ctx: AppContext, job: SyncJob, preview_run: JobRun | None, trigger: Trigger = Trigger.MANUAL) -> None:
+def confirm_and_run(ctx: AppContext, job: SyncJob, preview_run: JobRun | None, trigger: Trigger = Trigger.MANUAL,
+                    stay: bool = False) -> None:
     if ctx.runs is None:
         return
     job = copy.deepcopy(job)
     if needs_delete_confirmation(ctx, job):
         if preview_run is None:
-            _preview_then(ctx, job, lambda run: confirm_and_run(ctx, job, run, trigger))
+            _preview_then(ctx, job, lambda run: confirm_and_run(ctx, job, run, trigger, stay))
             return
         dels = deletions(preview_run.changes)
         if dels:
@@ -73,7 +79,7 @@ def confirm_and_run(ctx: AppContext, job: SyncJob, preview_run: JobRun | None, t
             if not confirm_delete(ctx.window, dels, job.name, dest_label, job.source.path):
                 return
     ctx.runs.start(job, trigger)
-    if ctx.window is not None:
+    if ctx.window is not None and not stay:
         ctx.window.show_page("transfers")
 
 

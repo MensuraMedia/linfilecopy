@@ -86,6 +86,7 @@ Any distribution, without root (installs into `~/.local`):
 ./install.sh --check    # lists missing system packages and how to install them
 ./install.sh --user     # app in ~/.local/share/linfilecopy, launcher in ~/.local/bin, menu entry and icons
 ./install.sh --uninstall   # removes the --user install; your jobs and history are kept
+./install.sh --dev      # menu entry "LinFileCopy (development)" that runs this checkout directly
 ```
 
 To run straight from the checkout without installing: `python3 -m linfilecopy`.
@@ -95,7 +96,9 @@ Rebuild the package with `tools/build_deb.sh`. Debian source packaging is in
 
 ## Usage
 
-1. **Job Designer:** pick the source and destination. Use the drive button, Browse, or drag
+1. **Quick View:** every job with its source → destination and when it runs. **Run now** starts
+   it (with the usual preview and delete confirmation) and shows a live progress bar.
+2. **Job Designer:** pick the source and destination. Use the drive button, Browse, or drag
    a folder from your file manager. Then choose Copy, Mirror or Two-way.
 2. The panel on the right shows the exact command and any problems, each with a suggested fix.
 3. **Preview** lists every change. **Start** runs the job (with a preview first, if that is on).
@@ -115,7 +118,7 @@ linfilecopy run      <job-id>         # run (exit 0 ok, 1 failed, 3 cancelled, 4
 ### Keyboard shortcuts
 
 Ctrl+N new job · Ctrl+S save · Ctrl+Return start · Ctrl+Shift+P preview · Ctrl+Shift+C copy
-command · Ctrl+E eject · Ctrl+1…6 pages · Space / Esc pause / cancel (Transfers) · Ctrl+? all
+command · Ctrl+E eject · Ctrl+1…7 pages · Space / Esc pause / cancel (Transfers) · Ctrl+? all
 shortcuts
 
 ### Where things are stored

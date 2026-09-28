@@ -307,9 +307,12 @@ class Segmented(Gtk.Box):
         active: str,
         on_change: Callable[[str], None] | None = None,
         tooltips: dict[str, str] | None = None,
+        linked: bool = True,
     ) -> None:
-        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-        add_classes(self, "linked")
+        """``linked=False`` draws separate buttons (still one choice at a time)."""
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=0 if linked else 6)
+        if linked:
+            add_classes(self, "linked")
         self.set_halign(Gtk.Align.START)
         self.buttons: dict[str, Gtk.ToggleButton] = {}
         self._value = active

@@ -7,6 +7,8 @@ Source: Phosphor Icons v2.0.8 (MIT, see LICENSE-phosphor).
 |---|---|---|---|
 | `lfc-nav-dashboard-symbolic` | squares-four | regular | Dashboard page |
 | `lfc-nav-dashboard-active-symbolic` | squares-four | fill | Dashboard page (selected) |
+| `lfc-nav-quickview-symbolic` | rocket-launch | regular | Quick View page (run any job at once) |
+| `lfc-nav-quickview-active-symbolic` | rocket-launch | fill | Quick View page (selected) |
 | `lfc-nav-designer-symbolic` | sliders-horizontal | regular | Job Designer page |
 | `lfc-nav-designer-active-symbolic` | sliders-horizontal | fill | Job Designer page (selected) |
 | `lfc-nav-transfers-symbolic` | pulse | regular | Active Transfers page |

@@ -10,8 +10,9 @@ def build_pages(ctx: AppContext) -> list[BasePage]:
     from linfilecopy.ui.pages.page_dashboard import DashboardPage
     from linfilecopy.ui.pages.page_designer import DesignerPage
     from linfilecopy.ui.pages.page_history import HistoryPage
+    from linfilecopy.ui.pages.page_quickview import QuickViewPage
     from linfilecopy.ui.pages.page_scheduler import SchedulerPage
     from linfilecopy.ui.pages.page_settings import SettingsPage
     from linfilecopy.ui.pages.page_transfers import TransfersPage
 
-    return [cls(ctx) for cls in (DashboardPage, DesignerPage, TransfersPage, HistoryPage, SchedulerPage, SettingsPage)]
+    return [cls(ctx) for cls in (DashboardPage, QuickViewPage, DesignerPage, TransfersPage, HistoryPage, SchedulerPage, SettingsPage)]

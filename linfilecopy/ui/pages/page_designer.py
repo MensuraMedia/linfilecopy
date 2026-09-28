@@ -104,7 +104,9 @@ class DesignerPage(BasePage):
         top.pack_start(self.name_entry, True, True, 0)
         self.view_switch = Segmented([("simple", _("Simple"), None), ("advanced", _("Advanced"), None)],
                                      "simple" if self.ctx.settings.simple_view_default else "advanced",
-                                     lambda v: self._set_view(v))
+                                     lambda v: self._set_view(v), linked=False,
+                                     tooltips={"simple": _("Only the ten basic options"),
+                                               "advanced": _("Every option, grouped by topic")})
         more = Gtk.MenuButton()
         more.add(icon("action-more"))
         more.set_tooltip_text(_("More job actions"))

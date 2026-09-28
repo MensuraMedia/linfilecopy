@@ -5,6 +5,8 @@
 #                             Other systems: same as --user.
 #   ./install.sh --user       Install for this user only, no root: ~/.local/share/linfilecopy,
 #                             launcher in ~/.local/bin, menu entry and icons in ~/.local/share.
+#   ./install.sh --dev        Menu launcher that runs this checkout (for development and testing:
+#                             code changes take effect at the next start, nothing is copied).
 #   ./install.sh --check      Only check the required system packages.
 #   ./install.sh --uninstall  Remove a --user install (use 'sudo apt remove linfilecopy' for the package).
 #
@@ -70,6 +72,7 @@ install_deb() {
     if [ -f "$SRC/releases/SHA256SUMS" ]; then
         (cd "$SRC/releases" && sha256sum -c --ignore-missing SHA256SUMS) || die "checksum mismatch for $deb"
     fi
+    remove_dev   # the installed app replaces the development launcher
     say "Installing $(basename "$deb") with apt (this asks for your password)…"
     sudo apt-get install -y "$deb"
     say "Done. Start LinFileCopy from the applications menu or run: linfilecopy"
@@ -77,6 +80,7 @@ install_deb() {
 
 install_user() {
     check || die "missing required packages (see above)"
+    remove_dev
     say "Installing for $(id -un) into $DATA_HOME/linfilecopy …"
     rm -rf "$APP_DIR"
     mkdir -p "$APP_DIR" "$BIN_DIR"
@@ -104,7 +108,35 @@ EOF
     case ":$PATH:" in *":$BIN_DIR:"*) ;; *) say "Tip: add $BIN_DIR to your PATH to run 'linfilecopy' directly." ;; esac
 }
 
+DEV_ID=$APP_ID.Devel
+
+install_dev() {
+    check || die "missing required packages (see above)"
+    mkdir -p "$BIN_DIR" "$DATA_HOME/applications"
+    cat > "$BIN_DIR/linfilecopy-dev" <<EOF
+#!/bin/sh
+# LinFileCopy development launcher (install.sh --dev): runs the checkout at $SRC
+PYTHONPATH="$SRC\${PYTHONPATH:+:\$PYTHONPATH}" exec python3 -m linfilecopy "\$@"
+EOF
+    chmod 755 "$BIN_DIR/linfilecopy-dev"
+    # Icons as for a normal install; the menu entry gets its own id and name.
+    "$SRC/packaging/install-data.sh" "$HOME/.local" >/dev/null
+    rm -f "$DATA_HOME/applications/$APP_ID.desktop" "$DATA_HOME/metainfo/$APP_ID.metainfo.xml"
+    sed -e "s|^Exec=linfilecopy|Exec=$BIN_DIR/linfilecopy-dev|" \
+        -e "s|^Name=LinFileCopy|Name=LinFileCopy (development)|" \
+        -e "s|^Comment=.*|Comment=Runs LinFileCopy from $SRC|" \
+        "$SRC/packaging/$APP_ID.desktop" > "$DATA_HOME/applications/$DEV_ID.desktop"
+    command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database -q "$DATA_HOME/applications" || true
+    command -v gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -q -t "$DATA_HOME/icons/hicolor" 2>/dev/null || true
+    say "Added 'LinFileCopy (development)' to the applications menu. It runs $SRC."
+}
+
+remove_dev() {
+    rm -f "$BIN_DIR/linfilecopy-dev" "$DATA_HOME/applications/$DEV_ID.desktop"
+}
+
 uninstall_user() {
+    remove_dev
     rm -rf "$DATA_HOME/linfilecopy/app"
     rm -f "$BIN_DIR/linfilecopy" "$DATA_HOME/applications/$APP_ID.desktop" "$DATA_HOME/metainfo/$APP_ID.metainfo.xml"
     find "$DATA_HOME/icons/hicolor" -name "$APP_ID*" -delete 2>/dev/null || true
@@ -116,6 +148,7 @@ uninstall_user() {
 case "${1:-}" in
     --check) check ;;
     --user) install_user ;;
+    --dev) install_dev ;;
     --uninstall) uninstall_user ;;
     "")
         if command -v apt-get >/dev/null 2>&1 && ls "$SRC"/releases/linfilecopy_*_all.deb >/dev/null 2>&1; then
@@ -123,6 +156,6 @@ case "${1:-}" in
         else
             install_user
         fi ;;
-    -h|--help) sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//' ;;
+    -h|--help) sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//' ;;
     *) die "unknown option $1 (see --help)" ;;
 esac

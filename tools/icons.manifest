@@ -6,6 +6,8 @@
 # --- navigation -----------------------------------------------------------
 nav-dashboard            squares-four             regular  Dashboard page
 nav-dashboard-active     squares-four             fill     Dashboard page (selected)
+nav-quickview            rocket-launch            regular  Quick View page (run any job at once)
+nav-quickview-active     rocket-launch            fill     Quick View page (selected)
 nav-designer             sliders-horizontal       regular  Job Designer page
 nav-designer-active      sliders-horizontal       fill     Job Designer page (selected)
 nav-transfers            pulse                    regular  Active Transfers page

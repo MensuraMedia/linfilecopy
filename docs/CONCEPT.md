@@ -363,7 +363,7 @@ The main choices:
 | Ctrl+N | New job | | Ctrl+S | Save job |
 | Ctrl+Return | Start | | Ctrl+Shift+P | Preview |
 | Space (Transfers) | Pause/Resume | | Escape (Transfers) | Cancel (asks first) |
-| Ctrl+Shift+C | Copy command | | Ctrl+1…6 | Switch page |
+| Ctrl+Shift+C | Copy command | | Ctrl+1…7 | Switch page |
 | Ctrl+E | Eject destination drive | | Ctrl+? | Shortcuts window |
 
 ## 9. Persistence
