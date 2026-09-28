@@ -7,4 +7,5 @@
 - [ ] rclone/cloud intentionally out of scope (local storage only)
 - [x] Coloured status icons in History and Preview
 - [ ] Translations beyond the .pot template
-- [ ] Manual check on real desktop and drives: eject, drive-connected trigger, LUKS unlock, tray, notifications
+- [x] Real desktop verified 2026-09-28: copy to exFAT stick, eject, Quick View progress, tray, close-to-tray
+- [ ] Drive-connected trigger: needs a physical re-plug; LUKS unlock: no encrypted drive available
