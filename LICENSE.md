@@ -58,8 +58,7 @@ terms are the **Creative Commons Attribution–NonCommercial 4.0 International P
 
 Where anything on this page and the official CC BY‑NC 4.0 text differ, the official text governs.
 
-SPDX‑License‑Identifier: CC‑BY‑NC‑4.0
-
+SPDX-License-Identifier: CC-BY-NC-4.0
 ## No warranty
 
 To the extent permitted by law, the software is provided **“as is”**, without warranty of any
