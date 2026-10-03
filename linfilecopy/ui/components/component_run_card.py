@@ -1,13 +1,15 @@
 """Live card for one run (B3, B4, #11): progress, speed graph, metrics, log, controls."""
 from __future__ import annotations
 
+import math
 import time
 from typing import Callable
 
+import cairo
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk  # noqa: E402
+from gi.repository import GLib, Gtk  # noqa: E402
 
 from linfilecopy.engine.runner import JobRun  # noqa: E402
 from linfilecopy.formatting import format_bytes, format_duration  # noqa: E402
@@ -80,6 +82,120 @@ class Sparkline(Gtk.DrawingArea):
         return False
 
 
+class ProgressRing(Gtk.DrawingArea):
+    """Compact circular progress: a coloured arc over a dim track with the
+    percentage in the centre. The colour follows the run's status. While the
+    run is indeterminate (running, no percentage yet) a short arc rotates,
+    mirroring the progress bar's pulse."""
+
+    SPIN_MS = 33          # ~30 fps while indeterminate
+    SPIN_STEP = 0.13      # radians per frame
+    SWEEP = math.pi * 0.55  # length of the spinning arc
+
+    def __init__(self, diameter: int = 50) -> None:
+        super().__init__()
+        self.set_size_request(diameter, diameter)
+        self._fraction = 0.0
+        self._text = ""
+        self._token = "lfc_accent"
+        self._indeterminate = False
+        self._spin = -math.pi / 2
+        self._anim_id = 0
+        self.connect("draw", self._draw)
+        self.connect("map", lambda *_: self._sync_anim())
+        self.connect("unmap", lambda *_: self._stop_anim())
+        self.connect("destroy", lambda *_: self._stop_anim())
+        self.get_accessible().set_name(_("Progress"))
+
+    def set_progress(self, fraction: float, text: str, token: str,
+                     indeterminate: bool = False) -> None:
+        self._fraction = max(0.0, min(1.0, fraction))
+        self._text = text
+        self._token = token
+        if indeterminate != self._indeterminate:
+            self._indeterminate = indeterminate
+            self._sync_anim()
+        self.queue_draw()
+
+    # ----- indeterminate animation lifecycle ----------------------------------
+    def _sync_anim(self) -> None:
+        if self._indeterminate and self._anim_id == 0 and self.get_mapped():
+            self._anim_id = GLib.timeout_add(self.SPIN_MS, self._on_frame)
+        elif not self._indeterminate:
+            self._stop_anim()
+
+    def _stop_anim(self) -> None:
+        if self._anim_id:
+            GLib.source_remove(self._anim_id)
+            self._anim_id = 0
+
+    def _on_frame(self) -> bool:
+        if not self._indeterminate:
+            self._anim_id = 0
+            return GLib.SOURCE_REMOVE
+        self._spin = (self._spin + self.SPIN_STEP) % (2 * math.pi)
+        self.queue_draw()
+        return GLib.SOURCE_CONTINUE
+
+    # ----- drawing ------------------------------------------------------------
+    def _draw(self, widget: Gtk.Widget, cr) -> bool:  # type: ignore[no-untyped-def]
+        w, h = widget.get_allocated_width(), widget.get_allocated_height()
+        size = min(w, h)
+        if size < 8:
+            return False
+        cx, cy = w / 2.0, h / 2.0
+        lw = max(3.0, size * 0.12)
+        r = size / 2.0 - lw / 2.0 - 1.0
+        ctx = widget.get_style_context()
+        _t, trough = ctx.lookup_color("lfc_trough")
+        _c, col = ctx.lookup_color(self._token)
+        fg = ctx.get_color(widget.get_state_flags())
+
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.set_line_width(lw)
+        # track
+        cr.set_source_rgba(trough.red, trough.green, trough.blue, 1.0)
+        cr.arc(cx, cy, r, 0, 2 * math.pi)
+        cr.stroke()
+
+        top = -math.pi / 2  # 12 o'clock
+        if self._indeterminate:
+            a0 = self._spin
+            self._arc(cr, cx, cy, r, a0, a0 + self.SWEEP, col, lw)
+        elif self._fraction > 0:
+            self._arc(cr, cx, cy, r, top, top + 2 * math.pi * self._fraction, col, lw)
+
+        if self._text:
+            cr.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
+                                cairo.FONT_WEIGHT_BOLD)
+            cr.set_font_size(size * 0.27)
+            ext = cr.text_extents(self._text)
+            cr.move_to(cx - ext.width / 2 - ext.x_bearing,
+                       cy - ext.height / 2 - ext.y_bearing)
+            cr.set_source_rgba(fg.red, fg.green, fg.blue, fg.alpha)
+            cr.show_text(self._text)
+        return False
+
+    def _arc(self, cr, cx, cy, r, a0, a1, col, lw) -> None:  # type: ignore[no-untyped-def]
+        # A linear gradient from top to bottom-right across the ring gives the
+        # arc a soft two-tone sweep (like the reference ring) while staying on
+        # the app's accent/status colour. Round caps match the progress bar.
+        light = _blend(col, (1.0, 1.0, 1.0), 0.28)
+        grad = cairo.LinearGradient(cx, cy - r, cx + r, cy + r)
+        grad.add_color_stop_rgba(0.0, col.red, col.green, col.blue, 1.0)
+        grad.add_color_stop_rgba(1.0, *light, 1.0)
+        cr.set_source(grad)
+        cr.arc(cx, cy, r, a0, a1)
+        cr.stroke()
+
+
+def _blend(c, white, t: float):  # type: ignore[no-untyped-def]
+    """Lighten a Gdk.RGBA toward white by fraction t; returns an (r,g,b) tuple."""
+    return (c.red + (white[0] - c.red) * t,
+            c.green + (white[1] - c.green) * t,
+            c.blue + (white[2] - c.blue) * t)
+
+
 class RunCardWidget(Gtk.Box):
     """One card; call :meth:`update` whenever the run changes."""
 
@@ -132,9 +248,15 @@ class RunCardWidget(Gtk.Box):
                                "lfc-dim", "lfc-small", ellipsize=True), False, True, 0)
         self.pack_start(route, False, False, 0)
 
+        prog_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        self.ring = ProgressRing(50)
+        self.ring.set_valign(Gtk.Align.CENTER)
+        prog_row.pack_start(self.ring, False, False, 0)
         self.bar = Gtk.ProgressBar()
         add_classes(self.bar, "lfc-progress")
-        self.pack_start(self.bar, False, False, 0)
+        self.bar.set_valign(Gtk.Align.CENTER)
+        prog_row.pack_start(self.bar, True, True, 0)
+        self.pack_start(prog_row, False, False, 0)
 
         # Four columns when wide, two when narrow.
         metrics = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, homogeneous=True, min_children_per_line=2,
@@ -228,6 +350,17 @@ class RunCardWidget(Gtk.Box):
             self.bar.pulse()
         else:
             self.bar.set_fraction(s.fraction if s.percent else 0.0)
+
+        # Circular glance indicator next to the bar, coloured by status.
+        if run.status is RunStatus.SUCCESS:
+            self.ring.set_progress(1.0, "100%", "lfc_ok")
+        elif run.status is RunStatus.RUNNING and s.percent == 0 and s.bytes_done == 0:
+            self.ring.set_progress(0.0, "", "lfc_accent", indeterminate=True)
+        else:
+            token = {"info": "lfc_accent", "ok": "lfc_ok", "err": "lfc_err",
+                     "warn": "lfc_warn"}.get(kind, "lfc_dim")
+            self.ring.set_progress(s.fraction if s.percent else 0.0,
+                                   f"{s.percent}%" if s.percent else "", token)
 
         total = s.bytes_total_estimate
         self.metric_values["copied"].set_text(
