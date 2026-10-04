@@ -103,9 +103,12 @@ in the catalog (§6/§7), written durably so any stage can resume.
    *Content-verified* is on, confirm/repair via magic-byte / MIME sniffing (stdlib
    `mimetypes` + a small built-in signature table — **no external `python-magic`**). →
    `planned`.
-3. **Plan** — compute each destination path `dest/files_<category>/files_<subtype>/<name>`,
-   **resolve duplicate-name and duplicate-content collisions (§5)** assigning each file a
-   final, reserved `dest_path`, and estimate totals for the **preview**. Nothing written yet.
+3. **Plan** — evaluate the **prompt rules** (size / folder-size / complexity / signature such as a
+   `venv` → predesignated action; see [CRITICAL_MASS_PROMPT_RULES.md](CRITICAL_MASS_PROMPT_RULES.md))
+   and surface their coalesced prompts in the preview; then compute each surviving file's
+   destination path `dest/files_<category>/files_<subtype>/<name>`, **resolve duplicate-name and
+   duplicate-content collisions (§5)** assigning each file a final, reserved `dest_path`, and
+   estimate totals for the **preview**. Nothing written yet.
 4. **Copy** — execute with **rsync** (the only engine) driven by per-bucket `--files-from`
    NUL-separated lists, with resilience flags (§7) so partial transfers survive interruption.
    The existing runner, progress parser, pause/resume and logging all apply. → `copied`.
