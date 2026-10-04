@@ -260,6 +260,12 @@ committed before the corresponding filesystem action is considered done.
 UUID**, not mount path, so a drive that reconnects at a different mountpoint is still matched to
 its catalog rows.
 
+**Feeds the persistent Index.** On every run, the catalog's per-file records (origin path +
+source drive, hash, final `dest_path` including any `_copy_NN` rename, verification) are also
+appended to a persistent, cross-run **Index** that outlives this destination. That Index later
+powers **Smart File Organization** and **Smart-Link** (hard-link/symlink re-designation so other
+apps still reach moved files). See [INDEX_AND_SMART_ORGANIZATION.md](INDEX_AND_SMART_ORGANIZATION.md).
+
 ## 7. Resumability & interruption tolerance
 
 Critical Mass is designed to **survive power outages, USB/SATA drop-outs, latency and

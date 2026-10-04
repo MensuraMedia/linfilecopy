@@ -10,3 +10,9 @@
 - [x] Real desktop verified 2026-09-28: copy to exFAT stick, eject, Quick View progress, tray, close-to-tray
 - [x] Drive-connected trigger verified on physical re-plug (2026-09-28), two-way propagated both directions
 - [ ] LUKS unlock/lock: not tested (no encrypted drive available)
+
+## Roadmap — Critical Mass & Smart Organization (concept docs; not implemented)
+- [ ] **Critical Mass** page: aggressive multi-source capture → type/subtype-sorted copy with duplicate-name handling, end-to-end verification, interruption-tolerant resume, and opt-in verified-move delete. Concept: `docs/CRITICAL_MASS.md`
+- [ ] **Persistent Index (near-term, with Critical Mass):** on every run, record each file's original path + source drive, destination path and name-at-destination (incl. `_copy_NN` renames) to a per-run JSONL + master sqlite under `~/.local/share/linfilecopy/index/`. Concept: `docs/INDEX_AND_SMART_ORGANIZATION.md` §2
+- [ ] **Smart File Organization (future/advanced):** index-driven re-sort, global dedup, reconstruct-original-view, reversible undo. Doc §3
+- [ ] **Smart-Link (future/advanced):** hard-link (same-fs, zero-copy, inode re-designation) / symlink (cross-fs) placement so other apps still reach moved files, with index-maintained self-healing relink; integrates with the verified-move delete (replace source with link). Doc §4, capability-gated
