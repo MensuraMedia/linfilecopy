@@ -11,7 +11,10 @@
 - [x] Drive-connected trigger verified on physical re-plug (2026-09-28), two-way propagated both directions
 - [ ] LUKS unlock/lock: not tested (no encrypted drive available)
 
-## Roadmap — Critical Mass & Smart Organization (concept docs; not implemented)
+## Roadmap — "Capture & Organize" suite (concept docs; not implemented)
+Overview + pick-up guide: `docs/HANDOFF.md` §5–§6 (reading order, how the pieces fit, and the
+suggested build order). Five cross-linked concept docs below; all Proposed, none implemented.
+Suggested build order: hashindex → Duplicates → catalog+prompt_rules → Critical Mass → Smart-Link/Organize.
 - [ ] **Critical Mass** page: aggressive multi-source capture → type/subtype-sorted copy with duplicate-name handling, end-to-end verification, interruption-tolerant resume, and opt-in verified-move delete. Concept: `docs/CRITICAL_MASS.md`
 - [ ] **Critical Mass Prompt Rules:** data-driven rule engine evaluated at Plan time that prompts for a predesignated action by file size (≥512 MiB/≥4 GiB; FAT 4 GiB block), folder size (≥5 GiB), complexity/file-count (≥50k, tiny-file ratio) and signature (venv/node_modules/.git/__pycache__/build/caches/OS-cruft/app-bundles). Actions include/preserve-tree/bundle/quarantine/skip/exclude; user-editable JSON, severity+priority+remembered decisions, coalesced prompts (never per-file), skips never delete. Concept: `docs/CRITICAL_MASS_PROMPT_RULES.md`
 - [ ] **Persistent Index (near-term, with Critical Mass):** on every run, record each file's original path + source drive, destination path and name-at-destination (incl. `_copy_NN` renames) to a per-run JSONL + master sqlite under `~/.local/share/linfilecopy/index/`. Concept: `docs/INDEX_AND_SMART_ORGANIZATION.md` §2

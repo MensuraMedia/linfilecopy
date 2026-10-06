@@ -3,7 +3,12 @@
 
 ## Session Logs
 <!-- Add newest first -->
+- [2026-10-05 Capture & Organize concepts](sessions/2026-10-05_capture-organize-concepts.md) — 5 concept docs + progress ring; handoff written
 - [2026-09-27 initial build](sessions/2026-09-27_2340_initial-build.md) — concept → v0.1.0 in one session
+
+## Design concepts (proposed, not implemented)
+- Handoff / pick-up guide: `docs/HANDOFF.md`
+- Capture & Organize suite: `docs/CRITICAL_MASS.md`, `docs/CRITICAL_MASS_PROMPT_RULES.md`, `docs/DUPLICATES.md`, `docs/INDEX_AND_SMART_ORGANIZATION.md` · roadmap in `pending.md`
 
 ## Changes
 <!-- Add newest first -->
