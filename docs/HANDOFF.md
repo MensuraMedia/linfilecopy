@@ -29,6 +29,7 @@ python3 -m unittest discover -s tests       # 157 tests, no display needed
 xvfb-run -a python3 -m unittest tests.ui_smoke   # UI smoke (needs a display)
 python3 tools/vendor_icons.py && tools/build_resources.sh   # after icon/CSS edits
 tools/build_deb.sh ; ./install.sh           # package + install (apt; ./install.sh --user elsewhere)
+scripts/backup.sh                           # timestamped tar.gz + sha256 -> ~/backups/linfilecopy (keeps last 10)
 ```
 
 Live display here is Cinnamon/X11 on `DISPLAY=:0`. Use `LFC_NON_UNIQUE=1` for screenshots/tests
@@ -104,10 +105,12 @@ manifest + memory, then commit & push per the per-feature convention.
 ## 7. Related project — orico-keepalive
 
 `/home/user/projects/orico-keepalive` (keeps the Orico USB bay awake; see memory
-`external-drives-and-keepalive`). It is a **local git repo** (commit `3d26cd5`, branch `main`) that
+`external-drives-and-keepalive`). It is a **local git repo** (HEAD `3d1893b`, branch `main`) that
 is **not yet pushed** — creating its GitHub repo is a deliberate **backlog** item (`BACKLOG.md`
-there), per the owner. Its `docs/CONCEPT.md` generalises the keepalive to all connected storage;
-that generalisation is also backlog, not built.
+there), per the owner. Until that exists it has **no off-repo copy but local backups**: it now has
+its own `scripts/backup.sh` (same house convention) writing to `~/backups/orico-keepalive`. Its
+`docs/CONCEPT.md` generalises the keepalive to all connected storage; that generalisation is also
+backlog, not built.
 
 ## 8. Invariants & conventions (don't break)
 
