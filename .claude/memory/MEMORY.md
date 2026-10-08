@@ -3,8 +3,13 @@
 
 ## Session Logs
 <!-- Add newest first -->
+- [2026-10-08 separate buttons + multi-source](sessions/2026-10-08_separate-buttons-multi-source.md) — menu launcher, installer refresh, two Designer features shipped
 - [2026-10-05 Capture & Organize concepts](sessions/2026-10-05_capture-organize-concepts.md) — 5 concept docs + progress ring; handoff written
 - [2026-09-27 initial build](sessions/2026-09-27_2340_initial-build.md) — concept → v0.1.0 in one session
+
+## Shipped feature docs (implemented)
+- Multi-source Copy: `docs/MULTI_SOURCE.md` (SyncJob.extra_sources[]; Copy-only; several folders → one destination)
+- Choice controls / separate buttons: `docs/UI_CONTROLS.md` (Segmented linked=False default)
 
 ## Design concepts (proposed, not implemented)
 - Handoff / pick-up guide: `docs/HANDOFF.md`
@@ -12,6 +17,8 @@
 
 ## Changes
 <!-- Add newest first -->
+- [Separate buttons + multi-source Copy](changes/2026-10-08_separate-buttons-multi-source.md)
+- [Active-Transfers progress ring](changes/2026-10-02_transfers-progress-ring.md)
 - [UI review fixes](changes/2026-09-28_ui-review-fixes.md)
 - [Data-safety fixes](changes/2026-09-28_data-safety-fixes.md)
 - [P7–P9 triggers, polish, packaging](changes/2026-09-28_p7-p9-triggers-polish-packaging.md)

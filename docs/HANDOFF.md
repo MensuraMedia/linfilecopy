@@ -1,9 +1,10 @@
 # LinFileCopy — Handoff
 
-**Last updated:** 2026-10-05
-**Repo:** https://github.com/MensuraMedia/linfilecopy (default branch `main`, HEAD `e0a36d3`)
-**Status:** v0.1.0 shipped and packaged (157 tests passing). Actively designing a
-**"Capture & Organize" feature suite** — five concept docs landed, none implemented yet.
+**Last updated:** 2026-10-08
+**Repo:** https://github.com/MensuraMedia/linfilecopy (default branch `main`, latest code `08af1b8`)
+**Status:** v0.1.0 shipped and packaged (157 tests passing). Two Designer features
+landed since (separate choice buttons + multi-source Copy, §4.1). Still actively
+designing the **"Capture & Organize" feature suite** — five concept docs, none implemented yet.
 **Owner:** MensuraMedia (`lin-*` desktop app series).
 
 This is the practical "pick it up and keep going" document. Design rationale is in
@@ -50,9 +51,29 @@ gtk-python-dashboard-starter): `page_*.py`→`*Page(BasePage)`, `component_*.py`
   Settings; rsync builder + runner; native two-way sync; snapshots; drive management (UDisks2);
   inotify + drive-connected triggers; Ayatana tray; systemd/cron scheduling; Debian package +
   installers; 157 tests.
-- **Most recent code change:** compact Cairo **`ProgressRing`** added to Active-Transfers run cards
-  (`ui/components/component_run_card.py`, commit `301bc56`) — reused by the proposed features below.
+- **Recently shipped (post-v0.1.0):** see §4.1.
 - **In design (not implemented):** the Capture & Organize concept suite (§5).
+
+### 4.1 Shipped since v0.1.0
+
+- **Separate choice buttons (2026-10-08, `08af1b8`).** Single-choice controls now
+  render as distinct mutually-exclusive buttons instead of one joined pill
+  (`Segmented(linked=False)` default). Mutual exclusion was already enforced; only
+  the visual join changed. Action toolbars (not choices) stay linked. Full doc:
+  `docs/UI_CONTROLS.md`.
+- **Multi-source Copy (2026-10-08, `08af1b8`).** A job can copy **several source
+  folders/drives into one destination** (`SyncJob.extra_sources[]`; rsync gets one
+  positional arg per source). **Copy only** — Mirror, two-way, snapshots, atomic,
+  parallel and files-from stay single-source and are blocked with a fixable error.
+  Destination is always single. Backward compatible (no schema bump). Full doc:
+  `docs/MULTI_SOURCE.md`.
+- **Active-Transfers `ProgressRing` (2026-10-02, `301bc56`).** Compact Cairo
+  percentage ring on run cards — reused by the proposed features below.
+- **Installer artifacts refreshed from HEAD (2026-10-08, `2ed77f5`).** `releases/`
+  `.deb` + tarball + `SHA256SUMS` rebuilt so the packages carry the latest code and
+  the menu launcher. The `.deb` was repacked with `dpkg-deb` (debhelper is not
+  installable on this host); a clean `tools/build_deb.sh` on a toolchain machine
+  reproduces the same payload.
 
 ## 5. The "Capture & Organize" concept suite (design-stage)
 
@@ -126,6 +147,7 @@ backlog, not built.
 
 - Design: `docs/CONCEPT.md` · as-built: `docs/ARCHITECTURE.md` · dev: `docs/DEVELOPER.md` ·
   mockups: `docs/mockups/index.html`
+- Shipped-feature docs: `docs/MULTI_SOURCE.md` · `docs/UI_CONTROLS.md`
 - Concept suite: the five docs in §5
 - Roadmap / pending: `.claude/memory/pending.md` · decisions: `.claude/memory/decisions.md` ·
   history: `changelog.md` · change manifests: `.claude/memory/changes/`
