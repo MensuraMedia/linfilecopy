@@ -115,6 +115,40 @@ def validate_job(job: SyncJob) -> list[Issue]:
                       _("{path} is a system or home folder. Two-way jobs can delete files on both sides.").format(path=src),
                       _("Choose a specific folder such as ~/Notes.")))
 
+    # ----- multiple sources (B1 multi-source) -----------------------------------
+    extra = [e for e in job.extra_sources if (e.path or "").strip()]
+    for i, ep in enumerate(extra):
+        p = ep.path.strip()
+        if not os.path.isabs(p):
+            add(Issue(ERROR, f"extra_sources.{i}", _("Each extra source must be a full path starting with /."),
+                      _("Use Browse to pick the folder.")))
+            continue
+        if dst and os.path.isabs(dst):
+            if _norm(p) == _norm(dst) or _real(p) == _real(dst):
+                add(Issue(ERROR, f"extra_sources.{i}", _("A source and the destination are the same folder: {path}").format(path=p),
+                          _("Remove that source or pick a different destination.")))
+            elif _inside(dst, p):
+                add(Issue(ERROR, f"extra_sources.{i}",
+                          _("The destination is inside a source folder, so the copy would include itself: {path}").format(path=p),
+                          _("Choose a destination outside every source folder.")))
+            elif _inside(p, dst):
+                add(Issue(WARNING, f"extra_sources.{i}",
+                          _("A source is inside the destination, so its files are copied next to it: {path}").format(path=p),
+                          _("Usually a mistake: pick sources outside the destination folder.")))
+    if job.multi_source:
+        if job.mode is not Mode.COPY:
+            add(Issue(ERROR, "mode", _("Only Copy can take more than one source folder."),
+                      _("Switch to Copy, or keep a single source for Mirror and Two-way.")))
+        if job.safety.snapshots or job.safety.atomic:
+            add(Issue(ERROR, "safety.snapshots", _("Snapshots and atomic replace need a single source folder."),
+                      _("Keep one source, or turn off snapshots and atomic replace.")))
+        if job.performance.parallel_streams > 1:
+            add(Issue(ERROR, "performance.parallel_streams", _("Parallel streams need a single source folder."),
+                      _("Set parallel streams to 1, or keep a single source.")))
+        if job.filters.files_from:
+            add(Issue(ERROR, "filters.files_from", _("\"Only files listed in\" needs a single source folder."),
+                      _("Keep one source, or clear the file list.")))
+
     # ----- mode combinations (B2, #13, #16, #17, #12) ---------------------------
     if job.mode is Mode.MIRROR:
         add(Issue(INFO, "mode", _("Mirror deletes files at the destination that are not in the source."),

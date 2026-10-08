@@ -307,9 +307,13 @@ class Segmented(Gtk.Box):
         active: str,
         on_change: Callable[[str], None] | None = None,
         tooltips: dict[str, str] | None = None,
-        linked: bool = True,
+        linked: bool = False,
     ) -> None:
-        """``linked=False`` draws separate buttons (still one choice at a time)."""
+        """Separate mutually-exclusive buttons (one choice at a time).
+
+        ``linked=True`` would join them into a single pill; the default draws
+        them as distinct buttons, which reads more clearly as a set of choices.
+        """
         super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=0 if linked else 6)
         if linked:
             add_classes(self, "linked")

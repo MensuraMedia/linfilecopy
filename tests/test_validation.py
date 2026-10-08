@@ -2,7 +2,7 @@ import os
 import unittest
 
 from linfilecopy.model.enums import DriveKind, Mode, ScheduleKind
-from linfilecopy.model.job import FilterRule, SyncJob
+from linfilecopy.model.job import Endpoint, FilterRule, SyncJob
 from linfilecopy.model.validation import ERROR, WARNING, has_errors, validate_job
 
 
@@ -46,6 +46,46 @@ class ValidationTest(unittest.TestCase):
     def test_parallel_with_files_from_blocked(self) -> None:
         j = job(); j.performance.parallel_streams = 2; j.filters.files_from = "/home/x/list"
         self.assertIn("performance.parallel_streams", fields(j))
+
+    # ----- multi-source (B1) -------------------------------------------------
+    def test_multi_source_copy_is_valid(self) -> None:
+        j = job(src="/data/one", dst="/backup/all")
+        j.extra_sources = [Endpoint(path="/data/two"), Endpoint(path="/media/sam/USB2/three")]
+        self.assertFalse(has_errors(validate_job(j)))
+        self.assertTrue(j.multi_source)
+
+    def test_multi_source_blocks_mirror_and_twoway(self) -> None:
+        for mode in (Mode.MIRROR, Mode.TWO_WAY):
+            j = job(src="/data/one", dst="/backup/all", mode=mode)
+            j.extra_sources = [Endpoint(path="/data/two")]
+            self.assertIn("mode", fields(j))
+
+    def test_multi_source_blocks_snapshot_atomic_parallel_filesfrom(self) -> None:
+        base = lambda: _multi(job(src="/data/one", dst="/backup/all"))  # noqa: E731
+        j = base(); j.safety.snapshots = True
+        self.assertIn("safety.snapshots", fields(j))
+        j = base(); j.safety.atomic = True
+        self.assertIn("safety.snapshots", fields(j))
+        j = base(); j.performance.parallel_streams = 2
+        self.assertIn("performance.parallel_streams", fields(j))
+        j = base(); j.filters.files_from = "/home/x/list"
+        self.assertIn("filters.files_from", fields(j))
+
+    def test_extra_source_path_and_overlap_checks(self) -> None:
+        j = job(src="/data/one", dst="/backup/all")
+        j.extra_sources = [Endpoint(path="relative/two")]       # not absolute
+        self.assertIn("extra_sources.0", fields(j))
+        j = job(src="/data/one", dst="/backup/all")
+        j.extra_sources = [Endpoint(path="/backup/all")]        # same as destination
+        self.assertIn("extra_sources.0", fields(j))
+        j = job(src="/data/one", dst="/backup/all")
+        j.extra_sources = [Endpoint(path="/backup")]            # destination inside this source
+        self.assertIn("extra_sources.0", fields(j))
+
+
+def _multi(j: SyncJob) -> SyncJob:
+    j.extra_sources = [Endpoint(path="/data/two")]
+    return j
 
     def test_mirror_into_protected_folder_blocked(self) -> None:
         self.assertIn("destination.path", fields(job(dst="/", mode=Mode.MIRROR)))

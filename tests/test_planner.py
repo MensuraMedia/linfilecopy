@@ -36,6 +36,31 @@ class PlannerTest(unittest.TestCase):
         self.assertEqual(p.steps[0].argv[-2:], ["/home/sam/Docs/", "/media/sam/USB/Docs/"])
         self.assertNotIn("#", p.display_text())
 
+    def test_multi_source_copy_command(self) -> None:
+        from linfilecopy.model.job import Endpoint
+
+        j = job()
+        j.extra_sources = [Endpoint(path="/home/sam/Pics"), Endpoint(path="/media/sam/USB2/Vids")]
+        e = env(extra_sources=[ResolvedEndpoint("/home/sam/Pics", EndpointState.READY),
+                               ResolvedEndpoint("/media/sam/USB2/Vids", EndpointState.READY)],
+                extra_source_exists=[True, True])
+        p = plan_job(j, e)
+        self.assertEqual(kinds(p), [StepKind.RSYNC])
+        self.assertEqual(p.steps[0].argv[-4:],
+                         ["/home/sam/Docs/", "/home/sam/Pics/", "/media/sam/USB2/Vids/", "/media/sam/USB/Docs/"])
+        self.assertIn("more", p.source)   # "… + 2 more"
+
+    def test_multi_source_missing_extra_reported(self) -> None:
+        from linfilecopy.model.job import Endpoint
+
+        j = job()
+        j.extra_sources = [Endpoint(path="/home/sam/Pics")]
+        e = env(extra_sources=[ResolvedEndpoint("/home/sam/Pics", EndpointState.READY)],
+                extra_source_exists=[False])
+        p = plan_job(j, e)
+        self.assertTrue(any(i.field == "extra_sources.0" for i in p.issues))
+        self.assertFalse(p.runnable)
+
     def test_exfat_adjustment_reported(self) -> None:
         p = plan_job(job(), env("exfat"))
         info = [i for i in p.issues if i.field == "destination.fs"]

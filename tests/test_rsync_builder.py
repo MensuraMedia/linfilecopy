@@ -35,6 +35,14 @@ class BuilderTest(unittest.TestCase):
         j = job(); j.transfer.copy_contents = False
         self.assertEqual(argv(j)[-2:], ["/src", "/dst/"])
 
+    def test_b1_multi_source_positional_args(self) -> None:
+        j = job()
+        out = rb.build_rsync_argv(j, ["/a", "/b", "/c"], "/dst", EXT4, rb.BuildOptions())
+        self.assertEqual(out[-4:], ["/a/", "/b/", "/c/", "/dst/"])
+        j.transfer.copy_contents = False
+        out = rb.build_rsync_argv(j, ["/a", "/b"], "/dst", EXT4, rb.BuildOptions())
+        self.assertEqual(out[-3:], ["/a", "/b", "/dst/"])
+
     def test_b2_mirror_deletes(self) -> None:
         self.assertIn("--delete-delay", argv(job(mode=Mode.MIRROR)))
         self.assertNotIn("--delete-delay", argv(job(mode=Mode.COPY)))

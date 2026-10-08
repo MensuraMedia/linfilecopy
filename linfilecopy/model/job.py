@@ -176,6 +176,7 @@ class SyncJob:
     name: str = ""
     description: str = ""
     source: Endpoint = field(default_factory=Endpoint)
+    extra_sources: list[Endpoint] = field(default_factory=list)   # additional source folders/drives (Copy only)
     destination: Endpoint = field(default_factory=Endpoint)
     mode: Mode = Mode.COPY
     overwrite: OverwritePolicy = OverwritePolicy.ALWAYS
@@ -194,6 +195,17 @@ class SyncJob:
     created: float = 0.0
     modified: float = 0.0
     schema_version: int = SCHEMA_VERSION
+
+    # ----- sources -------------------------------------------------------
+    @property
+    def source_endpoints(self) -> list[Endpoint]:
+        """The primary source plus any extra sources that have a path (B1, multi-source)."""
+        return [ep for ep in (self.source, *self.extra_sources) if (ep.path or "").strip()]
+
+    @property
+    def multi_source(self) -> bool:
+        """True when more than one source folder/drive is chosen."""
+        return len(self.source_endpoints) > 1
 
     # ----- identity ------------------------------------------------------
     @staticmethod

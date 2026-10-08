@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from linfilecopy.model.enums import ConflictPolicy, ExcludePreset, FilterAction, Mode, SymlinkPolicy
-from linfilecopy.model.job import SCHEMA_VERSION, FilterRule, SyncJob
+from linfilecopy.model.job import SCHEMA_VERSION, Endpoint, FilterRule, SyncJob
 from linfilecopy.model.store import JobStore
 from linfilecopy.model.templates import load_templates
 
@@ -48,6 +48,21 @@ class SyncJobTest(unittest.TestCase):
         job = SyncJob.from_dict({"name": "min"})
         self.assertTrue(job.transfer.resume)
         self.assertEqual(job.filters.presets, [ExcludePreset.CACHE, ExcludePreset.TEMP])
+
+    def test_extra_sources_round_trip_and_helpers(self) -> None:
+        job = SyncJob(name="multi")
+        job.source.path = "/data/one"
+        job.extra_sources = [Endpoint(path="/data/two"), Endpoint(path="/data/three")]
+        data = json.loads(json.dumps(job.to_dict()))
+        restored = SyncJob.from_dict(data)
+        self.assertEqual([e.path for e in restored.extra_sources], ["/data/two", "/data/three"])
+        self.assertTrue(restored.multi_source)
+        self.assertEqual([e.path for e in restored.source_endpoints], ["/data/one", "/data/two", "/data/three"])
+
+    def test_old_jobs_have_no_extra_sources(self) -> None:
+        job = SyncJob.from_dict({"name": "legacy", "source": {"path": "/a"}})
+        self.assertEqual(job.extra_sources, [])
+        self.assertFalse(job.multi_source)
 
     def test_v1_migration_drops_network_fields(self) -> None:
         job = SyncJob.from_dict({"schema_version": 1, "name": "old",

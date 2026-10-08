@@ -574,7 +574,7 @@ class DesignerPage(BasePage):
         self.job = job
         self.saved_snapshot = job.to_dict() if saved else None
         self.name_entry.set_text(job.name)
-        self.src_card.set_endpoint(job.source, job.transfer.copy_contents)
+        self.src_card.set_sources(job.source, job.extra_sources, job.transfer.copy_contents)
         self.dst_card.set_endpoint(job.destination)
         for fn in self._syncers:
             fn()
@@ -734,6 +734,7 @@ class DesignerPage(BasePage):
 
     def _on_source_changed(self, card: PathCardWidget) -> None:
         self.job.source = card.endpoint
+        self.job.extra_sources = card.extra_endpoints
         self.job.transfer.copy_contents = card.copy_contents
         self._changed()
 
@@ -742,9 +743,11 @@ class DesignerPage(BasePage):
         self._changed()
 
     def _on_swap(self, _b: Gtk.Button) -> None:
+        # The destination is always a single folder, so swapping drops any extra sources.
         self.job.source, self.job.destination = self.job.destination, self.job.source
+        self.job.extra_sources = []
         self._loading = True
-        self.src_card.set_endpoint(self.job.source, self.job.transfer.copy_contents)
+        self.src_card.set_sources(self.job.source, [], self.job.transfer.copy_contents)
         self.dst_card.set_endpoint(self.job.destination)
         self._loading = False
         self._changed()

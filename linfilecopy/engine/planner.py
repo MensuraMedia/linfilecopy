@@ -73,6 +73,19 @@ class PlanEnv:
     has_nice: bool = True
     udisks: bool = True
     now: dt.datetime = field(default_factory=dt.datetime.now)
+    # Extra resolved sources (multi-source Copy). Each carries its own path/state/drive.
+    extra_sources: list[ResolvedEndpoint] = field(default_factory=list)
+    extra_source_exists: list[bool] = field(default_factory=list)
+
+    @property
+    def all_sources(self) -> list[ResolvedEndpoint]:
+        """Primary plus every extra source, in order."""
+        return [self.source, *self.extra_sources]
+
+    @property
+    def source_paths(self) -> list[str]:
+        """Resolved paths of every source that has one (for the Copy rsync command)."""
+        return [r.path for r in self.all_sources if r.path]
 
 
 @dataclass
@@ -178,6 +191,22 @@ def _endpoint_issues(job: SyncJob, env: PlanEnv, issues: list[Issue]) -> None:
     if env.source.state is EndpointState.READY and job.source.path.strip() and not env.source_exists:
         issues.append(Issue(ERROR, "source.path", _("The source folder does not exist: {path}").format(path=env.source.path),
                             _("Check the path or pick the folder again.")))
+    for i, res in enumerate(env.extra_sources):
+        ep = job.extra_sources[i] if i < len(job.extra_sources) else None
+        name = (ep.volume_label if ep else None) or _("the drive")
+        if res.state is EndpointState.MISSING:
+            level = WARNING if job.drive.wait_for_drive else ERROR
+            issues.append(Issue(level, f"extra_sources.{i}",
+                                _("Connect {drive} to use the source folder.").format(drive=name),
+                                _("Plug in the drive, or turn on \"Wait for the drive\".")))
+        elif res.state is EndpointState.LOCKED and not job.drive.unlock_encrypted:
+            issues.append(Issue(ERROR, f"extra_sources.{i}", _("{drive} is locked.").format(drive=name),
+                                _("Unlock it from the sidebar, or turn on \"Unlock the encrypted drive before running\".")))
+        elif (res.state is EndpointState.READY and i < len(env.extra_source_exists)
+              and not env.extra_source_exists[i]):
+            issues.append(Issue(ERROR, f"extra_sources.{i}",
+                                _("The source folder does not exist: {path}").format(path=res.path),
+                                _("Check the path or pick the folder again.")))
     if job.mode is Mode.MIRROR and env.source.state is EndpointState.READY and env.source_empty:
         issues.append(Issue(ERROR, "source.path",
                             _("The source folder is empty. Mirroring it would delete everything at the destination."),
@@ -191,7 +220,7 @@ def _drive_steps(job: SyncJob, env: PlanEnv) -> tuple[list[Step], list[Step]]:
     before: list[Step] = []
     after: list[Step] = []
     seen: set[str] = set()
-    for res in (env.source, env.destination):
+    for res in (env.source, *env.extra_sources, env.destination):
         if res.state is EndpointState.LOCKED and res.container is not None and res.container.uuid not in seen:
             seen.add(res.container.uuid)
             before.append(Step(StepKind.UNLOCK, _("unlock and mount {drive} (UDisks2)").format(drive=res.container.label),
@@ -229,6 +258,9 @@ def plan_job(job: SyncJob, env: PlanEnv, preview: bool = False, dry_run: bool = 
     # Placeholders keep the preview readable before folders are chosen (the plan is not runnable then).
     src = env.source.path or _("<source folder>")
     dst = env.destination.path or _("<destination folder>")
+    extra_paths = [r.path for r in env.extra_sources if r.path]
+    src_display = (_("{first} + {n} more").format(first=src, n=len(extra_paths))
+                   if extra_paths else src)
     opts = rb.BuildOptions(
         dry_run=dry_run, preview=preview, priority_wrapper=() if preview else _priority(eff, env),
         rsync_path=env.rsync_path or "rsync", rsync_version=env.rsync_version or (0, 0, 0),
@@ -277,10 +309,12 @@ def plan_job(job: SyncJob, env: PlanEnv, preview: bool = False, dry_run: bool = 
                           _("copy with {n} parallel rsync streams (split by top-level folder)").format(n=eff.performance.parallel_streams),
                           argv, {"streams": eff.performance.parallel_streams, "source": src, "destination": dst}))
     else:
-        argv = rb.build_rsync_argv(eff, src, dst, fs, opts)
-        steps.append(Step(StepKind.RSYNC, _("copy"), argv))
+        sources: str | list[str] = [src, *extra_paths] if extra_paths else src
+        argv = rb.build_rsync_argv(eff, sources, dst, fs, opts)
+        label = _("copy {n} sources").format(n=len(extra_paths) + 1) if extra_paths else _("copy")
+        steps.append(Step(StepKind.RSYNC, label, argv))
     steps += after
-    return Plan(eff, steps, issues, src, dst, notes)
+    return Plan(eff, steps, issues, src_display, dst, notes)
 
 
 def _is_empty(path: str) -> bool:
@@ -303,6 +337,11 @@ def gather_env(
     """Collect filesystem facts for :func:`plan_job`. Touches the disk: call off the main thread."""
     src = resolve_endpoint(job.source, drives)
     dst = resolve_endpoint(job.destination, drives)
+    extra = [resolve_endpoint(ep, drives) for ep in job.extra_sources if (ep.path or "").strip()]
+    extra_exists = [
+        (bool(r.path) and os.path.isdir(r.path)) if r.state is EndpointState.READY else True
+        for r in extra
+    ]
     fs_type = None
     if dst.drive is not None:
         fs_type = dst.drive.fs_type
@@ -316,5 +355,5 @@ def gather_env(
         dest_exists=bool(dst.path) and os.path.isdir(dst.path),
         latest_snapshot_exists=bool(dst.path) and os.path.isdir(os.path.join(dst.path, LATEST)),
         rsync_path=rsync_path, rsync_version=rsync_version, has_ionice=has_ionice, has_nice=has_nice,
-        udisks=udisks,
+        udisks=udisks, extra_sources=extra, extra_source_exists=extra_exists,
     )

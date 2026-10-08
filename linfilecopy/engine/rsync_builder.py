@@ -7,6 +7,7 @@ cannot store; the planner reports those adjustments to the user.
 from __future__ import annotations
 
 import shlex
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 
 from linfilecopy.engine.filesystems import FsCapabilities, capabilities_for
@@ -129,12 +130,17 @@ def filter_args(job: SyncJob, include_internal: bool = True) -> list[str]:
 
 def build_rsync_argv(
     job: SyncJob,
-    source: str,
+    source: str | Sequence[str],
     destination: str,
     fs: FsCapabilities | None = None,
     opts: BuildOptions | None = None,
 ) -> list[str]:
-    """Build the full argv (including any priority wrapper) for one rsync run."""
+    """Build the full argv (including any priority wrapper) for one rsync run.
+
+    ``source`` may be a single path or several (rsync copies every source into the
+    one destination). Multiple sources are only used for Copy; the planner and
+    validator keep Mirror, two-way, snapshots, atomic and parallel single-source.
+    """
     opts = opts or BuildOptions()
     fs = fs or capabilities_for(job.destination.fs_type)
     t = job.transfer
@@ -181,8 +187,9 @@ def build_rsync_argv(
     if files_from:
         argv.append(f"--files-from={files_from}")
 
-    src = with_trailing_slash(source) if t.copy_contents else without_trailing_slash(source)
-    argv += [src, with_trailing_slash(destination)]
+    paths = [source] if isinstance(source, str) else list(source)
+    srcs = [with_trailing_slash(p) if t.copy_contents else without_trailing_slash(p) for p in paths]
+    argv += [*srcs, with_trailing_slash(destination)]
     return argv
 
 

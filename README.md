@@ -17,7 +17,7 @@ but the exact command is always shown and can be copied.
 
 | | Basic (Simple view) | |
 |---|---|---|
-| B1 | Source & destination | Drive picker, folder browser, drag and drop, swap |
+| B1 | Source & destination | Drive picker, folder browser, drag and drop, swap; add several source folders/drives into one destination (Copy) |
 | B2 | Copy / Mirror / Two-way | Mirror always confirms deletions with the exact list |
 | B3 | Live progress | Bar, speed, time left, files, current file, speed graph |
 | B4 | Start / Pause / Cancel | Pause stops rsync's whole process group; Cancel asks first |

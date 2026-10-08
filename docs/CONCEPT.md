@@ -216,7 +216,7 @@ It is scheduled in P6, after the runner and filter matcher it depends on are sta
 
 | # | Feature | UI | rsync | Notes |
 |---|---|---|---|---|
-| B1 | Source & destination | two `PathField`s: drop target, Browse, **drive picker** (lists internal, removable and array volumes with label, fs type and free space), swap button | positional args; "copy the folder itself / its contents" toggle controls the trailing `/` | drag and drop accepts `text/uri-list`; source blue, destination green |
+| B1 | Source & destination | two `PathField`s: drop target, Browse, **drive picker** (lists internal, removable and array volumes with label, fs type and free space), swap button; the source can hold **several folders/drives** ("Add another source folder") copied into the one destination | positional args (one per source); "copy the folder itself / its contents" toggle controls the trailing `/` | drag and drop accepts `text/uri-list` (several folders add several sources); source blue, destination green. **Multiple sources are Copy-only** — Mirror, two-way, snapshots, atomic, parallel and files-from stay single-source (validator blocks the rest) |
 | B2 | Copy vs Sync (mirror) | segmented **Copy · Mirror · Two-way** | Mirror → `--delete-delay` | Mirror always confirms with a count from a dry run |
 | B3 | Progress, speed, ETA | progress card | `--info=progress2,name1,stats2 --outbuf=L` | parsed at most 4 times per second |
 | B4 | Start / Pause / Cancel | primary Start + Pause/Cancel | SIGSTOP/SIGCONT/SIGTERM to the process group | unplugging a drive mid-run → clear "drive removed" error; resume later from partials |
